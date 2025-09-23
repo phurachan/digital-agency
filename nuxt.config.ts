@@ -11,7 +11,7 @@ export default defineNuxtConfig({
 
     // Public keys (exposed to client-side)
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE_URL || '/api',
+      apiBase: process.env.NUXT_PUBLIC_API_BASE_URL || '/api/agency-cms',
       siteName: process.env.NUXT_PUBLIC_SITE_NAME || 'Digital Agency',
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000'
     }
@@ -27,7 +27,7 @@ export default defineNuxtConfig({
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { hid: 'description', name: 'description', content: 'Professional digital marketing agency specializing in modern web solutions, SEO, and digital strategy.' }
+        { name: 'description', content: 'Professional digital marketing agency specializing in modern web solutions, SEO, and digital strategy.' }
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },

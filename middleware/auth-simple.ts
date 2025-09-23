@@ -1,6 +1,6 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  // Only protect /manage routes
-  if (!to.path.startsWith('/manage')) {
+  // Only protect /agency-cms/manage routes
+  if (!to.path.startsWith('/agency-cms/manage')) {
     return
   }
 
@@ -27,18 +27,18 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     console.log('Simple auth middleware: No auth status cookie, checking API...')
     
     // Fallback to API check - use navigateTo with external check
-    const response = await fetch('/api/auth/me', {
+    const response = await fetch('/api/agency-cms/auth/me', {
       credentials: 'include'
     }).then(res => res.json())
     
     if (!response?.user) {
       console.log('Simple auth middleware: No user found in API response')
-      return navigateTo('/login', { replace: true })
+      return navigateTo('/agency-cms/login', { replace: true })
     }
 
     console.log('Simple auth middleware: User authenticated via API:', response.user.email)
   } catch (error: any) {
     console.log('Simple auth middleware: Authentication failed:', error.data?.message || error.message || error)
-    return navigateTo('/login', { replace: true })
+    return navigateTo('/agency-cms/login', { replace: true })
   }
 })

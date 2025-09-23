@@ -4,15 +4,15 @@ export const API_CONFIG = {
   get BASE_URL() {
     // For server-side or when nuxtApp is not available, use default
     if (import.meta.server) {
-      return '/api'
+      return '/api/agency-cms'
     }
 
     // For client-side, try to get from runtime config
     try {
       const { $config } = useNuxtApp()
-      return $config.public.apiBase || '/api'
+      return $config.public.apiBase || '/api/agency-cms'
     } catch {
-      return '/api'
+      return '/api/agency-cms'
     }
   },
 
