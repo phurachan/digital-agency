@@ -283,3 +283,30 @@ textarea.form-input:not(:placeholder-shown) + .floating-label {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* Navbar offset for sections and pages */
+section[id],
+.section-with-nav {
+  scroll-margin-top: 120px; /* Account for both top navbar (40px) and main navbar (80px) */
+}
+
+/* For mobile responsive navbar offset */
+@media (max-width: 768px) {
+  section[id],
+  .section-with-nav {
+    scroll-margin-top: 100px;
+  }
+}
+
+/* Page content offset to prevent navbar overlap */
+.page-content {
+  padding-top: 120px;
+  margin-top: -120px;
+}
+
+@media (max-width: 768px) {
+  .page-content {
+    padding-top: 100px;
+    margin-top: -100px;
+  }
+}

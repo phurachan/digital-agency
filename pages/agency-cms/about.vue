@@ -23,7 +23,7 @@
     <!-- Hero Section -->
     <section 
       class="section-padding text-white relative overflow-hidden" 
-      style="padding-top: 140px;"
+      style="padding-top: 240px;"
       :class="aboutContent.heroImage ? 'bg-cover bg-center bg-no-repeat' : 'bg-gradient-primary-to-secondary'"
       :style="aboutContent.heroImage ? { backgroundImage: `url(${aboutContent.heroImage})` } : {}"
     >

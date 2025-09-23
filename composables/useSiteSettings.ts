@@ -1,7 +1,7 @@
 import { API_ENDPOINTS, buildApiUrl } from '~/constants/api'
 
 export const useSiteSettings = () => {
-  const siteSettings = ref(null)
+  const siteSettings = useState('siteSettings', () => null)
   
   const loadSiteSettings = async () => {
     try {

@@ -1,33 +1,48 @@
 import { API_ENDPOINTS, buildApiUrl } from '~/constants/api'
 
 export const useCMS = () => {
-  const getHomeContent = async () => {
-    try {
-      const data = await $fetch(buildApiUrl(API_ENDPOINTS.CMS.HOME_CONTENT.GET))
-      return data || getDefaultHomeContent()
-    } catch (error) {
-      console.error('Failed to fetch home content:', error)
-      return getDefaultHomeContent()
+  // Cache for API responses
+  const cache = new Map()
+
+  const getCached = async (key: string, fetcher: () => Promise<any>) => {
+    if (cache.has(key)) {
+      return cache.get(key)
     }
+    const result = await fetcher()
+    cache.set(key, result)
+    return result
+  }
+  const getHomeContent = async () => {
+    return getCached('home-content', async () => {
+      try {
+        const data = await $fetch(buildApiUrl(API_ENDPOINTS.CMS.HOME_CONTENT.GET))
+        return data || getDefaultHomeContent()
+      } catch (error) {
+        console.error('Failed to fetch home content:', error)
+        return getDefaultHomeContent()
+      }
+    })
   }
 
   const getServices = async () => {
-    try {
-      const data = await $fetch(buildApiUrl(API_ENDPOINTS.CMS.SERVICES.GET))
-      // Ensure features are parsed as arrays (fallback parsing)
-      const servicesWithParsedFeatures = data?.map(service => ({
-        ...service,
-        features: typeof service.features === 'string' 
-          ? JSON.parse(service.features) 
-          : Array.isArray(service.features) 
-            ? service.features 
-            : []
-      })) || []
-      return servicesWithParsedFeatures.filter(s => s.isActive)
-    } catch (error) {
-      console.error('Failed to fetch services:', error)
-      return []
-    }
+    return getCached('services', async () => {
+      try {
+        const data = await $fetch(buildApiUrl(API_ENDPOINTS.CMS.SERVICES.GET))
+        // Ensure features are parsed as arrays (fallback parsing)
+        const servicesWithParsedFeatures = data?.map(service => ({
+          ...service,
+          features: typeof service.features === 'string'
+            ? JSON.parse(service.features)
+            : Array.isArray(service.features)
+              ? service.features
+              : []
+        })) || []
+        return servicesWithParsedFeatures.filter(s => s.isActive !== false)
+      } catch (error) {
+        console.error('Failed to fetch services:', error)
+        return []
+      }
+    })
   }
 
   const getAboutContent = async () => {
@@ -41,13 +56,15 @@ export const useCMS = () => {
   }
 
   const getTeamMembers = async () => {
-    try {
-      const data = await $fetch(buildApiUrl(API_ENDPOINTS.CMS.TEAM.GET))
-      return data || []
-    } catch (error) {
-      console.error('Failed to fetch team members:', error)
-      return []
-    }
+    return getCached('team-members', async () => {
+      try {
+        const data = await $fetch(buildApiUrl(API_ENDPOINTS.CMS.TEAM.GET))
+        return data || []
+      } catch (error) {
+        console.error('Failed to fetch team members:', error)
+        return []
+      }
+    })
   }
 
   const getContactContent = async () => {
@@ -71,13 +88,11 @@ export const useCMS = () => {
   }
 
   const getSiteSettings = async () => {
-    try {
-      const data = await $fetch(buildApiUrl(API_ENDPOINTS.CMS.SITE_SETTINGS.GET))
-      return data || getDefaultSiteSettings()
-    } catch (error) {
-      console.error('Failed to fetch site settings:', error)
-      return getDefaultSiteSettings()
+    const { siteSettings, loadSiteSettings } = useSiteSettings()
+    if (!siteSettings.value) {
+      await loadSiteSettings()
     }
+    return siteSettings.value || getDefaultSiteSettings()
   }
 
   const getServicesContent = async () => {

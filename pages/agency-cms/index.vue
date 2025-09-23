@@ -32,8 +32,8 @@
       :class="homeContent.heroImage ? 'hero-with-image' : 'gradient-bg'"
       :style="homeContent.heroImage ? {
         backgroundImage: `url(${homeContent.heroImage})`,
-        paddingTop: '140px'
-      } : { paddingTop: '140px' }"
+        paddingTop: '200px'
+      } : { paddingTop: '200px' }"
     >
       <!-- Dark overlay for better text readability when using background image -->
       <div v-if="homeContent.heroImage" class="absolute inset-0 bg-black/50 z-0"></div>
@@ -91,7 +91,7 @@
         </div>
         
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div v-for="service in services" :key="service.id" class="card p-8 text-center relative overflow-hidden">
+          <div v-for="service in localizedServices" :key="service.id" class="card p-8 text-center relative overflow-hidden">
             <!-- Color accent bar -->
             <div 
               class="absolute top-0 left-0 w-full h-1"
@@ -130,7 +130,7 @@
           </div>
 
           <!-- Show message if no services -->
-          <div v-if="services.length === 0" class="col-span-full text-center py-12">
+          <div v-if="localizedServices.length === 0" class="col-span-full text-center py-12">
             <p class="text-gray-500">{{ t('home.servicesWillAppear') }}</p>
           </div>
         </div>
@@ -504,6 +504,9 @@ const getLocalizedContent = (field, fallback = '') => {
     if (typeof field === 'string') {
       const parsed = JSON.parse(field)
       return parsed[currentLanguage.value] || parsed.en || fallback
+    } else if (typeof field === 'object' && field !== null) {
+      // If it's already an object, extract the language value
+      return field[currentLanguage.value] || field.en || fallback
     }
     return field || fallback
   } catch {
@@ -539,33 +542,23 @@ const homeContent = computed(() => ({
   supportLabel: getLocalizedContent(homeContentRaw.supportLabel, 'Support Available'),
 }))
 
-// Helper functions for service icons
-const getServiceIcon = (iconName) => {
-  const iconMap = {
-    'search': 'svg',
-    'social': 'svg', 
-    'code': 'svg',
-    'ads': 'svg',
-    'email': 'svg',
-    'analytics': 'svg'
-  }
-  
-  // Return a simple div with SVG if no specific component
-  return 'svg'
-}
 
-const getIconColorClass = (iconName) => {
-  const colorMap = {
-    'search': 'bg-blue-100 text-blue-500',
-    'social': 'bg-green-100 text-green-500',
-    'code': 'bg-purple-100 text-purple-500',
-    'ads': 'bg-red-100 text-red-500',
-    'email': 'bg-yellow-100 text-yellow-500',
-    'analytics': 'bg-indigo-100 text-indigo-500'
-  }
-  
-  return colorMap[iconName] || 'bg-gray-100 text-gray-500'
-}
+// Create reactive localized services
+const localizedServices = computed(() => {
+  return services.map(service => {
+    // Process features using the updated getLocalizedContent function
+    const processedFeatures = service.features?.map(feature => {
+      return getLocalizedContent(feature, feature)
+    }) || []
+
+    return {
+      ...service,
+      title: getLocalizedContent(service.title, service.title),
+      description: getLocalizedContent(service.description, service.description),
+      features: processedFeatures
+    }
+  })
+})
 
 // Update page title with CMS data
 const pageTitle = computed(() => `${siteSettings.siteName} - ${siteSettings.siteTagline}`)
@@ -584,6 +577,7 @@ useSeoMeta({
 .line-clamp-3 {
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
