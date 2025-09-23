@@ -1,8 +1,8 @@
 {
-  "name": "digital-agency",
-  "private": true,
+  "name": "web-monorepo",
   "type": "module",
-  "description": "Digital Marketing Agency Website",
+  "private": true,
+  "packageManager": "pnpm@9.0.0",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -11,7 +11,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@vueuse/nuxt": "^10.5.0",
+    "@vueuse/nuxt": "^11.0.0",
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.20.0",
@@ -20,6 +20,7 @@
     "vue-router": "^4.4.3"
   },
   "devDependencies": {
+    "@nuxt/devtools": "latest",
     "@nuxtjs/tailwindcss": "^6.12.1"
   }
 }
