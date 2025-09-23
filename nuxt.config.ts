@@ -23,7 +23,7 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: 'Web Monorepo - Digital Showcase Platform',
+      title: 'Web Digital Agency - Digital Showcase Platform',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },

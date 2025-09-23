@@ -1,8 +1,7 @@
 {
-  "name": "web-monorepo",
+  "name": "web-digital-agency",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@9.0.0",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -12,12 +11,14 @@
   },
   "dependencies": {
     "@vueuse/nuxt": "^11.0.0",
-    "bcryptjs": "^2.4.3",
+    "bcryptjs": "^3.0.2",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.20.0",
-    "nuxt": "^3.12.4",
-    "vue": "^3.4.38",
-    "vue-router": "^4.4.3"
+    "nuxt": "^4.1.0",
+    "pinia": "^3.0.3",
+    "tailwindcss": "^3.4.17",
+    "vue": "^3.5.20",
+    "vue-router": "^4.5.1"
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
