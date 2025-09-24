@@ -8,9 +8,9 @@ This is a Nuxt 4.1.0 admin panel project using TailwindCSS 3.x and DaisyUI 5.1.6
 - **Styling**: TailwindCSS 3.4.17 + DaisyUI 5.1.6 + @nuxtjs/tailwindcss 6.12.4
 - **Icons**: @heroicons/vue 2.2.0
 - **Date Picker**: @vuepic/vue-datepicker 11.0.2 (Vue 3 Datepicker library)
-- **State Management**: Pinia 3.0.3 + @pinia/nuxt 0.11.2 + @pinia-plugin-persistedstate/nuxt 1.2.1
+- **State Management**: Pinia 3.0.3 + @pinia/nuxt 0.11.2 + pinia-plugin-persistedstate 4.5.0
 - **Language**: TypeScript 5.9.2
-- **Package Manager**: Yarn (npm failed with native binding errors)
+- **Package Manager**: npm (recommended for this project)
 - **Node Version**: 22.17.0 (Nuxt 4 requires Node 22+, not 18.18.0)
 
 ## Demo Credentials:
@@ -21,8 +21,8 @@ This is a Nuxt 4.1.0 admin panel project using TailwindCSS 3.x and DaisyUI 5.1.6
 ### Prerequisites
 ```bash
 # Required versions
-Node.js >= 22.17.0
-Yarn package manager
+Node.js >= 22.19.0
+npm package manager
 ```
 
 ### Installation
@@ -32,11 +32,11 @@ git clone <repository-url>
 cd web_admin_base
 
 # Install dependencies
-nvm use 22.17
-yarn install
+nvm use 22
+npm install
 
 # Start development server
-yarn dev
+npm run dev
 ```
 
 ### Environment Setup
@@ -200,7 +200,7 @@ const authStore = useAuthStore()
 
 // Check authentication
 if (!authStore.isAuthenticated) {
-  return navigateTo('/login')
+  return navigateTo('/digital-agency/login')
 }
 
 // Check permissions
@@ -230,9 +230,9 @@ nvm use 22.17.0
 
 ### 2. Package Manager Issues
 ```bash
-# Use Yarn, not npm (native binding issues)
-yarn install # ✅ Good
-npm install  # ❌ Avoid
+# Use npm for digital-agency project
+npm install # ✅ Good
+yarn install  # ❌ May have nuxt-prepare issues
 ```
 
 ### 3. DaisyUI Theme Issues

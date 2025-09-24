@@ -85,7 +85,7 @@
             </div>
 
             <!-- Language Switcher -->
-            <LanguageSwitcher />
+            <BaseLanguageSwitcher />
 
             <!-- Theme Toggle -->
             <BaseThemeToggle
@@ -219,10 +219,10 @@
       </Teleport>
 
       <!-- Toast Container -->
-      <ToastContainer />
+      <BaseToastContainer />
       
       <!-- Confirm Container -->
-      <ConfirmContainer />
+      <BaseConfirmContainer />
     </div>
   </ClientOnly>
 </template>
@@ -297,10 +297,10 @@ const menuSections = ref([
     icon: "chart-bar",
     items: [
       {
-        path: "/admin",
+        path: "/digital-agency/admin",
         label: "Overview",
         icon: "home",
-        activeWhen: ["/admin"]
+        activeWhen: ["/digital-agency/admin"]
       }
     ]
   },
@@ -309,7 +309,7 @@ const menuSections = ref([
     icon: "users",
     items: [
       {
-        path: "/admin/user_management",
+        path: "/digital-agency/admin/user_management",
         label: "จัดการผู้ใช้",
         icon: "user",
         badge: {
@@ -324,12 +324,12 @@ const menuSections = ref([
     icon: "beaker",
     items: [
       {
-        path: "/admin/demo",
+        path: "/digital-agency/admin/demo",
         label: "Demo",
         icon: "server",
       },
       {
-        path: "/admin/components",
+        path: "/digital-agency/admin/components",
         label: "Components",
         icon: "puzzle-piece",
         badge: {
@@ -338,7 +338,7 @@ const menuSections = ref([
         }
       },
       {
-        path: "/admin/i18n-test",
+        path: "/digital-agency/admin/i18n-test",
         label: "i18n Test",
         icon: "language",
         badge: {

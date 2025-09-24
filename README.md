@@ -25,13 +25,13 @@ git clone <repository-url>
 cd digital-agency
 
 # Install dependencies
-yarn install
+npm install
 
 # Copy environment file
 cp .env.example .env
 
 # Start development server
-yarn dev
+npm run dev
 ```
 
 ## การใช้งาน
@@ -56,9 +56,9 @@ digital-agency/
 
 ## การพัฒนา
 
-- `yarn dev` - เริ่ม development server
-- `yarn build` - build สำหรับ production
-- `yarn preview` - preview production build
+- `npm run dev` - เริ่ม development server
+- `npm run build` - build สำหรับ production
+- `npm run preview` - preview production build
 
 ## License
 

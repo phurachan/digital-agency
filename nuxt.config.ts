@@ -7,7 +7,6 @@ export default defineNuxtConfig({
   },
   modules: [
     '@pinia/nuxt',
-    '@pinia-plugin-persistedstate/nuxt',
     '@nuxtjs/tailwindcss',
     '@nuxtjs/i18n'
   ],
@@ -56,6 +55,14 @@ export default defineNuxtConfig({
   vite: {
     build: {
       chunkSizeWarningLimit: 1000,
+    },
+    server: {
+      fs: {
+        allow: [
+          process.cwd(),
+          '../node_modules'
+        ]
+      }
     }
   }
 })
