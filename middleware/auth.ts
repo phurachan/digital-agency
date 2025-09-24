@@ -1,42 +1,35 @@
-import { API_ENDPOINTS, buildApiUrl } from '~/constants/api'
-
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  // Only protect /agency-cms/manage routes, skip auth check for login page
-  if (!to.path.startsWith('/agency-cms/manage') && to.path !== '/agency-cms/login.vue') {
-    return
+  const authStore = useAuthStore()
+  
+  
+  // Initialize auth if not started (client-side only)
+  if (process.client && !authStore.hasInitialized && !authStore.isInitializing) {
+    await authStore.initializeAuth()
   }
-
-  // Skip middleware on server side during SSR
-  if (import.meta.server) return
-
-  // Add a small delay to ensure cookies are properly set after login
-  if (from?.path === '/agency-cms/login') {
-    console.log('Coming from login page, adding delay for cookie propagation')
-    await new Promise(resolve => setTimeout(resolve, 100))
+  
+  // Wait for auth initialization to complete if it's in progress
+  if (process.client && authStore.isInitializing) {
+    // Wait for initialization to complete with timeout
+    let attempts = 0
+    const maxAttempts = 100 // 5 seconds max wait
+    
+    while (authStore.isInitializing && attempts < maxAttempts) {
+      await new Promise(resolve => setTimeout(resolve, 50))
+      attempts++
+    }
+    
+    // If still initializing after timeout, assume failure
+    if (authStore.isInitializing) {
+      authStore.isInitializing = false
+      authStore.hasInitialized = true
+      authStore.isAuthenticated = false
+    }
   }
-
-  try {
-    // const { $fetch } = useNuxtApp()
-    console.log('Auth middleware: Checking authentication for path:', to.path)
-    
-    const response = await $fetch(buildApiUrl(API_ENDPOINTS.AUTH.ME))
-    
-    if (!response?.user) {
-      console.log('Auth middleware: No user found, redirecting to login')
-      return navigateTo('/agency-cms/login', { replace: true })
-    }
-
-    console.log('Auth middleware: User authenticated:', response.user.email)
-    
-    // Update the global auth state
-    const authState = useState('auth')
-    if (authState.value) {
-      authState.value.user = response.user
-      authState.value.isAuthenticated = true
-      authState.value.isLoading = false
-    }
-  } catch (error: any) {
-    console.log('Auth middleware: Auth check failed:', error.data?.message || error.message || error)
-    return navigateTo('/agency-cms/login', { replace: true })
+  
+  
+  // If not authenticated, redirect to login with current path
+  if (!authStore.isAuthenticated) {
+    const redirectUrl = `/login?redirect=${encodeURIComponent(to.fullPath)}`
+    return navigateTo(redirectUrl)
   }
 })

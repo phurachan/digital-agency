@@ -1,4 +1,3 @@
-<template></template>
 <script setup>
-await navigateTo('/agency-cms')
+await navigateTo('/digital-agency')
 </script>
