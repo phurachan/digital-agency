@@ -1,128 +1,21 @@
 # Claude Code Project Knowledge - Digital Agency
 
 ## Project Overview
-This is a Digital Agency website built with Nuxt 4.1.2 using TailwindCSS 3.x and DaisyUI 5.1.12, featuring a comprehensive CMS system with authentication and multi-language support.
+This is a comprehensive Digital Agency CMS website built with Nuxt 4.1.2 featuring multi-language support (Thai/English), MongoDB backend, JWT authentication, and a complete content management system for managing digital marketing services, team members, and company information.
 
 ## Tech Stack & Current Setup
 - **Framework**: Nuxt 4.1.2 (Vue 3, SSR enabled)
-- **Styling**: TailwindCSS 3.4.17 + DaisyUI 5.1.12 + @nuxtjs/tailwindcss 6.12.4
-- **Icons**: @heroicons/vue 2.2.0
-- **Date Picker**: @vuepic/vue-datepicker 11.0.2 (Vue 3 Datepicker library)
+- **Styling**: TailwindCSS 3.4.17 + Custom CSS Variables
 - **State Management**: Pinia 3.0.3 + @pinia/nuxt 0.11.2 + pinia-plugin-persistedstate 4.5.0
 - **Database**: MongoDB + Mongoose 8.18.0
 - **Authentication**: JWT with bcryptjs 3.0.2
-- **Languages**: TypeScript 5.9.2, i18n (Thai/English)
+- **Internationalization**: @nuxtjs/i18n (Thai/English support)
 - **Package Manager**: **npm** (recommended for this project)
 - **Node Version**: 22.19.0+ (Nuxt 4 requires Node 22+)
 
-### Package Manager Choice
-- **Both Projects**: Use **npm** - Consistent across all projects, works perfectly with Nuxt 4.x
+## Project Architecture
 
-### State Persistence Setup
-Since `@pinia-plugin-persistedstate/nuxt` is deprecated, we use modern setup:
-
-```typescript
-// plugins/pinia.client.ts
-import { createPersistedState } from 'pinia-plugin-persistedstate'
-
-export default defineNuxtPlugin(nuxtApp => {
-  const pinia = nuxtApp.$pinia as any
-  pinia.use(createPersistedState({
-    storage: localStorage
-  }))
-})
-```
-
-## Project Structure
-
-### Core Features
-- **Multi-language Support**: Thai (default) and English
-- **CMS Management**: Content management system with admin authentication
-- **API Structure**: RESTful APIs under `/api/digital-agency/`
-- **Authentication**: JWT-based auth system
-- **Database**: MongoDB integration with Mongoose ORM
-
-### Directory Structure
-```
-/
-├── components/          # Vue components
-├── composables/         # Composable functions
-│   ├── constants/       # API constants and configurations
-│   └── useCMS.ts        # CMS data management
-├── pages/
-│   └── digital-agency/  # Main site pages
-│       ├── index.vue    # Homepage
-│       ├── login.vue    # Admin login
-│       └── manage/      # CMS management pages
-├── server/
-│   └── api/
-│       └── digital-agency/  # API endpoints
-│           ├── auth/        # Authentication APIs
-│           └── cms/         # CMS APIs
-├── middleware/          # Route middleware
-├── plugins/             # Nuxt plugins
-├── locales/             # i18n translations
-├── lib/                 # Shared utilities
-└── public/              # Static assets
-```
-
-### Component Organization
-- **Base Components**: `/components/base/`
-  - Auto-imported as `<BaseIcon />`, `<BaseBreadcrumbs />`, etc.
-  - Use DaisyUI components as foundation
-- **Feature Components**: `/components/` (feature-specific)
-- **Page Components**: Co-located with pages when needed
-
-## API Structure
-
-### Authentication Endpoints
-- `POST /api/digital-agency/auth/login` - Admin login
-- `POST /api/digital-agency/auth/logout` - Admin logout
-- `GET /api/digital-agency/auth/me` - Get current user
-
-### CMS Endpoints
-- `GET/POST /api/digital-agency/cms/home-content` - Homepage content
-- `GET/POST /api/digital-agency/cms/services` - Services content
-- `GET/POST /api/digital-agency/cms/about` - About page content
-- `GET/POST /api/digital-agency/cms/contact` - Contact information
-- And more...
-
-### Database Connection
-```typescript
-// server/digital-agency/lib/mongodb.ts
-export async function connectToMongoDB() {
-  const mongoUri = useRuntimeConfig().mongoUri
-  return await mongoose.connect(mongoUri)
-}
-```
-
-## Development Commands
-
-### Environment Setup
-```bash
-nvm use 22
-npm install
-```
-
-### Development Server
-```bash
-npm run dev  # Runs on http://localhost:3000
-```
-
-### Build Commands
-```bash
-npm run build
-npm run preview
-```
-
-### Port Management
-- **Default Port**: 3000
-- **Alternative**: 3001 if 3000 is occupied
-- **Environment Variable**: Set PORT=3001 if needed
-
-## Multi-language Support
-
-### Configuration
+### Multi-language Configuration
 ```typescript
 // nuxt.config.ts
 i18n: {
@@ -131,115 +24,279 @@ i18n: {
     { code: 'en', iso: 'en-US', name: 'English', file: 'en.json' }
   ],
   defaultLocale: 'th',
-  strategy: 'prefix_except_default',
+  strategy: 'prefix_except_default', // Thai = no prefix, English = /en prefix
   langDir: 'locales/',
-}
-```
-
-### Usage in Components
-```vue
-<template>
-  <h1>{{ $t('welcome') }}</h1>
-  <NuxtLink :to="localePath('/about')">{{ $t('about') }}</NuxtLink>
-</template>
-```
-
-## Authentication & Security
-
-### JWT Configuration
-```typescript
-// nuxt.config.ts
-runtimeConfig: {
-  jwtSecret: process.env.JWT_SECRET || 'fallback-secret-key',
-  mongoUri: process.env.MONGO_URI || 'mongodb://localhost:27017/digital_agency',
-  public: {
-    apiBase: '/api/digital-agency',
-    siteName: 'Digital Agency',
-    siteUrl: 'http://localhost:3000'
+  detectBrowserLanguage: {
+    useCookie: true,
+    cookieKey: 'i18n_redirected',
+    redirectOn: 'root'
   }
 }
 ```
 
-### Route Protection
-- **Middleware**: `auth-cms.ts` protects `/digital-agency/manage/*` routes
-- **Client Plugin**: `auth.client.ts` checks authentication status
-- **Server Validation**: All CMS APIs verify JWT tokens
-
-## CMS Usage
-
-### Content Management
-```typescript
-// composables/useCMS.ts
-const { getHomeContent, updateHomeContent } = useCMS()
-
-// Get content with fallback
-const homeData = await getHomeContent()
-
-// Update content (requires auth)
-await updateHomeContent(newData)
+### Directory Structure
+```
+/
+├── components/
+│   ├── cms/              # CMS-specific components
+│   │   ├── TopNavbar.vue  # Language switcher & contact info
+│   │   └── ...
+│   └── showcase/         # Component showcase/demo pages
+├── composables/
+│   ├── constants/        # API endpoints and configurations
+│   │   └── api.ts       # Centralized API endpoint definitions
+│   ├── store_models/     # Pinia store definitions
+│   │   └── cms.ts       # CMS content state management
+│   ├── utilities/        # Utility composables
+│   │   ├── useAlert.ts   # Toast notifications
+│   │   ├── useErrorHandler.ts  # Global error handling
+│   │   ├── useHttpClient.ts    # HTTP client with auth
+│   │   ├── useMultiLanguage.ts # Multi-language content parsing
+│   │   └── useManageTheme.ts   # Theme management
+├── pages/
+│   ├── index.vue         # Root redirect to /digital-agency
+│   └── digital-agency/   # Main application
+│       ├── index.vue     # Homepage with all sections
+│       ├── about.vue     # About company page
+│       ├── services.vue  # Services showcase
+│       ├── team.vue      # Team members
+│       ├── contact.vue   # Contact information
+│       └── manage/       # CMS admin panel
+│           ├── index.vue      # Dashboard
+│           ├── home.vue       # Homepage content management
+│           ├── services.vue   # Services management
+│           ├── team.vue       # Team members management
+│           ├── about.vue      # About content management
+│           ├── contact.vue    # Contact info management
+│           ├── settings.vue   # Site settings
+│           └── ...
+├── server/
+│   ├── api/
+│   │   └── digital-agency/    # API endpoints
+│   │       ├── auth/          # Authentication APIs
+│   │       ├── cms/           # Content management APIs
+│   │       ├── permissions/   # Permission management
+│   │       ├── roles/         # Role management
+│   │       ├── users/         # User management
+│   │       └── upload/        # File upload handling
+│   └── digital-agency/        # Server utilities
+│       ├── models/            # Mongoose schemas
+│       │   ├── HomeContent.ts
+│       │   ├── Service.ts
+│       │   ├── TeamMember.ts
+│       │   ├── AboutContent.ts
+│       │   ├── ContactContent.ts
+│       │   ├── SiteSettings.ts
+│       │   └── ...
+│       └── utils/             # Server utilities
+│           ├── mongodb.ts     # Database connection
+│           ├── responseHandler.ts  # API response formatting
+│           └── ...
+├── stores/                    # Pinia stores
+│   └── cms.ts                # CMS content store
+├── middleware/               # Route middleware
+│   ├── auth.ts              # Authentication middleware
+│   └── permissions.global.ts # Permission checking
+├── locales/                 # i18n translations
+│   ├── en.json             # English translations
+│   └── th.json             # Thai translations
+└── public/                  # Static assets
+    ├── social_icons/        # Social media icons
+    └── uploads/            # Uploaded content files
 ```
 
-### Default Content Structure
-All CMS endpoints provide Thai-language defaults if no content exists in database.
+## Core Features
 
-## Styling Guidelines
+### 1. Multi-Language Content Management
+- **JSON Storage**: All multi-language content stored as JSON strings in MongoDB
+- **Dynamic Parsing**: `useMultiLanguage.ts` composable handles content parsing
+- **Localized Navigation**: All routes use `$localePath()` for proper locale handling
 
-### TailwindCSS + DaisyUI
-- Use DaisyUI components as foundation: `btn`, `card`, `modal`, etc.
-- Custom CSS variables in `/assets/css/main.css`:
-```css
-:root {
-  --primary-color: #6495ed;
-  --primary-dark: #4169e1;
-  --primary-light: #87ceeb;
+```typescript
+// Example multi-language content structure
+{
+  "title": "{\"th\": \"บริการของเรา\", \"en\": \"Our Services\"}",
+  "description": "{\"th\": \"บริการครบวงจร\", \"en\": \"Complete Services\"}"
 }
 ```
 
-### Component Styling
-- Prefer DaisyUI classes over custom CSS
-- Use Tailwind utilities for spacing, colors, responsive design
-- Consistent color scheme with CSS variables
+### 2. CMS Content Types
+- **HomeContent**: Hero section, features, statistics
+- **Services**: Digital marketing services (10 items, homepage shows 6)
+- **TeamMembers**: Team profiles (6 members, homepage shows 3)
+- **AboutContent**: Company mission, vision, values, history
+- **ContactContent**: Contact information, business hours
+- **SiteSettings**: Logo, colors, social links
+- **FAQ**: Frequently asked questions
 
-## Deployment Notes
+### 3. Authentication System
+- **JWT-based**: Secure token authentication
+- **Role-based**: Admin, User roles with permissions
+- **Route Protection**: Middleware protects `/manage/*` routes
+- **Auto-logout**: Token expiration handling
 
-### Environment Variables
-```env
-JWT_SECRET=your-secret-key
-MONGO_URI=mongodb://localhost:27017/digital_agency
-NUXT_PUBLIC_API_BASE_URL=/api/digital-agency
-NUXT_PUBLIC_SITE_NAME=Digital Agency
-NUXT_PUBLIC_SITE_URL=https://yourdomain.com
+### 4. API Structure
+
+#### Content Management APIs
+```
+GET/POST /api/digital-agency/cms/home-content
+GET/POST /api/digital-agency/cms/services
+GET/POST /api/digital-agency/cms/team
+GET/POST /api/digital-agency/cms/about
+GET/POST /api/digital-agency/cms/contact
+GET/POST /api/digital-agency/cms/site-settings
+POST /api/digital-agency/cms/seed  # Populate with sample data
 ```
 
-### Build Preparation
-1. Set production environment variables
-2. Test all CMS functionality
-3. Verify authentication flows
-4. Check multi-language routing
-5. Validate API endpoints
+#### Authentication APIs
+```
+POST /api/digital-agency/auth/login
+POST /api/digital-agency/auth/register
+GET /api/digital-agency/auth/me
+POST /api/digital-agency/auth/seed  # Create admin user
+```
+
+## Development Workflow
+
+### Environment Setup
+```bash
+# Ensure Node.js 22+
+nvm use 22
+
+# Install dependencies
+npm install
+
+# Environment variables
+cp .env.example .env
+```
+
+### Required Environment Variables
+```env
+JWT_SECRET=your-super-secret-jwt-key-here
+MONGO_URI=mongodb://localhost:27017/digital_agency
+NUXT_PUBLIC_API_BASE=/api
+```
+
+### Development Commands
+```bash
+# Start development server
+npm run dev  # http://localhost:3000
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+
+# Database seeding (create sample content)
+# POST to /api/digital-agency/cms/seed
+# POST to /api/digital-agency/auth/seed
+```
+
+## Language & Routing
+
+### URL Structure
+- **Thai (Default)**: `/digital-agency`, `/digital-agency/services`
+- **English**: `/en/digital-agency`, `/en/digital-agency/services`
+- **Language Switching**: Preserves current page when switching languages
+- **Root Redirect**: `/` → `/digital-agency` (Thai default)
+
+### Multi-language Content Usage
+```vue
+<!-- In templates -->
+<h1>{{ homeContent.title }}</h1>  <!-- Auto-localized -->
+
+<!-- In composables -->
+const { createLocalizedContent } = useMultiLanguage()
+const localizedData = computed(() => createLocalizedContent(rawData))
+```
+
+## CMS Usage
+
+### Content Structure
+All CMS content supports multi-language through JSON storage:
+
+```typescript
+// Raw database content
+const rawContent = {
+  title: '{"th": "หน้าแรก", "en": "Homepage"}',
+  description: '{"th": "คำอธิบาย", "en": "Description"}'
+}
+
+// Localized content (automatically parsed)
+const content = createLocalizedContent(rawContent)
+// Returns: { title: "หน้าแรก", description: "คำอธิบาย" } (for Thai locale)
+```
+
+### Admin Panel Features
+- **Dashboard**: Content overview and quick actions
+- **Content Management**: Edit all page content with live preview
+- **Media Management**: Upload and manage images
+- **User Management**: Admin user creation and management
+- **Settings**: Site configuration, colors, social links
+- **Internationalization**: Manage content in both Thai and English
+
+## Styling System
+
+### CSS Architecture
+- **TailwindCSS**: Utility-first CSS framework
+- **Custom Variables**: Dynamic color system
+- **Component-scoped**: Each page has its own styling
+- **Responsive**: Mobile-first design approach
+
+### Dynamic Color System
+```css
+/* Automatic color calculation */
+.min-h-screen {
+  --primary-color: v-bind('dynamicColors.primary');
+  --secondary-color: v-bind('dynamicColors.secondary');
+  --primary-dark: v-bind('dynamicColors.primaryDark');
+  /* ... auto-generated variants */
+}
+```
+
+## Performance & SEO
+
+### Optimizations
+- **SSR**: Server-side rendering for better SEO
+- **Image Handling**: All images set to `null` to avoid 404 errors
+- **Code Splitting**: Automatic via Nuxt 4
+- **Lazy Loading**: Components and routes
+- **Bundle Size**: Configured limits and warnings
+
+### SEO Features
+- **Dynamic Meta Tags**: Based on CMS content
+- **Multi-language SEO**: Proper hreflang implementation
+- **Structured Data**: Ready for schema markup
+- **Social Media**: Open Graph and Twitter cards
 
 ## Troubleshooting
 
 ### Common Issues
-1. **npm install fails**: Ensure Node.js 22+ (`nvm use 22`)
-2. **State persistence not working**: Check `plugins/pinia.client.ts` is correct
-3. **Authentication issues**: Verify JWT secret and MongoDB connection
-4. **i18n routing**: Check `strategy: 'prefix_except_default'` in config
-5. **API endpoints**: Ensure correct base URL `/api/digital-agency`
+1. **Language switching**: Ensure all `NuxtLink` uses `$localePath()`
+2. **JSON content display**: Check `useMultiLanguage` composable implementation
+3. **Authentication**: Verify JWT secret and MongoDB connection
+4. **404 on root**: Confirm `pages/index.vue` redirects properly
+5. **Console logs**: All debug logs have been cleaned up
 
-### Performance
-- **Bundle Size**: Configured `chunkSizeWarningLimit: 1000` in vite config
-- **SSR**: Enabled for SEO benefits
-- **Code Splitting**: Automatic via Nuxt 4
-- **Image Optimization**: Use Nuxt Image for better performance
+### Development Tips
+- Use `npm run dev` for hot reloading
+- Check browser console for any remaining errors
+- Test language switching on all pages
+- Verify CMS content displays correctly in both languages
+- Test admin panel authentication flow
 
-## Migration Notes
+## Deployment Checklist
 
-This project was migrated from `local-spot` with the following changes:
-- Renamed all API routes from `/api/local-spot/` to `/api/digital-agency/`
-- Updated project name and branding
-- Integrated comprehensive CMS functionality
-- Added JWT authentication system
-- Implemented multi-language support
-- Updated to modern Pinia persistence setup
-- Switched from yarn to npm for better Nuxt 4 compatibility
+1. **Environment Variables**: Set production values
+2. **Database**: Ensure MongoDB connection
+3. **Content**: Seed database with initial content
+4. **Admin User**: Create admin account via seed API
+5. **Languages**: Test all locale routes
+6. **Images**: Upload actual images to replace null placeholders
+7. **SEO**: Configure meta tags and structured data
+8. **Performance**: Run build and test loading speeds
+
+---
+
+This project represents a complete digital agency website with comprehensive CMS capabilities, multi-language support, and modern Vue 3/Nuxt 4 architecture.
