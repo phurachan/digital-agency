@@ -1,6 +1,14 @@
 export default defineNuxtRouteMiddleware(async (to) => {
-  // Skip middleware for home page, digital-agency homepage, login page and API routes
-  if (to.path === '/' || to.path === '/digital-agency' || to.path === '/digital-agency/login' || to.path.startsWith('/api/')) {
+  // Skip middleware for API routes, login page, and all public pages (anything NOT starting with /digital-agency/admin or /digital-agency/manage)
+  if (to.path.startsWith('/api/') || to.path === '/digital-agency/login') {
+    return
+  }
+
+  const isAdminPath = to.path.startsWith('/digital-agency/admin')
+  const isManagePath = to.path.startsWith('/digital-agency/manage')
+
+  // Only run permission checks for admin and manage pages
+  if (!isAdminPath && !isManagePath) {
     return
   }
 

@@ -88,6 +88,83 @@ export const API_ENDPOINTS = {
     SECURITY: '/settings/security',
     NOTIFICATIONS: '/settings/notifications',
     UPDATE: '/settings'
+  },
+
+  // CMS Content Management endpoints
+  CMS: {
+    // Home page content
+    HOME_CONTENT: {
+      GET: '/cms/home-content',
+      POST: '/cms/home-content'
+    },
+
+    // Services management
+    SERVICES: {
+      GET: '/cms/services',
+      POST: '/cms/services',
+      PUT: (id: string) => `/cms/services/${id}`,
+      DELETE: (id: string) => `/cms/services/${id}`
+    },
+
+    // Services page content
+    SERVICES_CONTENT: {
+      GET: '/cms/services-content',
+      POST: '/cms/services-content'
+    },
+
+    // About page content
+    ABOUT_CONTENT: {
+      GET: '/cms/about-content',
+      POST: '/cms/about-content'
+    },
+
+    // Team management
+    TEAM: {
+      GET: '/cms/team',
+      POST: '/cms/team',
+      PUT: (id: string) => `/cms/team/${id}`,
+      DELETE: (id: string) => `/cms/team/${id}`
+    },
+
+    // Team page content
+    TEAM_CONTENT: {
+      GET: '/cms/team-content',
+      POST: '/cms/team-content'
+    },
+
+    // Contact page content
+    CONTACT_CONTENT: {
+      GET: '/cms/contact-content',
+      POST: '/cms/contact-content'
+    },
+
+    // FAQ management
+    FAQS: {
+      GET: '/cms/faqs',
+      POST: '/cms/faqs',
+      PUT: (id: string) => `/cms/faqs/${id}`,
+      DELETE: (id: string) => `/cms/faqs/${id}`
+    },
+
+    // Site settings
+    SITE_SETTINGS: {
+      GET: '/cms/site-settings',
+      POST: '/cms/site-settings'
+    }
+  },
+
+  // File upload endpoints
+  UPLOAD: {
+    IMAGE: '/upload/image',
+    FILE: '/upload/file',
+    AVATAR: '/upload/avatar'
+  },
+
+  // Analytics endpoints (for future use)
+  ANALYTICS: {
+    DASHBOARD: '/analytics/dashboard',
+    TRAFFIC: '/analytics/traffic',
+    CONVERSIONS: '/analytics/conversions'
   }
 } as const
 
@@ -120,3 +197,9 @@ export const PAGINATION = {
   DEFAULT_PER_PAGE: 20,
   MAX_PER_PAGE: 100
 } as const
+
+// Build full API URL
+export const buildApiUrl = (endpoint: string): string => {
+  const baseUrl = getApiBaseUrl()
+  return `${baseUrl}${endpoint}`
+}

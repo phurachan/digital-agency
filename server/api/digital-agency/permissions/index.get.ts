@@ -1,8 +1,8 @@
-import Permission from '~/server/local-spot/models/Permission'
-import { createPermissionFilterConfig } from '~/server/local-spot/utils/filter_config/userManagement'
-import { connectMongoDB } from '~/server/local-spot/utils/mongodb'
-import { parseQueryAndBuildFilter } from '~/server/local-spot/utils/queryParser'
-import { API_RESPONSE_CODES, createPaginatedResponse, createPredefinedError } from '~/server/local-spot/utils/responseHandler'
+import Permission from '~/server/digital-agency/models/Permission'
+import { createPermissionFilterConfig } from '~/server/digital-agency/utils/filter_config/userManagement'
+import { connectMongoDB } from '~/server/digital-agency/utils/mongodb'
+import { parseQueryAndBuildFilter } from '~/server/digital-agency/utils/queryParser'
+import { API_RESPONSE_CODES, createPaginatedResponse, createPredefinedError } from '~/server/digital-agency/utils/responseHandler'
 
 export default defineEventHandler(async (event) => {
   try {

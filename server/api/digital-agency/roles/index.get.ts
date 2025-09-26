@@ -1,10 +1,10 @@
-import { extractTokenFromHeader, verifyToken } from '~/server/local-spot/utils/jwt'
-import { connectMongoDB } from '~/server/local-spot/utils/mongodb'
-import Role from '~/server/local-spot/models/Role'
-import User from '~/server/local-spot/models/User'
-import { createPredefinedError, createPaginatedResponse, API_RESPONSE_CODES } from '~/server/local-spot/utils/responseHandler'
-import { createRoleFilterConfig } from '~/server/local-spot/utils/filter_config/userManagement'
-import { parseQueryAndBuildFilter } from '~/server/local-spot/utils/queryParser'
+import { extractTokenFromHeader, verifyToken } from '~/server/digital-agency/utils/jwt'
+import { connectMongoDB } from '~/server/digital-agency/utils/mongodb'
+import Role from '~/server/digital-agency/models/Role'
+import User from '~/server/digital-agency/models/User'
+import { createPredefinedError, createPaginatedResponse, API_RESPONSE_CODES } from '~/server/digital-agency/utils/responseHandler'
+import { createRoleFilterConfig } from '~/server/digital-agency/utils/filter_config/userManagement'
+import { parseQueryAndBuildFilter } from '~/server/digital-agency/utils/queryParser'
 
 export default defineEventHandler(async (event) => {
   await connectMongoDB()

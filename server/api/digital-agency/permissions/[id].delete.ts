@@ -1,7 +1,7 @@
-import Permission from '~/server/local-spot/models/Permission'
-import Role from '~/server/local-spot/models/Role'
-import { connectMongoDB } from '~/server/local-spot/utils/mongodb'
-import { API_RESPONSE_CODES, createPredefinedError, createSuccessResponse, VALIDATION_DETAILS } from '~/server/local-spot/utils/responseHandler'
+import Permission from '~/server/digital-agency/models/Permission'
+import Role from '~/server/digital-agency/models/Role'
+import { connectMongoDB } from '~/server/digital-agency/utils/mongodb'
+import { API_RESPONSE_CODES, createPredefinedError, createSuccessResponse, VALIDATION_DETAILS } from '~/server/digital-agency/utils/responseHandler'
 
 export default defineEventHandler(async (event) => {
   try {

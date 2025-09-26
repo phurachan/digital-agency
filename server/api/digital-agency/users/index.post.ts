@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs'
-import User from '~/server/local-spot/models/User'
-import { connectMongoDB } from '~/server/local-spot/utils/mongodb'
-import { API_RESPONSE_CODES, createPredefinedError, createSuccessResponse, VALIDATION_DETAILS } from '~/server/local-spot/utils/responseHandler'
+import User from '~/server/digital-agency/models/User'
+import { connectMongoDB } from '~/server/digital-agency/utils/mongodb'
+import { API_RESPONSE_CODES, createPredefinedError, createSuccessResponse, VALIDATION_DETAILS } from '~/server/digital-agency/utils/responseHandler'
 
 export default defineEventHandler(async (event) => {
 
@@ -80,8 +80,6 @@ export default defineEventHandler(async (event) => {
 
     // Handle validation errors
     if (error.name === API_RESPONSE_CODES.VALIDATION_ERROR_EXCEPTION_NAME) {
-      console.log(error);
-
       const fieldErrors = Object.keys(error.errors)
       throw createPredefinedError(API_RESPONSE_CODES.VALIDATION_ERROR, {
         details: fieldErrors

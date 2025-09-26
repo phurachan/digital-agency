@@ -5,6 +5,6 @@
 <script setup>
 // Initialize
 onMounted(() => {
-  console.log('Demo page mounted');
+  // Demo page initialization
 })
 </script>

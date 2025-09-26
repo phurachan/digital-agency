@@ -1,3 +1,4 @@
 <script setup>
-await navigateTo('/digital-agency')
+const { $localePath } = useNuxtApp()
+await navigateTo($localePath('/digital-agency'))
 </script>

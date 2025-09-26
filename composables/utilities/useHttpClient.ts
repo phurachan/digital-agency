@@ -147,7 +147,7 @@ export const useHttpClient = (config: HttpClientConfig = {}) => {
         await mergedConfig.onResponse(response)
       }
       
-      return response
+      return response as T
       
     } catch (error: any) {
       // Call onError interceptor

@@ -237,7 +237,6 @@ const authStore = useAuthStore()
 
 // Theme change handler
 const onThemeChange = (theme) => {
-  console.log('Theme changed to:', theme)
   // The useTheme composable handles all theme logic
 }
 
@@ -301,12 +300,78 @@ const menuSections = ref([
         label: "Overview",
         icon: "home",
         activeWhen: ["/digital-agency/admin"]
+      },
+      {
+        path: "/digital-agency/manage",
+        label: "Content Management",
+        icon: "document-text",
+        activeWhen: ["/digital-agency/manage"]
+      }
+    ]
+  },
+  {
+    title: "Content Management",
+    icon: "pencil-square",
+    items: [
+      {
+        path: "/digital-agency/manage",
+        label: "Dashboard",
+        icon: "chart-bar",
+        activeWhen: ["/digital-agency/manage"]
+      },
+      {
+        path: "/digital-agency/manage/home",
+        label: "Home Page",
+        icon: "home",
+        activeWhen: ["/digital-agency/manage/home"]
+      },
+      {
+        path: "/digital-agency/manage/about",
+        label: "About Page",
+        icon: "information-circle",
+        activeWhen: ["/digital-agency/manage/about"]
+      },
+      {
+        path: "/digital-agency/manage/services-content",
+        label: "Services Content",
+        icon: "briefcase",
+        activeWhen: ["/digital-agency/manage/services-content"]
+      },
+      {
+        path: "/digital-agency/manage/services",
+        label: "Manage Services",
+        icon: "cog-6-tooth",
+        activeWhen: ["/digital-agency/manage/services"]
+      },
+      {
+        path: "/digital-agency/manage/team-content",
+        label: "Team Content",
+        icon: "users",
+        activeWhen: ["/digital-agency/manage/team-content"]
+      },
+      {
+        path: "/digital-agency/manage/team",
+        label: "Manage Team",
+        icon: "user-group",
+        activeWhen: ["/digital-agency/manage/team"]
+      },
+      {
+        path: "/digital-agency/manage/contact",
+        label: "Contact Page",
+        icon: "envelope",
+        activeWhen: ["/digital-agency/manage/contact"]
+      },
+      {
+        path: "/digital-agency/manage/faqs",
+        label: "FAQs",
+        icon: "question-mark-circle",
+        activeWhen: ["/digital-agency/manage/faqs"]
       }
     ]
   },
   {
     title: "Settings",
-    icon: "users",
+    icon: "cog-6-tooth",
     items: [
       {
         path: "/digital-agency/admin/user_management",
@@ -317,6 +382,12 @@ const menuSections = ref([
           variant: "primary"
         }
       },
+      {
+        path: "/digital-agency/manage/settings",
+        label: "Site Settings",
+        icon: "adjustments-horizontal",
+        activeWhen: ["/digital-agency/manage/settings"]
+      }
     ]
   },
   {

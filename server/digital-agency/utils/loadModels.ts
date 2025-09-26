@@ -10,13 +10,22 @@ export async function loadAllModels() {
     // Import models in dependency order to avoid circular reference issues
     const models = await Promise.all([
       import('../models/Permission'),
-      import('../models/Role'), 
-      import('../models/User')
+      import('../models/Role'),
+      import('../models/User'),
+      import('../models/HomeContent'),
+      import('../models/Service'),
+      import('../models/AboutContent'),
+      import('../models/TeamMember'),
+      import('../models/ContactContent'),
+      import('../models/FAQ'),
+      import('../models/SiteSettings'),
+      import('../models/ServicesContent'),
+      import('../models/TeamContent')
     ])
-    
+
     // Verify models are actually loaded
     const modelNames = models.map((m, i) => {
-      const modelName = ['Permission', 'Role', 'User'][i]
+      const modelName = ['Permission', 'Role', 'User', 'HomeContent', 'Service', 'AboutContent', 'TeamMember', 'ContactContent', 'FAQ', 'SiteSettings', 'ServicesContent', 'TeamContent'][i]
       return `${modelName}: ${m.default ? '✓' : '✗'}`
     }).join(', ')
     

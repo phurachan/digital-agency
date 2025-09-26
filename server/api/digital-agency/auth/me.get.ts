@@ -1,7 +1,7 @@
-import User from '~/server/local-spot/models/User'
-import { extractTokenFromHeader, verifyToken } from '~/server/local-spot/utils/jwt'
-import { connectMongoDB } from '~/server/local-spot/utils/mongodb'
-import { API_RESPONSE_CODES, createPredefinedError, createSuccessResponse } from '~/server/local-spot/utils/responseHandler'
+import User from '~/server/digital-agency/models/User'
+import { extractTokenFromHeader, verifyToken } from '~/server/digital-agency/utils/jwt'
+import { connectMongoDB } from '~/server/digital-agency/utils/mongodb'
+import { API_RESPONSE_CODES, createPredefinedError, createSuccessResponse } from '~/server/digital-agency/utils/responseHandler'
 
 export default defineEventHandler(async (event) => {
   await connectMongoDB()

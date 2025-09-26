@@ -1,9 +1,9 @@
-import User from '~/server/local-spot/models/User'
-import { createUserFilterConfig } from '~/server/local-spot/utils/filter_config/userManagement'
-import { extractTokenFromHeader, verifyToken } from '~/server/local-spot/utils/jwt'
-import { connectMongoDB } from '~/server/local-spot/utils/mongodb'
-import { parseQueryAndBuildFilter } from '~/server/local-spot/utils/queryParser'
-import { API_RESPONSE_CODES, createPaginatedResponse, createPredefinedError } from '~/server/local-spot/utils/responseHandler'
+import User from '~/server/digital-agency/models/User'
+import { createUserFilterConfig } from '~/server/digital-agency/utils/filter_config/userManagement'
+import { extractTokenFromHeader, verifyToken } from '~/server/digital-agency/utils/jwt'
+import { connectMongoDB } from '~/server/digital-agency/utils/mongodb'
+import { parseQueryAndBuildFilter } from '~/server/digital-agency/utils/queryParser'
+import { API_RESPONSE_CODES, createPaginatedResponse, createPredefinedError } from '~/server/digital-agency/utils/responseHandler'
 
 export default defineEventHandler(async (event) => {
   await connectMongoDB()

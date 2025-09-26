@@ -773,7 +773,7 @@ const showLoadingDemo = (type) => {
 }
 
 const handleTableSort = (key, order) => {
-  console.log(`Sorting by ${key} in ${order} order`)
+  // Table sorting logic
 }
 
 const handleTableEdit = (row) => {
@@ -788,7 +788,7 @@ const handleTableDelete = (row, index) => {
 
 // Theme handling
 const handleThemeChange = (theme) => {
-  console.log('Theme changed to:', theme)
+  // Theme change logic
 }
 
 onMounted(() => {

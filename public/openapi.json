@@ -1,12 +1,12 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Web Admin Base API",
-    "description": "Comprehensive API documentation for Nuxt 4.1.1 admin panel with user management, authentication, and role-based access control",
+    "title": "Digital Agency CMS API",
+    "description": "Comprehensive API documentation for Digital Agency CMS with multi-language support, content management, and user authentication",
     "version": "1.0.0",
     "contact": {
       "name": "API Support",
-      "email": "support@example.com"
+      "email": "support@digitalagency.co.th"
     }
   },
   "servers": [
@@ -15,8 +15,8 @@
       "description": "Development server"
     },
     {
-      "url": "https://web-admin-base.vercel.app/api",
-      "description": "Production server"
+      "url": "http://localhost:3000/api/digital-agency",
+      "description": "Development server"
     }
   ],
   "security": [
@@ -434,6 +434,286 @@
               "type": "string"
             },
             "example": ["64f123456789abcd12345679"]
+          }
+        }
+      },
+      "MultiLanguageText": {
+        "type": "object",
+        "properties": {
+          "th": {
+            "type": "string",
+            "example": "ข้อความภาษาไทย"
+          },
+          "en": {
+            "type": "string",
+            "example": "English text"
+          }
+        }
+      },
+      "Service": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "64f123456789abcd12345678"
+          },
+          "title": {
+            "$ref": "#/components/schemas/MultiLanguageText"
+          },
+          "description": {
+            "$ref": "#/components/schemas/MultiLanguageText"
+          },
+          "features": {
+            "type": "object",
+            "properties": {
+              "th": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "example": ["คุณสมบัติ 1", "คุณสมบัติ 2"]
+              },
+              "en": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "example": ["Feature 1", "Feature 2"]
+              }
+            }
+          },
+          "price": {
+            "type": "number",
+            "example": 15000
+          },
+          "isActive": {
+            "type": "boolean",
+            "example": true
+          },
+          "icon": {
+            "type": "string",
+            "example": "🎬"
+          },
+          "image": {
+            "type": "string",
+            "example": "/images/video-production.jpg"
+          },
+          "color": {
+            "type": "string",
+            "example": "#e74c3c"
+          },
+          "order": {
+            "type": "integer",
+            "example": 1
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "TeamMember": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "64f123456789abcd12345678"
+          },
+          "name": {
+            "$ref": "#/components/schemas/MultiLanguageText"
+          },
+          "position": {
+            "$ref": "#/components/schemas/MultiLanguageText"
+          },
+          "bio": {
+            "$ref": "#/components/schemas/MultiLanguageText"
+          },
+          "image": {
+            "type": "string",
+            "example": "/images/team/member.jpg"
+          },
+          "socialLinks": {
+            "type": "object",
+            "properties": {
+              "facebook": {
+                "type": "string",
+                "example": "https://facebook.com/member"
+              },
+              "instagram": {
+                "type": "string",
+                "example": "https://instagram.com/member"
+              },
+              "linkedin": {
+                "type": "string",
+                "example": "https://linkedin.com/in/member"
+              }
+            }
+          },
+          "isActive": {
+            "type": "boolean",
+            "example": true
+          },
+          "order": {
+            "type": "integer",
+            "example": 1
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "HomeContent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "64f123456789abcd12345678"
+          },
+          "heroTitle": {
+            "$ref": "#/components/schemas/MultiLanguageText"
+          },
+          "heroSubtitle": {
+            "$ref": "#/components/schemas/MultiLanguageText"
+          },
+          "ctaText": {
+            "$ref": "#/components/schemas/MultiLanguageText"
+          },
+          "ctaButtonText": {
+            "$ref": "#/components/schemas/MultiLanguageText"
+          },
+          "featureTitle": {
+            "$ref": "#/components/schemas/MultiLanguageText"
+          },
+          "featureDescription": {
+            "$ref": "#/components/schemas/MultiLanguageText"
+          },
+          "aboutTitle": {
+            "$ref": "#/components/schemas/MultiLanguageText"
+          },
+          "aboutDescription": {
+            "$ref": "#/components/schemas/MultiLanguageText"
+          },
+          "peopleTitle": {
+            "$ref": "#/components/schemas/MultiLanguageText"
+          },
+          "peopleDescription": {
+            "$ref": "#/components/schemas/MultiLanguageText"
+          },
+          "heroImage": {
+            "type": "string",
+            "example": "/images/hero-bg.jpg"
+          },
+          "featureImage": {
+            "type": "string",
+            "example": "/images/features.jpg"
+          },
+          "aboutImage": {
+            "type": "string",
+            "example": "/images/about-us.jpg"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "FAQ": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "64f123456789abcd12345678"
+          },
+          "question": {
+            "$ref": "#/components/schemas/MultiLanguageText"
+          },
+          "answer": {
+            "$ref": "#/components/schemas/MultiLanguageText"
+          },
+          "isActive": {
+            "type": "boolean",
+            "example": true
+          },
+          "order": {
+            "type": "integer",
+            "example": 1
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "SiteSettings": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "64f123456789abcd12345678"
+          },
+          "siteName": {
+            "$ref": "#/components/schemas/MultiLanguageText"
+          },
+          "siteTagline": {
+            "$ref": "#/components/schemas/MultiLanguageText"
+          },
+          "primaryColor": {
+            "type": "string",
+            "example": "#6495ed"
+          },
+          "secondaryColor": {
+            "type": "string",
+            "example": "#9333ea"
+          },
+          "socialLinks": {
+            "type": "object",
+            "properties": {
+              "facebook": {
+                "type": "string",
+                "example": "https://facebook.com/company"
+              },
+              "instagram": {
+                "type": "string",
+                "example": "https://instagram.com/company"
+              },
+              "twitter": {
+                "type": "string",
+                "example": "https://twitter.com/company"
+              }
+            }
+          },
+          "logo": {
+            "type": "string",
+            "example": "/images/logo.png"
+          },
+          "favicon": {
+            "type": "string",
+            "example": "/images/favicon.ico"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       }
@@ -1674,6 +1954,344 @@
           }
         }
       }
+    },
+    "/cms/services": {
+      "get": {
+        "tags": ["CMS - Services"],
+        "summary": "Get services",
+        "description": "Get all active services with multi-language support",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Services retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Service"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cms/team": {
+      "get": {
+        "tags": ["CMS - Team"],
+        "summary": "Get team members",
+        "description": "Get all active team members with multi-language support",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Team members retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/TeamMember"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cms/home-content": {
+      "get": {
+        "tags": ["CMS - Content"],
+        "summary": "Get home content",
+        "description": "Get home page content with multi-language support",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Home content retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/HomeContent"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cms/about-content": {
+      "get": {
+        "tags": ["CMS - Content"],
+        "summary": "Get about content",
+        "description": "Get about page content with multi-language support",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "About content retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cms/contact-content": {
+      "get": {
+        "tags": ["CMS - Content"],
+        "summary": "Get contact content",
+        "description": "Get contact page content with multi-language support",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Contact content retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cms/services-content": {
+      "get": {
+        "tags": ["CMS - Content"],
+        "summary": "Get services page content",
+        "description": "Get services page content with multi-language support",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Services content retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cms/team-content": {
+      "get": {
+        "tags": ["CMS - Content"],
+        "summary": "Get team page content",
+        "description": "Get team page content with multi-language support",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Team content retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cms/faqs": {
+      "get": {
+        "tags": ["CMS - FAQs"],
+        "summary": "Get FAQs",
+        "description": "Get all active FAQs with multi-language support",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "FAQs retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/FAQ"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cms/site-settings": {
+      "get": {
+        "tags": ["CMS - Settings"],
+        "summary": "Get site settings",
+        "description": "Get site settings with multi-language support",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Site settings retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/SiteSettings"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cms/seed": {
+      "post": {
+        "tags": ["CMS - Admin"],
+        "summary": "Seed CMS data",
+        "description": "Seed all CMS data with multi-language mockup content for Digital Agency",
+        "security": [],
+        "responses": {
+          "201": {
+            "description": "CMS data seeded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "message": {
+                              "type": "string",
+                              "example": "CMS data seeded successfully"
+                            },
+                            "summary": {
+                              "type": "object",
+                              "properties": {
+                                "homeContent": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "services": {
+                                  "type": "integer",
+                                  "example": 5
+                                },
+                                "teamMembers": {
+                                  "type": "integer",
+                                  "example": 6
+                                },
+                                "aboutContent": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "contactContent": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "servicesContent": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "teamContent": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "faqs": {
+                                  "type": "integer",
+                                  "example": 5
+                                },
+                                "siteSettings": {
+                                  "type": "integer",
+                                  "example": 1
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Seed failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "tags": [
@@ -1692,6 +2310,30 @@
     {
       "name": "Permission Management",
       "description": "Permission management and assignment"
+    },
+    {
+      "name": "CMS - Services",
+      "description": "Digital Agency services content management with multi-language support"
+    },
+    {
+      "name": "CMS - Team",
+      "description": "Team members content management with multi-language support"
+    },
+    {
+      "name": "CMS - Content",
+      "description": "Page content management (Home, About, Contact, etc.) with multi-language support"
+    },
+    {
+      "name": "CMS - FAQs",
+      "description": "Frequently Asked Questions management with multi-language support"
+    },
+    {
+      "name": "CMS - Settings",
+      "description": "Site settings and configuration management"
+    },
+    {
+      "name": "CMS - Admin",
+      "description": "CMS administration tools and seed functions"
     }
   ]
 }
