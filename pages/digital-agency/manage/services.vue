@@ -2,14 +2,16 @@
   <div class="min-h-screen bg-gray-50">
 
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <!-- Back to Dashboard Button -->
-      <div class="mb-6">
-        <NuxtLink to="/digital-agency/manage">
-          <BaseButton variant="ghost" icon-left="arrow-left">
-            Back to Dashboard
-          </BaseButton>
-        </NuxtLink>
-      </div>
+      <!-- Page Header -->
+      <BasePageHeader
+        title="Manage Services"
+        code="SRV-001"
+        description="Create, edit, and manage your digital marketing services"
+        :breadcrumbs="[
+          { label: 'Dashboard', to: '/digital-agency/manage', icon: 'home' },
+          { label: 'Services', icon: 'document' }
+        ]"
+      />
 
       <!-- Loading State -->
       <div v-if="loading" class="flex justify-center items-center h-64">
@@ -18,7 +20,7 @@
 
       <!-- Services List -->
       <div v-else class="space-y-6">
-        <div v-for="service in services" :key="service.id" class="card p-6">
+        <div v-for="service in localizedServices" :key="service.id" class="card p-6">
           <div class="flex items-start justify-between">
             <div class="flex-1">
               <div class="flex items-center space-x-3 mb-3">
@@ -89,7 +91,7 @@
         </div>
 
         <!-- Empty State -->
-        <div v-if="services.length === 0" class="text-center py-12">
+        <div v-if="localizedServices.length === 0" class="text-center py-12">
           <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
           </svg>
@@ -156,28 +158,41 @@
             <BaseTextarea
               v-model="serviceFormData.description[currentLanguage]"
               :label="`Description (${currentLanguage.toUpperCase()})`"
-              rows="3"
+              :rows=3
               required
             />
 
-            <div class="relative">
-              <input 
-                v-model="serviceFormData.icon" 
-                type="text" 
-                placeholder=" " 
-                class="form-input peer"
-              >
-              <label class="floating-label">Icon Name (e.g., search, social, code)</label>
-            </div>
+            <BaseInput
+              v-model="serviceFormData.icon"
+              type="text"
+              label="Icon Name (e.g., search, social, code)"
+            />
 
             <div>
               <label class="form-label">Service Image</label>
-              <CmsImageUpload 
-                v-model="serviceFormData.image" 
+              <CmsImageUpload
+                v-model="serviceFormData.image"
                 label="Service Image (optional)"
                 help-text="Optional image for the service. Will be displayed in service cards and details."
               />
             </div>
+
+            <div>
+              <label class="form-label">Service Video</label>
+              <CmsVideoUpload
+                v-model="serviceFormData.video"
+                label="Service Video (optional)"
+                help-text="Optional video for the service. Will be displayed in service details or promotional content."
+              />
+            </div>
+
+            <BaseInput
+              v-model="serviceFormData.externalURL"
+              type="url"
+              label="External URL (optional)"
+              placeholder="https://example.com/service-details"
+              help="Optional link to external page with more service details"
+            />
 
             <!-- Color Picker -->
             <div>
@@ -191,13 +206,12 @@
                   >
                 </div>
                 <div class="flex-1">
-                  <input 
-                    v-model="serviceFormData.color" 
-                    type="text" 
-                    placeholder="#6495ed" 
-                    class="form-input"
+                  <BaseInput
+                    v-model="serviceFormData.color"
+                    type="text"
+                    placeholder="#6495ed"
                     pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
-                  >
+                  />
                   <p class="text-xs text-gray-500 mt-1">This color will be used for the service card's accent color</p>
                 </div>
               </div>
@@ -207,12 +221,12 @@
               <label class="block text-sm font-medium text-gray-700 mb-2">Features ({{ currentLanguage.toUpperCase() }})</label>
               <div class="space-y-2">
                 <div v-for="(feature, index) in serviceFormData.features" :key="index" class="flex space-x-2">
-                  <input 
-                    v-model="serviceFormData.features[index][currentLanguage]" 
-                    type="text" 
-                    class="form-input flex-1"
+                  <BaseInput
+                    v-model="serviceFormData.features[index][currentLanguage]"
+                    type="text"
                     :placeholder="`Feature ${index + 1} (${currentLanguage.toUpperCase()})`"
-                  >
+                    class="flex-1"
+                  />
                   <button 
                     @click="removeFeature(index)"
                     type="button"
@@ -234,26 +248,17 @@
             </div>
 
             <div class="grid grid-cols-2 gap-4">
-              <div class="relative">
-                <input 
-                  v-model.number="serviceFormData.order" 
-                  type="number" 
-                  placeholder=" " 
-                  class="form-input peer"
-                  min="0"
-                >
-                <label class="floating-label">Display Order</label>
-              </div>
+              <BaseInput
+                v-model.number="serviceFormData.order"
+                type="number"
+                label="Display Order"
+                min="0"
+              />
 
-              <div class="flex items-center space-x-3">
-                <input 
-                  v-model="serviceFormData.isActive" 
-                  type="checkbox" 
-                  id="isActive"
-                  class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                >
-                <label for="isActive" class="text-sm font-medium text-gray-700">Active</label>
-              </div>
+              <BaseCheckbox
+                v-model="serviceFormData.isActive"
+                label="Active"
+              />
             </div>
 
             <div class="flex justify-end space-x-4 pt-4 border-t">
@@ -300,7 +305,6 @@
 </template>
 
 <script setup>
-import { API_ENDPOINTS, buildApiUrl } from '~/composables/constants/api'
 
 definePageMeta({
   middleware: 'auth'
@@ -311,9 +315,12 @@ const cmsStore = useCMSStore()
 await cmsStore.fetchSiteSettings()
 const siteSettings = cmsStore.siteSettings
 
-// Data
-const services = ref([])
-const loading = ref(true)
+// Import multi-language composable
+const { createLocalizedContent, parseJsonField, getLocalizedFeatures } = useMultiLanguage()
+const { locale } = useI18n()
+
+// Use computed properties from store like in UsersTab.vue
+const loading = computed(() => cmsStore.isLoading)
 const saving = ref(false)
 const showModal = ref(false)
 const editingService = ref(null)
@@ -333,20 +340,29 @@ const serviceFormData = reactive({
   // Language-neutral fields
   icon: '',
   image: '',
+  video: '',
+  externalURL: '',
   color: '#6495ed',
   order: 0,
   isActive: true
 })
 
-// Helper function to parse JSON with fallback
-const parseJsonField = (jsonString, fallback) => {
-  try {
-    const parsed = JSON.parse(jsonString || '{}')
-    return typeof parsed === 'object' && parsed !== null ? parsed : fallback
-  } catch {
-    return fallback
+// Computed property to get localized services for display
+const localizedServices = computed(() => {
+  const services = cmsStore.services || []
+  if (!Array.isArray(services)) {
+    return []
   }
-}
+  return services.map(service => {
+    const localized = createLocalizedContent(service)
+    return {
+      ...service,
+      title: localized.title || service.title,
+      description: localized.description || service.description,
+      features: getLocalizedFeatures(service.features) || []
+    }
+  })
+})
 
 // Methods
 onMounted(async () => {
@@ -355,21 +371,10 @@ onMounted(async () => {
 
 const loadServices = async () => {
   try {
-    // const { $fetch } = useNuxtApp()
-    const data = await $fetch(buildApiUrl(API_ENDPOINTS.CMS.SERVICES.GET))
-    // Ensure features are parsed as arrays (fallback parsing)
-    services.value = data.map(service => ({
-      ...service,
-      features: typeof service.features === 'string' 
-        ? JSON.parse(service.features) 
-        : Array.isArray(service.features) 
-          ? service.features 
-          : []
-    }))
+    await cmsStore.fetchServices()
   } catch (error) {
-    errorMessage.value = 'Failed to load services'
-  } finally {
-    loading.value = false
+    console.error('Failed to load services:', error)
+    errorMessage.value = 'Failed to load services: ' + (error.message || 'Unknown error')
   }
 }
 
@@ -380,29 +385,44 @@ const openAddModal = () => {
 }
 
 const editService = (service) => {
+  console.log('Editing service:', service)
   editingService.value = service
-  
-  // Parse multi-language fields
-  serviceFormData.title = parseJsonField(service.title, { en: '', th: '' })
-  serviceFormData.description = parseJsonField(service.description, { en: '', th: '' })
-  
-  // Parse features array
-  const features = typeof service.features === 'string' ? JSON.parse(service.features) : service.features
-  if (features.length > 0) {
-    serviceFormData.features = features.map(feature => 
-      typeof feature === 'object' ? feature : { en: feature || '', th: '' }
-    )
+
+  // Handle multi-language fields - check if they're objects or strings
+  serviceFormData.title = typeof service.title === 'object'
+    ? service.title
+    : { en: service.title || '', th: service.title || '' }
+
+  serviceFormData.description = typeof service.description === 'object'
+    ? service.description
+    : { en: service.description || '', th: service.description || '' }
+
+  // Handle features array
+  if (service.features && Array.isArray(service.features)) {
+    // Check if features are objects with th/en or simple strings
+    serviceFormData.features = service.features.length > 0
+      ? service.features.map(feature => {
+          if (typeof feature === 'object' && feature.th && feature.en) {
+            return feature
+          } else {
+            // If feature is a string, use it for current locale
+            return { en: feature || '', th: feature || '' }
+          }
+        })
+      : [{ en: '', th: '' }]
   } else {
     serviceFormData.features = [{ en: '', th: '' }]
   }
-  
+
   // Language-neutral fields
   serviceFormData.icon = service.icon || ''
   serviceFormData.image = service.image || ''
+  serviceFormData.video = service.video || ''
+  serviceFormData.externalURL = service.externalURL || ''
   serviceFormData.color = service.color || '#6495ed'
-  serviceFormData.order = service.order
+  serviceFormData.order = service.order || 0
   serviceFormData.isActive = service.isActive
-  
+
   currentLanguage.value = 'en'
   showModal.value = true
 }
@@ -419,6 +439,8 @@ const resetForm = () => {
   serviceFormData.features = [{ en: '', th: '' }]
   serviceFormData.icon = ''
   serviceFormData.image = ''
+  serviceFormData.video = ''
+  serviceFormData.externalURL = ''
   serviceFormData.color = '#6495ed'
   serviceFormData.order = 0
   serviceFormData.isActive = true
@@ -454,22 +476,23 @@ const saveService = async () => {
       // Language-neutral fields
       icon: serviceFormData.icon,
       image: serviceFormData.image,
+      video: serviceFormData.video,
+      externalURL: serviceFormData.externalURL,
       color: serviceFormData.color,
       order: serviceFormData.order,
       isActive: serviceFormData.isActive
     }
 
     if (editingService.value) {
-      await $fetch(buildApiUrl(API_ENDPOINTS.CMS.SERVICES.PUT(editingService.value.id)), {
-        method: 'PUT',
-        body: serviceData
+      await cmsStore.updateService({
+        body: {
+          ...serviceData,
+          id: editingService.value.id
+        }
       })
       successMessage.value = 'Service updated successfully!'
     } else {
-      await $fetch(buildApiUrl(API_ENDPOINTS.CMS.SERVICES.POST), {
-        method: 'POST',
-        body: serviceData
-      })
+      await cmsStore.createService({ body: serviceData })
       successMessage.value = 'Service created successfully!'
     }
 
@@ -484,16 +507,15 @@ const saveService = async () => {
 
 const toggleServiceStatus = async (service) => {
   try {
-    // const { $fetch } = useNuxtApp()
-    await $fetch(buildApiUrl(API_ENDPOINTS.CMS.SERVICES.PUT(service.id)), {
-      method: 'PUT',
+    await cmsStore.updateService({
       body: {
         ...service,
+        id: service.id,
         features: service.features,
         isActive: !service.isActive
       }
     })
-    
+
     successMessage.value = `Service ${service.isActive ? 'deactivated' : 'activated'} successfully!`
     await loadServices()
   } catch (error) {
@@ -504,11 +526,8 @@ const toggleServiceStatus = async (service) => {
 const deleteService = async (service) => {
   if (confirm(`Are you sure you want to delete "${service.title}"?`)) {
     try {
-      // const { $fetch } = useNuxtApp()
-      await $fetch(buildApiUrl(API_ENDPOINTS.CMS.SERVICES.DELETE(service.id)), {
-        method: 'DELETE'
-      })
-      
+      await cmsStore.deleteService({ body: { id: service.id } })
+
       successMessage.value = 'Service deleted successfully!'
       await loadServices()
     } catch (error) {

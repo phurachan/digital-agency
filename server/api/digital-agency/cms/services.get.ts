@@ -6,8 +6,8 @@ export default defineEventHandler(async (event) => {
   await connectMongoDB()
 
   try {
-    // Get all active services, sorted by order
-    const services = await Service.find({ isActive: true }).sort({ order: 1 }).lean()
+    // Get all services (both active and inactive for management), sorted by order
+    const services = await Service.find({}).sort({ order: 1 }).lean()
 
     // Transform the services
     const transformedServices = services.map(service => {
@@ -24,6 +24,8 @@ export default defineEventHandler(async (event) => {
           isActive: service.isActive,
           icon: service.icon,
           image: service.image,
+          video: service.video,
+          externalURL: service.externalURL,
           color: service.color,
           order: service.order,
           createdAt: service.createdAt,
@@ -40,6 +42,8 @@ export default defineEventHandler(async (event) => {
           isActive: service.isActive,
           icon: service.icon,
           image: service.image,
+          video: service.video,
+          externalURL: service.externalURL,
           color: service.color,
           order: service.order,
           createdAt: service.createdAt,

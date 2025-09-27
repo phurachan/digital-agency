@@ -27,6 +27,11 @@ export interface Service {
   price?: number
   isActive: boolean
   icon?: string
+  image?: string | null
+  video?: string | null
+  externalURL?: string | null
+  color?: string
+  order?: number
   createdAt?: string
   updatedAt?: string
 }
@@ -93,6 +98,10 @@ export interface SiteSettings {
   socialLinks: string
   logo: string | null
   favicon: string | null
+  metaDescription?: string
+  keywords?: string
+  contactEmail?: string
+  contactPhone?: string
   createdAt?: string
   updatedAt?: string
 }
@@ -139,6 +148,11 @@ export interface ServiceRequest {
   price?: number
   isActive?: boolean
   icon?: string
+  image?: string | null
+  video?: string | null
+  externalURL?: string | null
+  color?: string
+  order?: number
 }
 
 export interface AboutContentRequest {

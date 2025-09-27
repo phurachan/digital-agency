@@ -2,14 +2,16 @@
   <div class="min-h-screen bg-gray-50">
 
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <!-- Back to Dashboard Button -->
-      <div class="mb-6">
-        <NuxtLink to="/digital-agency/manage">
-          <BaseButton variant="ghost" icon-left="arrow-left">
-            Back to Dashboard
-          </BaseButton>
-        </NuxtLink>
-      </div>
+      <!-- Page Header -->
+      <BasePageHeader
+        title="Contact Page Content"
+        code="CONTACT-001"
+        description="Manage contact page content, contact information, and business details"
+        :breadcrumbs="[
+          { label: 'Dashboard', to: '/digital-agency/manage', icon: 'home' },
+          { label: 'Contact Content', icon: 'mail' }
+        ]"
+      />
 
       <!-- Loading State -->
       <div v-if="loading" class="flex justify-center items-center h-64">
@@ -82,7 +84,7 @@
               v-model="formData.subtitle[currentLanguage]"
               :label="`Page Subtitle (${currentLanguage.toUpperCase()})`"
               placeholder="Enter page subtitle..."
-              :rows="3"
+              :rows=3
               required
             />
           </div>
@@ -113,7 +115,7 @@
               v-model="formData.address[currentLanguage]"
               :label="`Physical Address (${currentLanguage.toUpperCase()})`"
               placeholder="Enter physical address..."
-              :rows="3"
+              :rows=3
               required
             />
           </div>
@@ -259,12 +261,13 @@ const loadContent = async () => {
   try {
     await cmsStore.fetchContactContent()
     const response = cmsStore.contactContent
-    
+    console.log('Loaded contact content:', response)
+
     if (response) {
-      // Parse multi-language text fields
-      formData.title = parseJsonField(response.title, { en: '', th: '' })
-      formData.subtitle = parseJsonField(response.subtitle, { en: '', th: '' })
-      formData.address = parseJsonField(response.address, { en: '', th: '' })
+      // The API already transforms JSON strings to objects, so use them directly
+      formData.title = response.title || { en: '', th: '' }
+      formData.subtitle = response.subtitle || { en: '', th: '' }
+      formData.address = response.address || { en: '', th: '' }
       
       // Language-neutral fields
       formData.phone = response.phone || ''
@@ -273,10 +276,12 @@ const loadContent = async () => {
       formData.heroImage = response.heroImage || ''
       formData.bannerImage = response.bannerImage || ''
       
-      // Parse business hours JSON
+      // Handle business hours (may already be parsed by API)
       if (response.businessHours) {
         try {
-          const hours = JSON.parse(response.businessHours)
+          const hours = typeof response.businessHours === 'string'
+            ? JSON.parse(response.businessHours)
+            : response.businessHours
           Object.assign(businessHours, hours)
         } catch (e) {
           console.error('Failed to parse business hours:', e)

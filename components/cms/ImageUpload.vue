@@ -54,9 +54,11 @@
     <BaseInput
       :model-value="modelValue"
       @update:model-value="$emit('update:modelValue', $event)"
-      type="url"
+      type="text"
       placeholder="Or enter image URL"
       label="Image URL"
+      :required="false"
+      help="Optional: Enter image URL instead of uploading a file"
     />
 
     <!-- Hidden file input -->
@@ -141,16 +143,21 @@ const uploadFile = async (file: File) => {
     const formData = new FormData()
     formData.append('file', file)
 
-    // Upload file
-    // const { $fetch } = useNuxtApp()
+    // Upload file with authentication
+    const authStore = useAuthStore()
     const response = await $fetch(buildApiUrl(API_ENDPOINTS.UPLOAD.IMAGE), {
       method: 'POST',
-      body: formData
+      body: formData,
+      headers: {
+        'Authorization': `Bearer ${authStore.token}`
+      }
     })
 
-    if (response.success) {
+    // Handle API response structure
+    const data = response.data || response
+    if (response.success || data.url) {
       // Emit the new URL
-      emit('update:modelValue', response.url)
+      emit('update:modelValue', data.url)
     } else {
       throw new Error('Upload failed')
     }

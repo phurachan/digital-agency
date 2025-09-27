@@ -42,29 +42,63 @@
     <section class="section-padding">
       <div class="container">
         <div class="grid lg:grid-cols-2 xl:grid-cols-3 gap-8">
-          <div v-for="service in services" :key="service.id" class="card p-8">
+          <div
+            v-for="service in services"
+            :key="service.id"
+            class="card p-8 cursor-pointer group transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
+            @click="handleServiceClick(service)"
+          >
             <!-- Color accent bar -->
             <div
               class="absolute top-0 left-0 w-full h-1"
               :style="{ backgroundColor: service.color || '#6495ed' }"
             ></div>
 
-            <div class="flex items-center mb-6">
-              <!-- Service icon with dynamic color background -->
-              <div
-                class="w-16 h-16 rounded-full flex items-center justify-center mr-4 text-3xl"
-                :style="{
-                  backgroundColor: service.color ? service.color + '20' : 'rgba(100, 149, 237, 0.2)',
-                  color: service.color || '#6495ed'
-                }"
+            <!-- Service Media (Priority: Image > Video > Icon) -->
+            <div class="w-full h-48 mb-6 rounded-2xl overflow-hidden relative">
+              <!-- Image Display (First Priority) -->
+              <img
+                v-if="service.image"
+                :src="service.image"
+                :alt="service.title"
+                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
               >
-                {{ service.icon || '🎯' }}
+
+              <!-- Video Display (Second Priority) -->
+              <video
+                v-else-if="service.video"
+                :src="service.video"
+                class="w-full h-full object-cover"
+                muted
+                loop
+                autoplay
+                playsinline
+                @mouseenter="$event.target.play()"
+                @mouseleave="$event.target.pause()"
+              ></video>
+
+              <!-- Icon Fallback (Third Priority) -->
+              <div
+                v-else
+                class="w-full h-full rounded-2xl flex items-center justify-center text-white"
+                :style="{ backgroundColor: service.color || '#6495ed' }"
+              >
+                <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path v-if="service.icon === 'search'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                  <path v-else-if="service.icon === 'social'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2M7 4h10M7 4L5.5 20h13L17 4M9 9v6M15 9v6"></path>
+                  <path v-else-if="service.icon === 'code'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                  <path v-else-if="service.icon === 'ads'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM4 19h9a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                  <path v-else-if="service.icon === 'email'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                  <path v-else-if="service.icon === 'analytics'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                  <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
               </div>
-              <div>
-                <h3 class="text-xl font-bold text-gray-900 mb-1">{{ service.title }}</h3>
-                <div v-if="service.price" class="text-lg font-semibold text-primary">
-                  ฿{{ service.price.toLocaleString() }}
-                </div>
+            </div>
+
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">{{ service.title }}</h3>
+              <div v-if="service.price" class="text-lg font-semibold text-primary">
+                ฿{{ service.price.toLocaleString() }}
               </div>
             </div>
 
@@ -80,7 +114,19 @@
               </li>
             </ul>
 
-            <button class="btn-primary w-full">{{ t('common.learnMore') }}</button>
+            <!-- External URL indicator -->
+            <div v-if="service.externalURL" class="absolute top-4 right-4 bg-blue-600 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+              </svg>
+            </div>
+
+            <button
+              class="btn-primary w-full group-hover:scale-105 transition-transform duration-300"
+              @click.stop="handleServiceClick(service)"
+            >
+              {{ service.externalURL ? t('common.learnMore') : t('common.getInTouch') }}
+            </button>
           </div>
 
           <!-- Show message if no services -->
@@ -252,11 +298,25 @@ const services = computed(() => {
   return servicesRaw.map(service => {
     const localized = createLocalizedContent(service)
     return {
-      ...localized,
+      ...service, // Keep all original service data including externalURL
+      ...localized, // Override with localized content
       features: getLocalizedFeatures(service.features)
     }
   })
 })
+
+// Handle service click - navigate to external URL if available
+const { $localePath } = useNuxtApp()
+
+const handleServiceClick = (service) => {
+  if (service.externalURL) {
+    // Open external URL in new tab
+    window.open(service.externalURL, '_blank', 'noopener,noreferrer')
+  } else {
+    // Could implement a service detail page here, for now just show contact
+    navigateTo($localePath('/digital-agency/contact'))
+  }
+}
 
 // Dynamic color calculations
 const dynamicColors = computed(() => {

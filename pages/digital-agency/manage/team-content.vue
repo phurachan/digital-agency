@@ -2,14 +2,16 @@
   <div class="min-h-screen bg-gray-50">
 
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <!-- Back to Dashboard Button -->
-      <div class="mb-6">
-        <NuxtLink to="/digital-agency/manage">
-          <BaseButton variant="ghost" icon-left="arrow-left">
-            Back to Dashboard
-          </BaseButton>
-        </NuxtLink>
-      </div>
+      <!-- Page Header -->
+      <BasePageHeader
+        title="Team Page Content"
+        code="TEAM-CONTENT-001"
+        description="Manage team page hero section and introductory content"
+        :breadcrumbs="[
+          { label: 'Dashboard', to: '/digital-agency/manage', icon: 'home' },
+          { label: 'Team Content', icon: 'user-group' }
+        ]"
+      />
 
       <!-- Loading State -->
       <div v-if="loading" class="flex justify-center items-center h-64">
@@ -63,7 +65,7 @@
               v-model="formData.heroSubtitle[currentLanguage]"
               :label="`Hero Subtitle (${currentLanguage.toUpperCase()})`"
               placeholder="Enter hero subtitle..."
-              :rows="3"
+              :rows=3
               required
             />
             
@@ -165,12 +167,13 @@ const loadContent = async () => {
   try {
     await cmsStore.fetchTeamContent()
     const response = cmsStore.teamContent
-    
+    console.log('Loaded team content:', response)
+
     if (response) {
-      // Parse multi-language text fields
-      formData.heroTitle = parseJsonField(response.heroTitle, { en: '', th: '' })
-      formData.heroSubtitle = parseJsonField(response.heroSubtitle, { en: '', th: '' })
-      
+      // The API already transforms JSON strings to objects, so use them directly
+      formData.heroTitle = response.heroTitle || { en: '', th: '' }
+      formData.heroSubtitle = response.heroSubtitle || { en: '', th: '' }
+
       // Images (language-neutral)
       formData.heroImage = response.heroImage || ''
     }

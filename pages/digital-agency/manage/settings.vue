@@ -2,14 +2,16 @@
   <div class="min-h-screen bg-gray-50">
 
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <!-- Back to Dashboard Button -->
-      <div class="mb-6">
-        <NuxtLink to="/digital-agency/manage">
-          <BaseButton variant="ghost" icon-left="arrow-left">
-            Back to Dashboard
-          </BaseButton>
-        </NuxtLink>
-      </div>
+      <!-- Page Header -->
+      <BasePageHeader
+        title="Site Settings"
+        code="SET-001"
+        description="Configure site identity, colors, social media, and global settings"
+        :breadcrumbs="[
+          { label: 'Dashboard', to: '/digital-agency/manage', icon: 'home' },
+          { label: 'Settings', icon: 'cog' }
+        ]"
+      />
 
       <!-- Loading State -->
       <div v-if="loading" class="flex justify-center items-center h-64">
@@ -106,7 +108,7 @@
           <h2 class="text-xl font-bold text-gray-900 mb-6">Social Media Links</h2>
           
           <div class="space-y-4">
-            <div v-for="(value, platform) in socialLinks" :key="platform" class="space-y-1">
+            <div v-for="(_, platform) in socialLinks" :key="platform" class="space-y-1">
               <BaseInput
                 v-model="socialLinks[platform]"
                 type="url"
@@ -128,10 +130,10 @@
                 v-model="form.metaDescription"
                 label="Meta Description (160 chars max)"
                 placeholder="Enter meta description..."
-                :rows="3"
-                maxlength="160"
+                :rows=3
+                :maxlength=160
               />
-              <p class="text-sm text-gray-500 mt-1">{{ form.metaDescription.length }}/160 characters</p>
+              <p class="text-sm text-gray-500 mt-1">{{ (form.metaDescription || '').length }}/160 characters</p>
             </div>
 
             <BaseInput
@@ -208,10 +210,10 @@ definePageMeta({
   layout: 'default'
 })
 
-const authStore = useAuthStore()
 const cmsStore = useCMSStore()
 await cmsStore.fetchSiteSettings()
 const siteSettings = cmsStore.siteSettings
+
 
 // Form data
 const form = reactive({
@@ -236,8 +238,8 @@ const socialLinks = reactive({
   youtube: ''
 })
 
-// Component state
-const loading = ref(true)
+// Use computed properties from store
+const loading = computed(() => cmsStore.isLoading)
 const saving = ref(false)
 const successMessage = ref('')
 const errorMessage = ref('')
@@ -249,25 +251,43 @@ onMounted(async () => {
 
 const loadContent = async () => {
   try {
+    // Force fresh fetch using store
     await cmsStore.fetchSiteSettings()
-    const response = cmsStore.siteSettings
-    
-    if (response) {
-      form.siteName = response.siteName || ''
-      form.siteTagline = response.siteTagline || ''
-      form.logo = response.logo || ''
-      form.favicon = response.favicon || ''
-      form.primaryColor = response.primaryColor || '#6495ed'
-      form.secondaryColor = response.secondaryColor || '#9333ea'
-      form.metaDescription = response.metaDescription || ''
-      form.keywords = response.keywords || ''
-      form.contactEmail = response.contactEmail || ''
-      form.contactPhone = response.contactPhone || ''
-      
-      // Parse social links JSON
-      if (response.socialLinks) {
+    const settings = cmsStore.siteSettings
+    console.log('Store settings:', settings)
+
+    if (settings) {
+      // Handle potentially nested object fields - extract values safely
+      const extractValue = (field) => {
+        console.log('Extracting field:', field, 'Type:', typeof field)
+        if (!field) return ''
+        if (typeof field === 'string') return field
+        if (typeof field === 'object') {
+          // Try to get en value first, then th, but handle empty strings
+          const enValue = field.en && field.en.trim() !== '' ? field.en : null
+          const thValue = field.th && field.th.trim() !== '' ? field.th : null
+          return enValue || thValue || ''
+        }
+        return String(field)
+      }
+
+      form.siteName = extractValue(settings.siteName)
+      form.siteTagline = extractValue(settings.siteTagline)
+      form.logo = extractValue(settings.logo)
+      form.favicon = extractValue(settings.favicon)
+      form.primaryColor = extractValue(settings.primaryColor) || '#6495ed'
+      form.secondaryColor = extractValue(settings.secondaryColor) || '#9333ea'
+      form.metaDescription = extractValue(settings.metaDescription)
+      form.keywords = extractValue(settings.keywords)
+      form.contactEmail = extractValue(settings.contactEmail)
+      form.contactPhone = extractValue(settings.contactPhone)
+
+      // Handle social links (may already be parsed by API)
+      if (settings.socialLinks) {
         try {
-          const links = JSON.parse(response.socialLinks)
+          const links = typeof settings.socialLinks === 'string'
+            ? JSON.parse(settings.socialLinks)
+            : settings.socialLinks
           Object.assign(socialLinks, links)
         } catch (e) {
           console.error('Failed to parse social links:', e)
@@ -277,8 +297,6 @@ const loadContent = async () => {
   } catch (error) {
     errorMessage.value = 'Failed to load settings'
     console.error('Failed to load settings:', error)
-  } finally {
-    loading.value = false
   }
 }
 

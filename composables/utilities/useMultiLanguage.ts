@@ -51,14 +51,21 @@ export const useMultiLanguage = () => {
   const parseJsonField = (field: any): any => {
     try {
       if (typeof field === 'string') {
-        return JSON.parse(field)
+        // Check if string looks like JSON (starts with { or [)
+        const trimmed = field.trim()
+        if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+          return JSON.parse(field)
+        } else {
+          // Return the string as-is if it's not JSON
+          return field
+        }
       } else if (typeof field === 'object' && field !== null) {
         return field
       }
-      return {}
+      return field || {}
     } catch (error) {
-      console.warn('Error parsing JSON field:', error, 'Field:', field)
-      return {}
+      // If JSON parsing fails, return the original field
+      return field || {}
     }
   }
 

@@ -300,12 +300,6 @@ const menuSections = ref([
         label: "Overview",
         icon: "home",
         activeWhen: ["/digital-agency/admin"]
-      },
-      {
-        path: "/digital-agency/manage",
-        label: "Content Management",
-        icon: "document-text",
-        activeWhen: ["/digital-agency/manage"]
       }
     ]
   },
@@ -366,6 +360,12 @@ const menuSections = ref([
         label: "FAQs",
         icon: "question-mark-circle",
         activeWhen: ["/digital-agency/manage/faqs"]
+      },
+      {
+        path: "/digital-agency/manage/settings",
+        label: "Site Settings",
+        icon: "adjustments-horizontal",
+        activeWhen: ["/digital-agency/manage/settings"]
       }
     ]
   },
@@ -381,12 +381,6 @@ const menuSections = ref([
           text: "New",
           variant: "primary"
         }
-      },
-      {
-        path: "/digital-agency/manage/settings",
-        label: "Site Settings",
-        icon: "adjustments-horizontal",
-        activeWhen: ["/digital-agency/manage/settings"]
       }
     ]
   },

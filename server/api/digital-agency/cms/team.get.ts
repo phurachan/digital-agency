@@ -6,8 +6,8 @@ export default defineEventHandler(async (event) => {
   await connectMongoDB()
 
   try {
-    // Get all active team members, sorted by order
-    const teamMembers = await TeamMember.find({ isActive: true }).sort({ order: 1 }).lean()
+    // Get all team members (both active and inactive for management), sorted by order
+    const teamMembers = await TeamMember.find({}).sort({ order: 1 }).lean()
 
     // Transform the team members
     const transformedTeamMembers = teamMembers.map(member => ({

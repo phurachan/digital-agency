@@ -2,14 +2,16 @@
   <div class="min-h-screen bg-gray-50">
 
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <!-- Back to Dashboard Button -->
-      <div class="mb-6">
-        <NuxtLink to="/digital-agency/manage">
-          <BaseButton variant="ghost" icon-left="arrow-left">
-            Back to Dashboard
-          </BaseButton>
-        </NuxtLink>
-      </div>
+      <!-- Page Header -->
+      <BasePageHeader
+        title="Manage People"
+        code="TEAM-001"
+        description="Add and manage team members displayed on your website"
+        :breadcrumbs="[
+          { label: 'Dashboard', to: '/digital-agency/manage', icon: 'home' },
+          { label: 'Team Members', icon: 'user-group' }
+        ]"
+      />
 
       <!-- Loading State -->
       <div v-if="loading" class="flex justify-center items-center h-64">
@@ -18,7 +20,7 @@
 
       <!-- People List -->
       <div v-else class="space-y-6">
-        <div v-for="member in teamMembers" :key="member.id" class="card p-6">
+        <div v-for="member in localizedTeamMembers" :key="member.id" class="card p-6">
           <div class="flex items-start justify-between">
             <div class="flex items-start space-x-4 flex-1">
               <!-- Member Image -->
@@ -134,100 +136,63 @@
           </div>
 
           <form @submit.prevent="saveMember" class="space-y-6">
-            <div class="relative">
-              <input 
-                v-model="memberForm.name" 
-                type="text" 
-                placeholder=" " 
-                class="form-input peer"
-                required
-              >
-              <label class="floating-label">Full Name</label>
-            </div>
+            <BaseInput
+              v-model="memberForm.name"
+              type="text"
+              label="Full Name"
+              required
+            />
 
-            <div class="relative">
-              <input 
-                v-model="memberForm.position" 
-                type="text" 
-                placeholder=" " 
-                class="form-input peer"
-                required
-              >
-              <label class="floating-label">Position/Title</label>
-            </div>
+            <BaseInput
+              v-model="memberForm.position"
+              type="text"
+              label="Position/Title"
+              required
+            />
 
-            <div class="relative">
-              <textarea 
-                v-model="memberForm.description" 
-                placeholder=" " 
-                rows="3" 
-                class="form-input resize-none peer"
-                required
-              ></textarea>
-              <label class="floating-label">Bio/Description</label>
-            </div>
+            <BaseTextarea
+              v-model="memberForm.description"
+              label="Bio/Description"
+              :rows=3
+              required
+            />
 
-            <div class="relative">
-              <input 
-                v-model="memberForm.image" 
-                type="url" 
-                placeholder=" " 
-                class="form-input peer"
-              >
-              <label class="floating-label">Profile Image URL</label>
-            </div>
+            <BaseInput
+              v-model="memberForm.image"
+              type="url"
+              label="Profile Image URL"
+            />
 
-            <div class="relative">
-              <input 
-                v-model="memberForm.email" 
-                type="email" 
-                placeholder=" " 
-                class="form-input peer"
-              >
-              <label class="floating-label">Email Address</label>
-            </div>
+            <BaseInput
+              v-model="memberForm.email"
+              type="email"
+              label="Email Address"
+            />
 
-            <div class="relative">
-              <input 
-                v-model="memberForm.linkedin" 
-                type="url" 
-                placeholder=" " 
-                class="form-input peer"
-              >
-              <label class="floating-label">LinkedIn URL</label>
-            </div>
+            <BaseInput
+              v-model="memberForm.linkedin"
+              type="url"
+              label="LinkedIn URL"
+            />
 
-            <div class="relative">
-              <input 
-                v-model="memberForm.twitter" 
-                type="url" 
-                placeholder=" " 
-                class="form-input peer"
-              >
-              <label class="floating-label">Twitter URL</label>
-            </div>
+            <BaseInput
+              v-model="memberForm.twitter"
+              type="url"
+              label="Twitter URL"
+            />
 
             <div class="grid grid-cols-2 gap-4">
-              <div class="relative">
-                <input 
-                  v-model.number="memberForm.order" 
-                  type="number" 
-                  placeholder=" " 
-                  class="form-input peer"
-                  min="0"
-                >
-                <label class="floating-label">Display Order</label>
-              </div>
+              <BaseInput
+                v-model.number="memberForm.order"
+                type="number"
+                label="Display Order"
+                min="0"
+              />
 
-              <div class="flex items-center space-x-3">
-                <input 
-                  v-model="memberForm.isActive" 
-                  type="checkbox" 
-                  id="isActive"
-                  class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                >
-                <label for="isActive" class="text-sm font-medium text-gray-700">Active</label>
-              </div>
+              <BaseCheckbox
+                v-model="memberForm.isActive"
+                label="Active"
+              />
             </div>
 
             <div class="flex justify-end space-x-4 pt-4 border-t">
@@ -265,7 +230,8 @@
 </template>
 
 <script setup>
-import { API_ENDPOINTS, buildApiUrl } from '~/composables/constants/api'
+const { createLocalizedContent, parseJsonField } = useMultiLanguage()
+const { locale } = useI18n()
 
 definePageMeta({
   middleware: 'auth',
@@ -277,9 +243,8 @@ const cmsStore = useCMSStore()
 await cmsStore.fetchSiteSettings()
 const siteSettings = cmsStore.siteSettings
 
-// Data
-const teamMembers = ref([])
-const loading = ref(true)
+// Use computed properties from store
+const loading = computed(() => cmsStore.isLoading)
 const saving = ref(false)
 const showModal = ref(false)
 const editingMember = ref(null)
@@ -299,6 +264,23 @@ const memberForm = reactive({
   isActive: true
 })
 
+// Localized team members for display
+const localizedTeamMembers = computed(() => {
+  const teamMembers = cmsStore.teamMembers || []
+  if (!Array.isArray(teamMembers)) {
+    return []
+  }
+  return teamMembers.map(member => {
+    const localized = createLocalizedContent(member)
+    return {
+      ...member,
+      name: localized.name || member.name,
+      position: localized.position || member.position,
+      bio: localized.bio || member.bio || ''
+    }
+  })
+})
+
 // Methods
 onMounted(async () => {
   await loadTeamMembers()
@@ -306,12 +288,10 @@ onMounted(async () => {
 
 const loadTeamMembers = async () => {
   try {
-    const data = await $fetch(buildApiUrl(API_ENDPOINTS.CMS.TEAM.GET))
-    teamMembers.value = data
+    await cmsStore.fetchTeamMembers()
   } catch (error) {
+    console.error('Failed to load team members:', error)
     errorMessage.value = 'Failed to load team members'
-  } finally {
-    loading.value = false
   }
 }
 
@@ -321,17 +301,21 @@ const openAddModal = () => {
   showModal.value = true
 }
 
-const editMember = (member) => {
-  editingMember.value = member
-  memberForm.name = member.name
-  memberForm.position = member.position
-  memberForm.description = member.description
-  memberForm.image = member.image || ''
-  memberForm.email = member.email || ''
-  memberForm.linkedin = member.linkedin || ''
-  memberForm.twitter = member.twitter || ''
-  memberForm.order = member.order
-  memberForm.isActive = member.isActive
+const editMember = (localizedMember) => {
+  // Find the original member data (not localized) for editing
+  const originalMember = cmsStore.teamMembers?.find(m => m.id === localizedMember.id)
+  editingMember.value = originalMember
+
+  // Use the data directly (API already sends as objects)
+  memberForm.name = (typeof originalMember.name === 'object' ? originalMember.name[locale.value] || originalMember.name.en || '' : originalMember.name) || ''
+  memberForm.position = (typeof originalMember.position === 'object' ? originalMember.position[locale.value] || originalMember.position.en || '' : originalMember.position) || ''
+  memberForm.description = (typeof originalMember.bio === 'object' ? originalMember.bio[locale.value] || originalMember.bio.en || '' : originalMember.bio) || ''
+  memberForm.image = originalMember.image || ''
+  memberForm.email = originalMember.email || ''
+  memberForm.linkedin = originalMember.linkedin || ''
+  memberForm.twitter = originalMember.twitter || ''
+  memberForm.order = originalMember.order
+  memberForm.isActive = originalMember.isActive
   showModal.value = true
 }
 
@@ -372,16 +356,15 @@ const saveMember = async () => {
     }
 
     if (editingMember.value) {
-      await $fetch(buildApiUrl(API_ENDPOINTS.CMS.TEAM.PUT(editingMember.value.id)), {
-        method: 'PUT',
-        body: memberData
+      await cmsStore.updateTeamMember({
+        body: {
+          ...memberData,
+          id: editingMember.value.id
+        }
       })
       successMessage.value = 'Person updated successfully!'
     } else {
-      await $fetch(buildApiUrl(API_ENDPOINTS.CMS.TEAM.POST), {
-        method: 'POST',
-        body: memberData
-      })
+      await cmsStore.createTeamMember({ body: memberData })
       successMessage.value = 'Person created successfully!'
     }
 
@@ -396,14 +379,14 @@ const saveMember = async () => {
 
 const toggleMemberStatus = async (member) => {
   try {
-    await $fetch(buildApiUrl(API_ENDPOINTS.CMS.TEAM.PUT(member.id)), {
-      method: 'PUT',
+    await cmsStore.updateTeamMember({
       body: {
         ...member,
+        id: member.id,
         isActive: !member.isActive
       }
     })
-    
+
     successMessage.value = `Person ${member.isActive ? 'deactivated' : 'activated'} successfully!`
     await loadTeamMembers()
   } catch (error) {
@@ -414,10 +397,8 @@ const toggleMemberStatus = async (member) => {
 const deleteMember = async (member) => {
   if (confirm(`Are you sure you want to delete "${member.name}"?`)) {
     try {
-      await $fetch(buildApiUrl(API_ENDPOINTS.CMS.TEAM.DELETE(member.id)), {
-        method: 'DELETE'
-      })
-      
+      await cmsStore.deleteTeamMember({ body: { id: member.id } })
+
       successMessage.value = 'Person deleted successfully!'
       await loadTeamMembers()
     } catch (error) {

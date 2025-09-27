@@ -2,11 +2,15 @@
   <div class="min-h-screen bg-gray-50">
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <!-- Header -->
-      <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Content Management System</h1>
-        <p class="text-gray-600 mt-2">Manage your website content, images, and settings</p>
-      </div>
+      <!-- Page Header -->
+      <BasePageHeader
+        title="Content Management System"
+        code="CMS-001"
+        description="Manage your website content, images, and settings"
+        :breadcrumbs="[
+          { label: 'Dashboard', icon: 'home' }
+        ]"
+      />
 
       <!-- Quick Stats -->
       <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -286,7 +290,6 @@
 </template>
 
 <script setup>
-import { API_ENDPOINTS, buildApiUrl } from '~/composables/constants/api'
 
 definePageMeta({
   middleware: 'auth',
@@ -312,18 +315,17 @@ onMounted(async () => {
 
 const loadStats = async () => {
   try {
-    // const { $fetch } = useNuxtApp()
-
-    const [servicesRes, teamRes, faqRes] = await Promise.all([
-      $fetch(buildApiUrl(API_ENDPOINTS.CMS.SERVICES.GET)),
-      $fetch(buildApiUrl(API_ENDPOINTS.CMS.TEAM.GET)),
-      $fetch(buildApiUrl(API_ENDPOINTS.CMS.FAQS.GET))
+    // Use store methods instead of direct $fetch calls
+    await Promise.all([
+      cmsStore.fetchServices(),
+      cmsStore.fetchTeamMembers(),
+      cmsStore.fetchFAQs()
     ])
 
     stats.value = {
-      services: servicesRes?.length || 0,
-      teamMembers: teamRes?.length || 0,
-      faqs: faqRes?.length || 0
+      services: (cmsStore.services || []).length,
+      teamMembers: (cmsStore.teamMembers || []).length,
+      faqs: (cmsStore.faqs || []).length
     }
   } catch (error) {
     console.error('Failed to load stats:', error)

@@ -2,14 +2,16 @@
   <div class="min-h-screen bg-gray-50">
 
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <!-- Back to Dashboard Button -->
-      <div class="mb-6">
-        <NuxtLink to="/digital-agency/manage">
-          <BaseButton variant="ghost" icon-left="arrow-left">
-            Back to Dashboard
-          </BaseButton>
-        </NuxtLink>
-      </div>
+      <!-- Page Header -->
+      <BasePageHeader
+        title="Home Page Content"
+        code="HOME-001"
+        description="Manage homepage hero section, features, and about preview content"
+        :breadcrumbs="[
+          { label: 'Dashboard', to: '/digital-agency/manage', icon: 'home' },
+          { label: 'Home Content', icon: 'home' }
+        ]"
+      />
 
       <!-- Loading State -->
       <div v-if="loading" class="flex justify-center items-center h-64">
@@ -63,7 +65,7 @@
               v-model="formData.heroSubtitle[currentLanguage]"
               :label="`Hero Subtitle (${currentLanguage.toUpperCase()})`"
               placeholder="Enter hero subtitle..."
-              :rows="3"
+              :rows=3
               required
             />
 
@@ -97,7 +99,7 @@
               v-model="formData.featureDescription[currentLanguage]"
               :label="`Feature Description (${currentLanguage.toUpperCase()})`"
               placeholder="Enter feature description..."
-              :rows="3"
+              :rows=3
               required
             />
 
@@ -153,7 +155,7 @@
               v-model="formData.aboutDescription[currentLanguage]"
               :label="`About Description (${currentLanguage.toUpperCase()})`"
               placeholder="Enter about description..."
-              :rows="4"
+              :rows=4
               required
             />
 
@@ -186,7 +188,7 @@
               v-model="formData.peopleDescription[currentLanguage]"
               :label="`People Section Description (${currentLanguage.toUpperCase()})`"
               placeholder="Enter people section description..."
-              :rows="3"
+              :rows=3
               required
             />
           </div>
@@ -287,20 +289,21 @@ const loadContent = async () => {
   try {
     await cmsStore.fetchHomeContent()
     const response = cmsStore.homeContent
-    
+    console.log('Loaded home content:', response)
+
     if (response) {
-      // Parse multi-language text fields
-      formData.heroTitle = parseJsonField(response.heroTitle, { en: '', th: '' })
-      formData.heroSubtitle = parseJsonField(response.heroSubtitle, { en: '', th: '' })
-      formData.featureTitle = parseJsonField(response.featureTitle, { en: 'Expert Management Solutions', th: 'โซลูชั่นการจัดการจากผู้เชี่ยวชาญ' })
-      formData.featureDescription = parseJsonField(response.featureDescription, { en: 'Streamline your business operations and enhance productivity', th: 'ปรับปรุงการดำเนินธุรกิจและเพิ่มผลิตภาพ' })
-      formData.ctaText = parseJsonField(response.ctaText, { en: '', th: '' })
-      formData.ctaButtonText = parseJsonField(response.ctaButtonText, { en: '', th: '' })
-      formData.aboutTitle = parseJsonField(response.aboutTitle, { en: '', th: '' })
-      formData.aboutDescription = parseJsonField(response.aboutDescription, { en: '', th: '' })
-      formData.peopleTitle = parseJsonField(response.peopleTitle, { en: 'Meet Our People', th: 'พบกับทีมงานของเรา' })
-      formData.peopleDescription = parseJsonField(response.peopleDescription, { en: 'Get to know the talented individuals who drive our success', th: 'ทำความรู้จักกับบุคคลที่มีความสามารถผลักดันความสำเร็จ' })
-      
+      // The API already transforms JSON strings to objects, so use them directly
+      formData.heroTitle = response.heroTitle || { en: '', th: '' }
+      formData.heroSubtitle = response.heroSubtitle || { en: '', th: '' }
+      formData.featureTitle = response.featureTitle || { en: 'Expert Management Solutions', th: 'โซลูชั่นการจัดการจากผู้เชี่ยวชาญ' }
+      formData.featureDescription = response.featureDescription || { en: 'Streamline your business operations and enhance productivity', th: 'ปรับปรุงการดำเนินธุรกิจและเพิ่มผลิตภาพ' }
+      formData.ctaText = response.ctaText || { en: '', th: '' }
+      formData.ctaButtonText = response.ctaButtonText || { en: '', th: '' }
+      formData.aboutTitle = response.aboutTitle || { en: '', th: '' }
+      formData.aboutDescription = response.aboutDescription || { en: '', th: '' }
+      formData.peopleTitle = response.peopleTitle || { en: 'Meet Our People', th: 'พบกับทีมงานของเรา' }
+      formData.peopleDescription = response.peopleDescription || { en: 'Get to know the talented individuals who drive our success', th: 'ทำความรู้จักกับบุคคลที่มีความสามารถผลักดันความสำเร็จ' }
+
       // Images (language-neutral)
       formData.heroImage = response.heroImage || ''
       formData.featureImage = response.featureImage || ''

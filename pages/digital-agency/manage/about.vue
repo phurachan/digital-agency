@@ -2,14 +2,16 @@
   <div class="min-h-screen bg-gray-50">
 
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <!-- Back to Dashboard Button -->
-      <div class="mb-6">
-        <NuxtLink to="/digital-agency/manage">
-          <BaseButton variant="ghost" icon-left="arrow-left">
-            Back to Dashboard
-          </BaseButton>
-        </NuxtLink>
-      </div>
+      <!-- Page Header -->
+      <BasePageHeader
+        title="About Page Content"
+        code="ABOUT-001"
+        description="Manage about page mission, vision, values, and history content"
+        :breadcrumbs="[
+          { label: 'Dashboard', to: '/digital-agency/manage', icon: 'home' },
+          { label: 'About Content', icon: 'information-circle' }
+        ]"
+      />
 
       <!-- Loading State -->
       <div v-if="loading" class="flex justify-center items-center h-64">
@@ -74,7 +76,7 @@
               v-model="formData.missionText[currentLanguage]"
               :label="`Mission Description (${currentLanguage.toUpperCase()})`"
               placeholder="Enter mission description..."
-              :rows="4"
+              :rows=4
               required
             />
           </div>
@@ -97,7 +99,7 @@
               v-model="formData.visionText[currentLanguage]"
               :label="`Vision Description (${currentLanguage.toUpperCase()})`"
               placeholder="Enter vision description..."
-              :rows="4"
+              :rows=4
               required
             />
             
@@ -130,7 +132,7 @@
               v-model="formData.valuesText[currentLanguage]"
               :label="`Values Description (${currentLanguage.toUpperCase()})`"
               placeholder="Enter values description..."
-              :rows="4"
+              :rows=4
               required
             />
           </div>
@@ -153,7 +155,7 @@
               v-model="formData.historyText[currentLanguage]"
               :label="`History Description (${currentLanguage.toUpperCase()})`"
               placeholder="Enter history description..."
-              :rows="4"
+              :rows=4
               required
             />
           </div>
@@ -270,7 +272,7 @@
                   v-model="formData.valuesItems[index].description[currentLanguage]"
                   :label="`Description (${currentLanguage.toUpperCase()})`"
                   placeholder="Enter description..."
-                  :rows="3"
+                  :rows=3
                   required
                 />
                 
@@ -342,7 +344,7 @@
                   v-model="formData.journeyItems[index].description[currentLanguage]"
                   :label="`Description (${currentLanguage.toUpperCase()})`"
                   placeholder="Enter description..."
-                  :rows="3"
+                  :rows=3
                   required
                 />
               </div>
@@ -486,38 +488,39 @@ const loadContent = async () => {
   try {
     await cmsStore.fetchAboutContent()
     const response = cmsStore.aboutContent
-    
+    console.log('Loaded about content:', response)
+
     if (response) {
-      // Parse multi-language text fields
-      formData.missionTitle = parseJsonField(response.missionTitle, { en: '', th: '' })
-      formData.missionText = parseJsonField(response.missionText, { en: '', th: '' })
-      formData.visionTitle = parseJsonField(response.visionTitle, { en: '', th: '' })
-      formData.visionText = parseJsonField(response.visionText, { en: '', th: '' })
-      formData.valuesTitle = parseJsonField(response.valuesTitle, { en: '', th: '' })
-      formData.valuesText = parseJsonField(response.valuesText, { en: '', th: '' })
-      formData.historyTitle = parseJsonField(response.historyTitle, { en: '', th: '' })
-      formData.historyText = parseJsonField(response.historyText, { en: '', th: '' })
-      
+      // The API already transforms JSON strings to objects, so use them directly
+      formData.missionTitle = response.missionTitle || { en: '', th: '' }
+      formData.missionText = response.missionText || { en: '', th: '' }
+      formData.visionTitle = response.visionTitle || { en: '', th: '' }
+      formData.visionText = response.visionText || { en: '', th: '' }
+      formData.valuesTitle = response.valuesTitle || { en: '', th: '' }
+      formData.valuesText = response.valuesText || { en: '', th: '' }
+      formData.historyTitle = response.historyTitle || { en: '', th: '' }
+      formData.historyText = response.historyText || { en: '', th: '' }
+
       // Images (language-neutral)
       formData.missionImage = response.missionImage || ''
       formData.heroImage = response.heroImage || ''
+
+      // Statistics
+      formData.happyClientsCount = response.happyClientsCount || { en: '500+', th: '500+' }
+      formData.happyClientsLabel = response.happyClientsLabel || { en: 'Happy Clients', th: 'ลูกค้าที่พอใจ' }
+      formData.experienceCount = response.experienceCount || { en: '10+', th: '10+' }
+      formData.experienceLabel = response.experienceLabel || { en: 'Years Experience', th: 'ปีประสบการณ์' }
       
-      // Parse statistics
-      formData.happyClientsCount = parseJsonField(response.happyClientsCount, { en: '500+', th: '500+' })
-      formData.happyClientsLabel = parseJsonField(response.happyClientsLabel, { en: 'Happy Clients', th: 'ลูกค้าที่พอใจ' })
-      formData.experienceCount = parseJsonField(response.experienceCount, { en: '10+', th: '10+' })
-      formData.experienceLabel = parseJsonField(response.experienceLabel, { en: 'Years Experience', th: 'ปีประสบการณ์' })
-      
-      // Parse dynamic arrays
-      const visionItems = JSON.parse(response.visionItems || '[]')
+      // Handle dynamic arrays (may already be parsed by API)
+      const visionItems = Array.isArray(response.visionItems) ? response.visionItems : JSON.parse(response.visionItems || '[]')
       formData.visionItems = visionItems.length > 0 ? visionItems : [
         { en: 'Proven Track Record', th: 'ประวัติที่พิสูจน์แล้ว' },
         { en: 'Dedicated Management', th: 'การจัดการที่ทุ่มเท' },
         { en: 'Transparent Reporting', th: 'รายงานที่โปร่งใส' },
         { en: '24/7 Support Available', th: 'บริการสนับสนุน 24/7' }
       ]
-      
-      const valuesItems = JSON.parse(response.valuesItems || '[]')
+
+      const valuesItems = Array.isArray(response.valuesItems) ? response.valuesItems : JSON.parse(response.valuesItems || '[]')
       formData.valuesItems = valuesItems.length > 0 ? valuesItems : [
         { 
           title: { en: 'Excellence', th: 'ความเป็นเลิศ' }, 

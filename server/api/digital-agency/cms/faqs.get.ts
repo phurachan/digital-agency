@@ -6,8 +6,8 @@ export default defineEventHandler(async (event) => {
   await connectMongoDB()
 
   try {
-    // Get all active FAQs, sorted by order
-    const faqs = await FAQ.find({ isActive: true }).sort({ order: 1 }).lean()
+    // Get all FAQs (both active and inactive for management), sorted by order
+    const faqs = await FAQ.find({}).sort({ order: 1 }).lean()
 
     // Transform the FAQs
     const transformedFAQs = faqs.map(faq => ({

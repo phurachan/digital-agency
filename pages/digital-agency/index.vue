@@ -91,34 +91,66 @@
         </div>
         
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div v-for="service in localizedServices.slice(0, 6)" :key="service.id" class="card p-8 text-center relative overflow-hidden">
+          <div
+            v-for="service in localizedServices.slice(0, 6)"
+            :key="service.id"
+            class="card p-8 text-center relative overflow-hidden cursor-pointer group transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
+            @click="handleServiceClick(service)"
+          >
             <!-- Color accent bar -->
-            <div 
+            <div
               class="absolute top-0 left-0 w-full h-1"
               :style="{ backgroundColor: service.color || '#6495ed' }"
             ></div>
-            
-            <div 
-              class="w-16 h-16 rounded-full mx-auto mb-6 flex items-center justify-center text-white"
-              :style="{ backgroundColor: service.color || '#6495ed' }"
-            >
-              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path v-if="service.icon === 'search'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                <path v-else-if="service.icon === 'social'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2M7 4h10M7 4L5.5 20h13L17 4M9 9v6M15 9v6"></path>
-                <path v-else-if="service.icon === 'code'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                <path v-else-if="service.icon === 'ads'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM4 19h9a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                <path v-else-if="service.icon === 'email'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                <path v-else-if="service.icon === 'analytics'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-              </svg>
+
+            <!-- Service Media (Priority: Image > Video > Icon) -->
+            <div class="w-full h-48 mb-6 rounded-2xl overflow-hidden relative">
+              <!-- Image Display (First Priority) -->
+              <img
+                v-if="service.image"
+                :src="service.image"
+                :alt="service.title"
+                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+              >
+
+              <!-- Video Display (Second Priority) -->
+              <video
+                v-else-if="service.video"
+                :src="service.video"
+                class="w-full h-full object-cover"
+                muted
+                loop
+                autoplay
+                playsinline
+                @mouseenter="$event.target.play()"
+                @mouseleave="$event.target.pause()"
+              ></video>
+
+              <!-- Icon Fallback (Third Priority) -->
+              <div
+                v-else
+                class="w-full h-full rounded-2xl flex items-center justify-center text-white"
+                :style="{ backgroundColor: service.color || '#6495ed' }"
+              >
+                <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path v-if="service.icon === 'search'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                  <path v-else-if="service.icon === 'social'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2M7 4h10M7 4L5.5 20h13L17 4M9 9v6M15 9v6"></path>
+                  <path v-else-if="service.icon === 'code'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                  <path v-else-if="service.icon === 'ads'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM4 19h9a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                  <path v-else-if="service.icon === 'email'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                  <path v-else-if="service.icon === 'analytics'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                  <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+              </div>
             </div>
-            <h3 class="text-xl font-bold mb-4">{{ service.title }}</h3>
-            <p class="text-gray-600">{{ service.description }}</p>
-            
+
+            <h3 class="text-xl font-bold mb-4 group-hover:text-blue-600 transition-colors duration-300">{{ service.title }}</h3>
+            <p class="text-gray-600 mb-4">{{ service.description }}</p>
+
             <div v-if="service.features?.length" class="mt-4">
               <div class="flex flex-wrap gap-2 justify-center">
-                <span 
-                  v-for="feature in service.features.slice(0, 3)" 
+                <span
+                  v-for="feature in service.features.slice(0, 3)"
                   :key="feature"
                   class="px-2 py-1 text-xs rounded-full text-white"
                   :style="{ backgroundColor: service.color || '#6495ed', opacity: 0.8 }"
@@ -126,6 +158,13 @@
                   {{ feature }}
                 </span>
               </div>
+            </div>
+
+            <!-- External URL indicator -->
+            <div v-if="service.externalURL" class="absolute top-4 right-4 bg-blue-600 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+              </svg>
             </div>
           </div>
 
@@ -196,8 +235,19 @@
           </div>
           
           <div class="relative">
-            <div class="bg-gradient-primary-to-secondary rounded-2xl p-8 text-white">
-              <div class="grid grid-cols-2 gap-6 text-center">
+            <div
+              class="rounded-2xl p-8 text-white relative overflow-hidden"
+              :class="homeContent.aboutImage ? 'stats-with-image' : 'bg-gradient-primary-to-secondary'"
+              :style="homeContent.aboutImage ? {
+                backgroundImage: `url(${homeContent.aboutImage})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
+              } : {}"
+            >
+              <!-- Dark overlay for better text readability when using background image -->
+              <div v-if="homeContent.aboutImage" class="absolute inset-0 bg-black/60 z-0"></div>
+              <div class="relative z-10 grid grid-cols-2 gap-6 text-center">
                 <div>
                   <div class="text-3xl font-bold mb-2">500+</div>
                   <div class="text-blue-100">{{ t('home.projectsCompleted') }}</div>
@@ -556,7 +606,8 @@ const localizedServices = computed(() => {
   return services.map(service => {
     const localized = createLocalizedContent(service)
     return {
-      ...localized,
+      ...service, // Keep all original service data including externalURL
+      ...localized, // Override with localized content
       features: getLocalizedFeatures(service.features)
     }
   })
@@ -598,6 +649,19 @@ useSeoMeta({
   ogImage: () => homeContent.value.heroImage || '/og-image.jpg',
   twitterCard: 'summary_large_image',
 })
+
+// Handle service click - navigate to external URL if available
+const { $localePath } = useNuxtApp()
+
+const handleServiceClick = (service) => {
+  if (service.externalURL) {
+    // Open external URL in new tab
+    window.open(service.externalURL, '_blank', 'noopener,noreferrer')
+  } else {
+    // Fallback to services page if no external URL
+    navigateTo($localePath('/digital-agency/services'))
+  }
+}
 
 // Smooth scrolling for navigation with navbar offset
 onMounted(() => {

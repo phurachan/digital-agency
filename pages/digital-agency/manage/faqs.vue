@@ -2,14 +2,16 @@
   <div class="min-h-screen bg-gray-50">
 
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <!-- Back to Dashboard Button -->
-      <div class="mb-6">
-        <NuxtLink to="/digital-agency/manage">
-          <BaseButton variant="ghost" icon-left="arrow-left">
-            Back to Dashboard
-          </BaseButton>
-        </NuxtLink>
-      </div>
+      <!-- Page Header -->
+      <BasePageHeader
+        title="Manage FAQs"
+        code="FAQ-001"
+        description="Create and manage frequently asked questions for your website"
+        :breadcrumbs="[
+          { label: 'Dashboard', to: '/digital-agency/manage', icon: 'home' },
+          { label: 'FAQs', icon: 'question-mark-circle' }
+        ]"
+      />
 
       <!-- Loading State -->
       <div v-if="loading" class="flex justify-center items-center h-64">
@@ -18,7 +20,7 @@
 
       <!-- FAQs List -->
       <div v-else class="space-y-6">
-        <div v-for="faq in faqs" :key="faq.id" class="card p-6">
+        <div v-for="faq in localizedFaqs" :key="faq.id" class="card p-6">
           <div class="flex items-start justify-between">
             <div class="flex-1">
               <div class="flex items-center space-x-3 mb-3">
@@ -100,49 +102,32 @@
           </div>
 
           <form @submit.prevent="saveFaq" class="space-y-6">
-            <div class="relative">
-              <input 
-                v-model="faqForm.question" 
-                type="text" 
-                placeholder=" " 
-                class="form-input peer"
-                required
-              >
-              <label class="floating-label">Question</label>
-            </div>
+            <BaseInput
+              v-model="faqForm.question"
+              type="text"
+              label="Question"
+              required
+            />
 
-            <div class="relative">
-              <textarea 
-                v-model="faqForm.answer" 
-                placeholder=" " 
-                rows="4" 
-                class="form-input resize-none peer"
-                required
-              ></textarea>
-              <label class="floating-label">Answer</label>
-            </div>
+            <BaseTextarea
+              v-model="faqForm.answer"
+              label="Answer"
+              :rows=4
+              required
+            />
 
             <div class="grid grid-cols-2 gap-4">
-              <div class="relative">
-                <input 
-                  v-model.number="faqForm.order" 
-                  type="number" 
-                  placeholder=" " 
-                  class="form-input peer"
-                  min="0"
-                >
-                <label class="floating-label">Display Order</label>
-              </div>
+              <BaseInput
+                v-model.number="faqForm.order"
+                type="number"
+                label="Display Order"
+                min="0"
+              />
 
-              <div class="flex items-center space-x-3">
-                <input 
-                  v-model="faqForm.isActive" 
-                  type="checkbox" 
-                  id="isActive"
-                  class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                >
-                <label for="isActive" class="text-sm font-medium text-gray-700">Active</label>
-              </div>
+              <BaseCheckbox
+                v-model="faqForm.isActive"
+                label="Active"
+              />
             </div>
 
             <div class="flex justify-end space-x-4 pt-4 border-t">
@@ -180,7 +165,8 @@
 </template>
 
 <script setup>
-import { API_ENDPOINTS, buildApiUrl } from '~/composables/constants/api'
+const { createLocalizedContent, parseJsonField } = useMultiLanguage()
+const { locale } = useI18n()
 
 definePageMeta({
   middleware: 'auth',
@@ -192,9 +178,8 @@ const cmsStore = useCMSStore()
 await cmsStore.fetchSiteSettings()
 const siteSettings = cmsStore.siteSettings
 
-// Data
-const faqs = ref([])
-const loading = ref(true)
+// Use computed properties from store
+const loading = computed(() => cmsStore.isLoading)
 const saving = ref(false)
 const showModal = ref(false)
 const editingFaq = ref(null)
@@ -209,6 +194,22 @@ const faqForm = reactive({
   isActive: true
 })
 
+// Localized FAQs for display
+const localizedFaqs = computed(() => {
+  const faqs = cmsStore.faqs || []
+  if (!Array.isArray(faqs)) {
+    return []
+  }
+  return faqs.map(faq => {
+    const localized = createLocalizedContent(faq)
+    return {
+      ...faq,
+      question: localized.question || faq.question,
+      answer: localized.answer || faq.answer
+    }
+  })
+})
+
 // Methods
 onMounted(async () => {
   await loadFaqs()
@@ -216,12 +217,10 @@ onMounted(async () => {
 
 const loadFaqs = async () => {
   try {
-    const data = await $fetch(buildApiUrl(API_ENDPOINTS.CMS.FAQS.GET))
-    faqs.value = data
+    await cmsStore.fetchFAQs()
   } catch (error) {
+    console.error('Failed to load FAQs:', error)
     errorMessage.value = 'Failed to load FAQs'
-  } finally {
-    loading.value = false
   }
 }
 
@@ -231,12 +230,16 @@ const openAddModal = () => {
   showModal.value = true
 }
 
-const editFaq = (faq) => {
-  editingFaq.value = faq
-  faqForm.question = faq.question
-  faqForm.answer = faq.answer
-  faqForm.order = faq.order
-  faqForm.isActive = faq.isActive
+const editFaq = (localizedFaq) => {
+  // Find the original FAQ data (not localized) for editing
+  const originalFaq = cmsStore.faqs?.find(f => f.id === localizedFaq.id)
+  editingFaq.value = originalFaq
+
+  // Use the data directly (API already sends as objects)
+  faqForm.question = (typeof originalFaq.question === 'object' ? originalFaq.question[locale.value] || originalFaq.question.en || '' : originalFaq.question) || ''
+  faqForm.answer = (typeof originalFaq.answer === 'object' ? originalFaq.answer[locale.value] || originalFaq.answer.en || '' : originalFaq.answer) || ''
+  faqForm.order = originalFaq.order
+  faqForm.isActive = originalFaq.isActive
   showModal.value = true
 }
 
@@ -267,16 +270,15 @@ const saveFaq = async () => {
     }
 
     if (editingFaq.value) {
-      await $fetch(buildApiUrl(API_ENDPOINTS.CMS.FAQS.PUT(editingFaq.value.id)), {
-        method: 'PUT',
-        body: faqData
+      await cmsStore.updateFAQ({
+        body: {
+          ...faqData,
+          id: editingFaq.value.id
+        }
       })
       successMessage.value = 'FAQ updated successfully!'
     } else {
-      await $fetch(buildApiUrl(API_ENDPOINTS.CMS.FAQS.POST), {
-        method: 'POST',
-        body: faqData
-      })
+      await cmsStore.createFAQ({ body: faqData })
       successMessage.value = 'FAQ created successfully!'
     }
 
@@ -291,14 +293,14 @@ const saveFaq = async () => {
 
 const toggleFaqStatus = async (faq) => {
   try {
-    await $fetch(buildApiUrl(API_ENDPOINTS.CMS.FAQS.PUT(faq.id)), {
-      method: 'PUT',
+    await cmsStore.updateFAQ({
       body: {
         ...faq,
+        id: faq.id,
         isActive: !faq.isActive
       }
     })
-    
+
     successMessage.value = `FAQ ${faq.isActive ? 'deactivated' : 'activated'} successfully!`
     await loadFaqs()
   } catch (error) {
@@ -309,10 +311,8 @@ const toggleFaqStatus = async (faq) => {
 const deleteFaq = async (faq) => {
   if (confirm(`Are you sure you want to delete this FAQ: "${faq.question}"?`)) {
     try {
-      await $fetch(buildApiUrl(API_ENDPOINTS.CMS.FAQS.DELETE(faq.id)), {
-        method: 'DELETE'
-      })
-      
+      await cmsStore.deleteFAQ({ body: { id: faq.id } })
+
       successMessage.value = 'FAQ deleted successfully!'
       await loadFaqs()
     } catch (error) {
@@ -347,6 +347,13 @@ useSeoMeta({
 :root {
   --primary-color: v-bind('siteSettings.primaryColor || "#6495ed"');
   --secondary-color: v-bind('siteSettings.secondaryColor || "#9333ea"');
+}
+
+.card {
+  background: white;
+  border: 1px solid rgb(229 231 235);
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 [data-theme="dark"] {

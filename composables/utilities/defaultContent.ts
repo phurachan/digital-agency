@@ -34,7 +34,11 @@ export const getDefaultSiteSettings = (): SiteSettings => ({
     facebook: '#'
   }),
   logo: null,
-  favicon: null
+  favicon: null,
+  metaDescription: 'Elevating brands through innovative digital marketing solutions',
+  keywords: 'digital marketing, web development, SEO, social media',
+  contactEmail: 'hello@digitalagency.com',
+  contactPhone: '+1 (555) 123-4567'
 })
 
 export const getDefaultServicesContent = (): ServicesContent => ({

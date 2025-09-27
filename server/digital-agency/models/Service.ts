@@ -10,6 +10,8 @@ export interface IService extends Document {
   isActive: boolean
   icon?: string
   image?: string
+  video?: string
+  externalURL?: string
   color?: string
   order?: number
   createdAt: Date
@@ -47,6 +49,14 @@ const ServiceSchema = new Schema<IService>({
     trim: true
   },
   image: {
+    type: String,
+    trim: true
+  },
+  video: {
+    type: String,
+    trim: true
+  },
+  externalURL: {
     type: String,
     trim: true
   },

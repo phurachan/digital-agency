@@ -10,6 +10,10 @@ export interface ISiteSettings extends Document {
   socialLinks: string // JSON object: {"facebook": "url", "twitter": "url", etc.}
   logo?: string
   favicon?: string
+  metaDescription?: string // JSON string: {"th": "", "en": ""}
+  keywords?: string // JSON string: {"th": "", "en": ""}
+  contactEmail?: string // JSON string: {"th": "", "en": ""}
+  contactPhone?: string // JSON string: {"th": "", "en": ""}
   createdAt: Date
   updatedAt: Date
 }
@@ -52,6 +56,26 @@ const SiteSettingsSchema = new Schema<ISiteSettings>({
   favicon: {
     type: String,
     trim: true
+  },
+  metaDescription: {
+    type: String,
+    trim: true,
+    default: '{"th": "", "en": ""}'
+  },
+  keywords: {
+    type: String,
+    trim: true,
+    default: '{"th": "", "en": ""}'
+  },
+  contactEmail: {
+    type: String,
+    trim: true,
+    default: '{"th": "", "en": ""}'
+  },
+  contactPhone: {
+    type: String,
+    trim: true,
+    default: '{"th": "", "en": ""}'
   }
 }, {
   timestamps: true,
