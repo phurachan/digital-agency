@@ -9,6 +9,7 @@ export interface ITeamMember extends Document {
   image?: string
   socialLinks?: string // JSON object: {"facebook": "url", "twitter": "url", etc.}
   isActive: boolean
+  isDisplayInHome: boolean
   order?: number
   createdAt: Date
   updatedAt: Date
@@ -42,6 +43,10 @@ const TeamMemberSchema = new Schema<ITeamMember>({
     default: '{}'
   },
   isActive: {
+    type: Boolean,
+    default: true
+  },
+  isDisplayInHome: {
     type: Boolean,
     default: true
   },

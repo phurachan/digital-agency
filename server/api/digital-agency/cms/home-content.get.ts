@@ -16,22 +16,35 @@ export default defineEventHandler(async (event) => {
       return createSuccessResponse(defaultContent)
     }
 
+    // Helper function to safely parse JSON
+    const safeJsonParse = (field, defaultValue = '{"th": "", "en": ""}') => {
+      if (!field) return JSON.parse(defaultValue)
+      if (typeof field === 'object') return field
+
+      try {
+        return JSON.parse(field)
+      } catch (e) {
+        // If parsing fails, treat as plain string and create object structure
+        return { th: field, en: field }
+      }
+    }
+
     // Transform the content
     const transformedContent = {
       id: content._id.toString(),
-      heroTitle: JSON.parse(content.heroTitle || '{"th": "", "en": ""}'),
-      heroSubtitle: JSON.parse(content.heroSubtitle || '{"th": "", "en": ""}'),
-      ctaText: JSON.parse(content.ctaText || '{"th": "", "en": ""}'),
-      ctaButtonText: JSON.parse(content.ctaButtonText || '{"th": "", "en": ""}'),
-      featureTitle: JSON.parse(content.featureTitle || '{"th": "", "en": ""}'),
-      featureDescription: JSON.parse(content.featureDescription || '{"th": "", "en": ""}'),
+      heroTitle: safeJsonParse(content.heroTitle),
+      heroSubtitle: safeJsonParse(content.heroSubtitle),
+      ctaText: safeJsonParse(content.ctaText),
+      ctaButtonText: safeJsonParse(content.ctaButtonText),
+      featureTitle: safeJsonParse(content.featureTitle),
+      featureDescription: safeJsonParse(content.featureDescription),
       featureImage: content.featureImage,
-      aboutTitle: JSON.parse(content.aboutTitle || '{"th": "", "en": ""}'),
-      aboutDescription: JSON.parse(content.aboutDescription || '{"th": "", "en": ""}'),
+      aboutTitle: safeJsonParse(content.aboutTitle),
+      aboutDescription: safeJsonParse(content.aboutDescription),
       heroImage: content.heroImage,
       aboutImage: content.aboutImage,
-      peopleTitle: JSON.parse(content.peopleTitle || '{"th": "", "en": ""}'),
-      peopleDescription: JSON.parse(content.peopleDescription || '{"th": "", "en": ""}'),
+      peopleTitle: safeJsonParse(content.peopleTitle),
+      peopleDescription: safeJsonParse(content.peopleDescription),
       createdAt: content.createdAt,
       updatedAt: content.updatedAt
     }

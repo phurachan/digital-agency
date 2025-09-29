@@ -10,18 +10,53 @@ export default defineEventHandler(async (event) => {
     const teamMembers = await TeamMember.find({}).sort({ order: 1 }).lean()
 
     // Transform the team members
-    const transformedTeamMembers = teamMembers.map(member => ({
-      id: member._id.toString(),
-      name: JSON.parse(member.name || '{"th": "", "en": ""}'),
-      position: JSON.parse(member.position || '{"th": "", "en": ""}'),
-      bio: member.bio ? JSON.parse(member.bio) : {"th": "", "en": ""},
-      image: member.image,
-      socialLinks: member.socialLinks ? JSON.parse(member.socialLinks) : {},
-      isActive: member.isActive,
-      order: member.order,
-      createdAt: member.createdAt,
-      updatedAt: member.updatedAt
-    }))
+    const transformedTeamMembers = teamMembers.map(member => {
+      // Safely parse name
+      let name
+      try {
+        name = typeof member.name === 'string' ? JSON.parse(member.name) : member.name
+      } catch (e) {
+        name = { th: member.name || '', en: member.name || '' }
+      }
+
+      // Safely parse position
+      let position
+      try {
+        position = typeof member.position === 'string' ? JSON.parse(member.position) : member.position
+      } catch (e) {
+        position = { th: member.position || '', en: member.position || '' }
+      }
+
+      // Safely parse bio
+      let bio
+      try {
+        bio = member.bio ? (typeof member.bio === 'string' ? JSON.parse(member.bio) : member.bio) : { th: '', en: '' }
+      } catch (e) {
+        bio = { th: member.bio || '', en: member.bio || '' }
+      }
+
+      // Safely parse socialLinks
+      let socialLinks
+      try {
+        socialLinks = member.socialLinks ? (typeof member.socialLinks === 'string' ? JSON.parse(member.socialLinks) : member.socialLinks) : {}
+      } catch (e) {
+        socialLinks = {}
+      }
+
+      return {
+        id: member._id.toString(),
+        name: name || { th: '', en: '' },
+        position: position || { th: '', en: '' },
+        bio: bio || { th: '', en: '' },
+        image: member.image,
+        socialLinks: socialLinks || {},
+        isActive: member.isActive,
+        isDisplayInHome: member.isDisplayInHome ?? true,
+        order: member.order,
+        createdAt: member.createdAt,
+        updatedAt: member.updatedAt
+      }
+    })
 
     return createSuccessResponse(transformedTeamMembers)
   } catch (error: any) {

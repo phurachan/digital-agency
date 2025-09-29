@@ -9,46 +9,50 @@ export default defineEventHandler(async (event) => {
     // Get all services (both active and inactive for management), sorted by order
     const services = await Service.find({}).sort({ order: 1 }).lean()
 
+    console.log('Raw services from DB:', services.map(s => ({ id: s._id, title: s.title })))
+
     // Transform the services
     const transformedServices = services.map(service => {
+      // Safely parse title
+      let title
       try {
-        const parsedFeatures = JSON.parse(service.features || '[]')
-        const parsedTitle = JSON.parse(service.title || '{"th": "", "en": ""}')
-        const parsedDescription = JSON.parse(service.description || '{"th": "", "en": ""}')
-        return {
-          id: service._id.toString(),
-          title: parsedTitle,
-          description: parsedDescription,
-          features: parsedFeatures,
-          price: service.price,
-          isActive: service.isActive,
-          icon: service.icon,
-          image: service.image,
-          video: service.video,
-          externalURL: service.externalURL,
-          color: service.color,
-          order: service.order,
-          createdAt: service.createdAt,
-          updatedAt: service.updatedAt
-        }
-      } catch (error) {
-        console.error('Failed to parse JSON fields for service:', service._id.toString(), error)
-        return {
-          id: service._id.toString(),
-          title: service.title,
-          description: service.description,
-          features: [],
-          price: service.price,
-          isActive: service.isActive,
-          icon: service.icon,
-          image: service.image,
-          video: service.video,
-          externalURL: service.externalURL,
-          color: service.color,
-          order: service.order,
-          createdAt: service.createdAt,
-          updatedAt: service.updatedAt
-        }
+        title = typeof service.title === 'string' ? JSON.parse(service.title) : service.title
+      } catch (e) {
+        title = { th: service.title || '', en: service.title || '' }
+      }
+
+      // Safely parse description
+      let description
+      try {
+        description = typeof service.description === 'string' ? JSON.parse(service.description) : service.description
+      } catch (e) {
+        description = { th: service.description || '', en: service.description || '' }
+      }
+
+      // Safely parse features
+      let features
+      try {
+        features = service.features ? (typeof service.features === 'string' ? JSON.parse(service.features) : service.features) : []
+      } catch (e) {
+        features = []
+      }
+
+      return {
+        id: service._id.toString(),
+        title: title || { th: '', en: '' },
+        description: description || { th: '', en: '' },
+        features: features || [],
+        price: service.price,
+        isActive: service.isActive,
+        isDisplayInHome: service.isDisplayInHome ?? true,
+        icon: service.icon,
+        image: service.image,
+        video: service.video,
+        externalURL: service.externalURL,
+        color: service.color,
+        order: service.order,
+        createdAt: service.createdAt,
+        updatedAt: service.updatedAt
       }
     })
 

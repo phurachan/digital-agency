@@ -39,6 +39,8 @@
                 <div class="flex items-center space-x-3 mb-2">
                   <h3 class="text-xl font-bold text-gray-900">{{ member.name }}</h3>
                   <span v-if="!member.isActive" class="px-2 py-1 bg-gray-200 text-gray-600 text-xs rounded-full">Inactive</span>
+                  <span v-if="member.isDisplayInHome" class="px-2 py-1 bg-green-100 text-green-600 text-xs rounded-full">🏠 Home</span>
+                  <span v-else class="px-2 py-1 bg-yellow-100 text-yellow-600 text-xs rounded-full">📋 List Only</span>
                 </div>
                 
                 <p class="text-blue-600 font-medium mb-2">{{ member.position }}</p>
@@ -64,7 +66,7 @@
                 </div>
 
                 <div class="flex items-center space-x-4 text-sm text-gray-500">
-                  <span>Order: {{ member.order }}</span>
+                  <span>Order: {{ member.order || '-' }}</span>
                   <span>•</span>
                   <span>Updated: {{ formatDate(member.updatedAt) }}</span>
                 </div>
@@ -81,16 +83,17 @@
                 </svg>
               </button>
               
-              <button 
-                @click="toggleMemberStatus(member)"
-                :class="member.isActive ? 'text-yellow-600 hover:bg-yellow-50' : 'text-green-600 hover:bg-green-50'"
+              <button
+                @click="toggleHomeDisplay(member)"
+                :class="member.isDisplayInHome ? 'text-green-600 hover:bg-green-50' : 'text-gray-600 hover:bg-gray-50'"
                 class="p-2 rounded-lg"
+                :title="member.isDisplayInHome ? 'Remove from Home Page' : 'Add to Home Page'"
               >
-                <svg v-if="member.isActive" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L5.636 5.636"></path>
+                <svg v-if="member.isDisplayInHome" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                 </svg>
                 <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
               </button>
               
@@ -107,7 +110,7 @@
         </div>
 
         <!-- Empty State -->
-        <div v-if="teamMembers.length === 0" class="text-center py-12">
+        <div v-if="localizedTeamMembers.length === 0" class="text-center py-12">
           <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
           </svg>
@@ -181,7 +184,7 @@
               label="Twitter URL"
             />
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-3 gap-4">
               <BaseInput
                 v-model.number="memberForm.order"
                 type="number"
@@ -192,6 +195,11 @@
               <BaseCheckbox
                 v-model="memberForm.isActive"
                 label="Active"
+              />
+
+              <BaseCheckbox
+                v-model="memberForm.isDisplayInHome"
+                label="Display in Home"
               />
             </div>
 
@@ -261,7 +269,8 @@ const memberForm = reactive({
   linkedin: '',
   twitter: '',
   order: 0,
-  isActive: true
+  isActive: true,
+  isDisplayInHome: true
 })
 
 // Localized team members for display
@@ -316,6 +325,7 @@ const editMember = (localizedMember) => {
   memberForm.twitter = originalMember.twitter || ''
   memberForm.order = originalMember.order
   memberForm.isActive = originalMember.isActive
+  memberForm.isDisplayInHome = originalMember.isDisplayInHome ?? true
   showModal.value = true
 }
 
@@ -335,6 +345,7 @@ const resetForm = () => {
   memberForm.twitter = ''
   memberForm.order = 0
   memberForm.isActive = true
+  memberForm.isDisplayInHome = true
 }
 
 const saveMember = async () => {
@@ -352,7 +363,8 @@ const saveMember = async () => {
       linkedin: memberForm.linkedin,
       twitter: memberForm.twitter,
       order: memberForm.order,
-      isActive: memberForm.isActive
+      isActive: memberForm.isActive,
+      isDisplayInHome: memberForm.isDisplayInHome
     }
 
     if (editingMember.value) {
@@ -377,20 +389,24 @@ const saveMember = async () => {
   }
 }
 
-const toggleMemberStatus = async (member) => {
+const toggleHomeDisplay = async (member) => {
   try {
+    console.log('Toggling home display for member:', member)
+    console.log('Member ID:', member.id)
+
     await cmsStore.updateTeamMember({
       body: {
         ...member,
         id: member.id,
-        isActive: !member.isActive
+        isDisplayInHome: !member.isDisplayInHome
       }
     })
 
-    successMessage.value = `Person ${member.isActive ? 'deactivated' : 'activated'} successfully!`
+    successMessage.value = `Person ${member.isDisplayInHome ? 'removed from' : 'added to'} home page successfully!`
     await loadTeamMembers()
   } catch (error) {
-    errorMessage.value = 'Failed to update team member status'
+    console.error('Failed to update home display status:', error)
+    errorMessage.value = 'Failed to update home display status'
   }
 }
 

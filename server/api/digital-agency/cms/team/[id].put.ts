@@ -34,10 +34,13 @@ export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id')
     const body = await readBody(event)
 
+    // Prepare update data (remove fields that shouldn't be updated)
+    const { id: bodyId, createdAt, updatedAt, ...updateData } = body
+
     // Update team member by ID
     const result = await TeamMember.findByIdAndUpdate(
       id,
-      body,
+      updateData,
       { new: true, runValidators: true }
     ).lean()
 
@@ -54,6 +57,7 @@ export default defineEventHandler(async (event) => {
       image: result.image,
       socialLinks: result.socialLinks,
       isActive: result.isActive,
+      isDisplayInHome: result.isDisplayInHome ?? true,
       order: result.order,
       createdAt: result.createdAt,
       updatedAt: result.updatedAt

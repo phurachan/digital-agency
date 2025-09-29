@@ -16,17 +16,30 @@ export default defineEventHandler(async (event) => {
       return createSuccessResponse(defaultContent)
     }
 
+    // Helper function to safely parse JSON
+    const safeJsonParse = (field, defaultValue = '{"th": "", "en": ""}') => {
+      if (!field) return JSON.parse(defaultValue)
+      if (typeof field === 'object') return field
+
+      try {
+        return JSON.parse(field)
+      } catch (e) {
+        // If parsing fails, treat as plain string and create object structure
+        return { th: field, en: field }
+      }
+    }
+
     // Transform the content
     const transformedContent = {
       id: content._id.toString(),
-      missionTitle: JSON.parse(content.missionTitle || '{"th": "", "en": ""}'),
-      missionText: JSON.parse(content.missionText || '{"th": "", "en": ""}'),
-      visionTitle: JSON.parse(content.visionTitle || '{"th": "", "en": ""}'),
-      visionText: JSON.parse(content.visionText || '{"th": "", "en": ""}'),
-      valuesTitle: JSON.parse(content.valuesTitle || '{"th": "", "en": ""}'),
-      valuesText: JSON.parse(content.valuesText || '{"th": "", "en": ""}'),
-      historyTitle: JSON.parse(content.historyTitle || '{"th": "", "en": ""}'),
-      historyText: JSON.parse(content.historyText || '{"th": "", "en": ""}'),
+      missionTitle: safeJsonParse(content.missionTitle),
+      missionText: safeJsonParse(content.missionText),
+      visionTitle: safeJsonParse(content.visionTitle),
+      visionText: safeJsonParse(content.visionText),
+      valuesTitle: safeJsonParse(content.valuesTitle),
+      valuesText: safeJsonParse(content.valuesText),
+      historyTitle: safeJsonParse(content.historyTitle),
+      historyText: safeJsonParse(content.historyText),
       missionImage: content.missionImage,
       heroImage: content.heroImage,
       createdAt: content.createdAt,

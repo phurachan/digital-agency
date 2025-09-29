@@ -568,9 +568,9 @@ await cmsStore.fetchSiteSettings()
 await cmsStore.fetchTeamMembers()
 
 const homeContentRaw = cmsStore.homeContent
-const services = cmsStore.getActiveServices
+const services = cmsStore.getHomeServices
 const siteSettingsRaw = cmsStore.siteSettings
-const teamMembersRaw = cmsStore.getActiveTeamMembers
+const teamMembersRaw = cmsStore.getHomeTeamMembers
 
 // Create reactive localized content using the composable
 const homeContent = computed(() => createLocalizedContent(homeContentRaw))

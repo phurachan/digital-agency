@@ -51,8 +51,10 @@ export const useCMSStore = defineStore('cms', {
   getters: {
     getServiceById: (state) => (id: string) => state.services?.find((service: Service) => service.id === id),
     getActiveServices: (state) => state.services?.filter((service: Service) => service.isActive !== false) || [],
+    getHomeServices: (state) => state.services?.filter((service: Service) => service.isActive !== false && service.isDisplayInHome !== false) || [],
     getTeamMemberById: (state) => (id: string) => state.teamMembers?.find((member: TeamMember) => member.id === id),
     getActiveTeamMembers: (state) => state.teamMembers?.filter((member: TeamMember) => member.isActive !== false) || [],
+    getHomeTeamMembers: (state) => state.teamMembers?.filter((member: TeamMember) => member.isActive !== false && member.isDisplayInHome !== false) || [],
     getFAQById: (state) => (id: string) => state.faqs?.find((faq: FAQ) => faq.id === id),
     getActiveFAQs: (state) => state.faqs?.filter((faq: FAQ) => faq.isActive !== false) || []
   },

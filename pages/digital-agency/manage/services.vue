@@ -30,6 +30,8 @@
                 ></div>
                 <h3 class="text-xl font-bold text-gray-900">{{ service.title }}</h3>
                 <span v-if="!service.isActive" class="px-2 py-1 bg-gray-200 text-gray-600 text-xs rounded-full">Inactive</span>
+                <span v-if="service.isDisplayInHome" class="px-2 py-1 bg-green-100 text-green-600 text-xs rounded-full">🏠 Home</span>
+                <span v-else class="px-2 py-1 bg-yellow-100 text-yellow-600 text-xs rounded-full">📋 List Only</span>
               </div>
               
               <p class="text-gray-600 mb-4">{{ service.description }}</p>
@@ -49,7 +51,7 @@
               </div>
 
               <div class="flex items-center space-x-4 text-sm text-gray-500">
-                <span>Order: {{ service.order }}</span>
+                <span>Order: {{ service.order || '-' }}</span>
                 <span>•</span>
                 <span>Updated: {{ formatDate(service.updatedAt) }}</span>
               </div>
@@ -65,16 +67,17 @@
                 </svg>
               </button>
               
-              <button 
-                @click="toggleServiceStatus(service)"
-                :class="service.isActive ? 'text-yellow-600 hover:bg-yellow-50' : 'text-green-600 hover:bg-green-50'"
+              <button
+                @click="toggleHomeDisplay(service)"
+                :class="service.isDisplayInHome ? 'text-green-600 hover:bg-green-50' : 'text-gray-600 hover:bg-gray-50'"
                 class="p-2 rounded-lg"
+                :title="service.isDisplayInHome ? 'Remove from Home Page' : 'Add to Home Page'"
               >
-                <svg v-if="service.isActive" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L5.636 5.636"></path>
+                <svg v-if="service.isDisplayInHome" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                 </svg>
                 <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
               </button>
               
@@ -247,7 +250,7 @@
               </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-3 gap-4">
               <BaseInput
                 v-model.number="serviceFormData.order"
                 type="number"
@@ -258,6 +261,11 @@
               <BaseCheckbox
                 v-model="serviceFormData.isActive"
                 label="Active"
+              />
+
+              <BaseCheckbox
+                v-model="serviceFormData.isDisplayInHome"
+                label="Display in Home"
               />
             </div>
 
@@ -344,7 +352,8 @@ const serviceFormData = reactive({
   externalURL: '',
   color: '#6495ed',
   order: 0,
-  isActive: true
+  isActive: true,
+  isDisplayInHome: true
 })
 
 // Computed property to get localized services for display
@@ -422,6 +431,7 @@ const editService = (service) => {
   serviceFormData.color = service.color || '#6495ed'
   serviceFormData.order = service.order || 0
   serviceFormData.isActive = service.isActive
+  serviceFormData.isDisplayInHome = service.isDisplayInHome ?? true
 
   currentLanguage.value = 'en'
   showModal.value = true
@@ -444,6 +454,7 @@ const resetForm = () => {
   serviceFormData.color = '#6495ed'
   serviceFormData.order = 0
   serviceFormData.isActive = true
+  serviceFormData.isDisplayInHome = true
   currentLanguage.value = 'en'
 }
 
@@ -480,7 +491,8 @@ const saveService = async () => {
       externalURL: serviceFormData.externalURL,
       color: serviceFormData.color,
       order: serviceFormData.order,
-      isActive: serviceFormData.isActive
+      isActive: serviceFormData.isActive,
+      isDisplayInHome: serviceFormData.isDisplayInHome
     }
 
     if (editingService.value) {
@@ -505,21 +517,25 @@ const saveService = async () => {
   }
 }
 
-const toggleServiceStatus = async (service) => {
+const toggleHomeDisplay = async (service) => {
   try {
+    console.log('Toggling home display for service:', service)
+    console.log('Service ID:', service.id)
+
     await cmsStore.updateService({
       body: {
         ...service,
         id: service.id,
         features: service.features,
-        isActive: !service.isActive
+        isDisplayInHome: !service.isDisplayInHome
       }
     })
 
-    successMessage.value = `Service ${service.isActive ? 'deactivated' : 'activated'} successfully!`
+    successMessage.value = `Service ${service.isDisplayInHome ? 'removed from' : 'added to'} home page successfully!`
     await loadServices()
   } catch (error) {
-    errorMessage.value = 'Failed to update service status'
+    console.error('Failed to update home display status:', error)
+    errorMessage.value = 'Failed to update home display status'
   }
 }
 

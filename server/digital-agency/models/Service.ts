@@ -8,6 +8,7 @@ export interface IService extends Document {
   features: string // JSON string array: [{"th": ["คุณสมบัติ1", "คุณสมบัติ2"], "en": ["Feature1", "Feature2"]}]
   price?: number
   isActive: boolean
+  isDisplayInHome: boolean
   icon?: string
   image?: string
   video?: string
@@ -41,6 +42,10 @@ const ServiceSchema = new Schema<IService>({
     min: [0, 'Price must be a positive number']
   },
   isActive: {
+    type: Boolean,
+    default: true
+  },
+  isDisplayInHome: {
     type: Boolean,
     default: true
   },

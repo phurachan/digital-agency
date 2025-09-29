@@ -16,15 +16,28 @@ export default defineEventHandler(async (event) => {
       return createSuccessResponse(defaultContent)
     }
 
+    // Helper function to safely parse JSON
+    const safeJsonParse = (field, defaultValue = '{"th": "", "en": ""}') => {
+      if (!field) return JSON.parse(defaultValue)
+      if (typeof field === 'object') return field
+
+      try {
+        return JSON.parse(field)
+      } catch (e) {
+        // If parsing fails, treat as plain string and create object structure
+        return { th: field, en: field }
+      }
+    }
+
     // Transform the content
     const transformedContent = {
       id: content._id.toString(),
-      title: JSON.parse(content.title || '{"th": "", "en": ""}'),
-      subtitle: JSON.parse(content.subtitle || '{"th": "", "en": ""}'),
+      title: safeJsonParse(content.title),
+      subtitle: safeJsonParse(content.subtitle),
       phone: content.phone,
       email: content.email,
-      address: JSON.parse(content.address || '{"th": "", "en": ""}'),
-      businessHours: JSON.parse(content.businessHours || '{"th": "", "en": ""}'),
+      address: safeJsonParse(content.address),
+      businessHours: safeJsonParse(content.businessHours),
       bannerImage: content.bannerImage,
       heroImage: content.heroImage,
       createdAt: content.createdAt,
