@@ -34,27 +34,6 @@ export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id')
     const body = await readBody(event)
 
-    console.log('Updating service with ID:', id)
-    console.log('Update body:', body)
-
-    // Validate ObjectId format
-    if (!id || !id.match(/^[0-9a-fA-F]{24}$/)) {
-      console.log('Invalid ObjectId format:', id)
-      throw createPredefinedError(API_RESPONSE_CODES.NOT_FOUND)
-    }
-
-    // Check if service exists first
-    const existingService = await Service.findById(id).lean()
-    console.log('Existing service found:', !!existingService)
-
-    if (!existingService) {
-      console.log('Service not found with ID:', id)
-      // Let's check what services exist
-      const allServices = await Service.find({}).select('_id title').lean()
-      console.log('Available services:', allServices.map(s => ({ id: s._id.toString(), title: s.title })))
-      throw createPredefinedError(API_RESPONSE_CODES.NOT_FOUND)
-    }
-
     // Prepare update data (remove fields that shouldn't be updated)
     const { id: bodyId, createdAt, updatedAt, ...rawUpdateData } = body
 
@@ -66,19 +45,14 @@ export default defineEventHandler(async (event) => {
         : rawUpdateData.features
     }
 
-    console.log('Attempting to update service with data:', updateData)
-
+    // Update service by ID
     const result = await Service.findByIdAndUpdate(
       id,
       updateData,
       { new: true, runValidators: true }
     ).lean()
 
-    console.log('Update result:', !!result)
-    console.log('Update result data:', result ? { id: result._id, title: result.title } : 'null')
-
     if (!result) {
-      console.log('findByIdAndUpdate returned null')
       throw createPredefinedError(API_RESPONSE_CODES.NOT_FOUND)
     }
 
@@ -103,8 +77,6 @@ export default defineEventHandler(async (event) => {
 
     return createSuccessResponse(transformedResult)
   } catch (error: any) {
-    console.error('Update service error:', error)
-    
     // If it's already a createError, throw it as is
     if (error.statusCode) {
       throw error

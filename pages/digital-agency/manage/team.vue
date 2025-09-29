@@ -391,9 +391,6 @@ const saveMember = async () => {
 
 const toggleHomeDisplay = async (member) => {
   try {
-    console.log('Toggling home display for member:', member)
-    console.log('Member ID:', member.id)
-
     await cmsStore.updateTeamMember({
       body: {
         ...member,
@@ -405,7 +402,6 @@ const toggleHomeDisplay = async (member) => {
     successMessage.value = `Person ${member.isDisplayInHome ? 'removed from' : 'added to'} home page successfully!`
     await loadTeamMembers()
   } catch (error) {
-    console.error('Failed to update home display status:', error)
     errorMessage.value = 'Failed to update home display status'
   }
 }

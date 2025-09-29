@@ -519,9 +519,6 @@ const saveService = async () => {
 
 const toggleHomeDisplay = async (service) => {
   try {
-    console.log('Toggling home display for service:', service)
-    console.log('Service ID:', service.id)
-
     await cmsStore.updateService({
       body: {
         ...service,
@@ -534,7 +531,6 @@ const toggleHomeDisplay = async (service) => {
     successMessage.value = `Service ${service.isDisplayInHome ? 'removed from' : 'added to'} home page successfully!`
     await loadServices()
   } catch (error) {
-    console.error('Failed to update home display status:', error)
     errorMessage.value = 'Failed to update home display status'
   }
 }

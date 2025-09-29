@@ -15,8 +15,8 @@
       "description": "Development server"
     },
     {
-      "url": "http://localhost:3001/api/digital-agency",
-      "description": "Development server"
+      "url": "https://digital-agency-xi-navy.vercel.app/api/digital-agency",
+      "description": "Production server"
     }
   ],
   "security": [
@@ -490,6 +490,11 @@
             "type": "boolean",
             "example": true
           },
+          "isDisplayInHome": {
+            "type": "boolean",
+            "example": true,
+            "description": "Whether this service should be displayed on the home page"
+          },
           "icon": {
             "type": "string",
             "example": "🎬"
@@ -497,6 +502,16 @@
           "image": {
             "type": "string",
             "example": "/images/video-production.jpg"
+          },
+          "video": {
+            "type": "string",
+            "example": "/videos/service-demo.mp4",
+            "description": "Video URL for service demonstration"
+          },
+          "externalURL": {
+            "type": "string",
+            "example": "https://external-service.com",
+            "description": "External URL related to this service"
           },
           "color": {
             "type": "string",
@@ -714,6 +729,145 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "ServiceCreateRequest": {
+        "type": "object",
+        "required": ["title", "description", "price"],
+        "properties": {
+          "title": {
+            "$ref": "#/components/schemas/MultiLanguageText"
+          },
+          "description": {
+            "$ref": "#/components/schemas/MultiLanguageText"
+          },
+          "features": {
+            "type": "object",
+            "properties": {
+              "th": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "example": ["คุณสมบัติ 1", "คุณสมบัติ 2"]
+              },
+              "en": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "example": ["Feature 1", "Feature 2"]
+              }
+            }
+          },
+          "price": {
+            "type": "number",
+            "example": 15000
+          },
+          "isActive": {
+            "type": "boolean",
+            "example": true
+          },
+          "isDisplayInHome": {
+            "type": "boolean",
+            "example": true,
+            "description": "Whether this service should be displayed on the home page"
+          },
+          "icon": {
+            "type": "string",
+            "example": "🎬"
+          },
+          "image": {
+            "type": "string",
+            "example": "/images/video-production.jpg"
+          },
+          "video": {
+            "type": "string",
+            "example": "/videos/service-demo.mp4",
+            "description": "Video URL for service demonstration"
+          },
+          "externalURL": {
+            "type": "string",
+            "example": "https://external-service.com",
+            "description": "External URL related to this service"
+          },
+          "color": {
+            "type": "string",
+            "example": "#e74c3c"
+          },
+          "order": {
+            "type": "integer",
+            "example": 1
+          }
+        }
+      },
+      "ServiceUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "$ref": "#/components/schemas/MultiLanguageText"
+          },
+          "description": {
+            "$ref": "#/components/schemas/MultiLanguageText"
+          },
+          "features": {
+            "type": "object",
+            "properties": {
+              "th": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "example": ["คุณสมบัติ 1", "คุณสมบัติ 2"]
+              },
+              "en": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "example": ["Feature 1", "Feature 2"]
+              }
+            }
+          },
+          "price": {
+            "type": "number",
+            "example": 15000
+          },
+          "isActive": {
+            "type": "boolean",
+            "example": true
+          },
+          "isDisplayInHome": {
+            "type": "boolean",
+            "example": true,
+            "description": "Whether this service should be displayed on the home page"
+          },
+          "icon": {
+            "type": "string",
+            "example": "🎬"
+          },
+          "image": {
+            "type": "string",
+            "example": "/images/video-production.jpg"
+          },
+          "video": {
+            "type": "string",
+            "example": "/videos/service-demo.mp4",
+            "description": "Video URL for service demonstration"
+          },
+          "externalURL": {
+            "type": "string",
+            "example": "https://external-service.com",
+            "description": "External URL related to this service"
+          },
+          "color": {
+            "type": "string",
+            "example": "#e74c3c"
+          },
+          "order": {
+            "type": "integer",
+            "example": 1
           }
         }
       }
@@ -1959,7 +2113,7 @@
       "get": {
         "tags": ["CMS - Services"],
         "summary": "Get services",
-        "description": "Get all active services with multi-language support",
+        "description": "Get all services (both active and inactive for management) with multi-language support, sorted by order",
         "security": [],
         "responses": {
           "200": {
@@ -1988,13 +2142,232 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": ["CMS - Services"],
+        "summary": "Create service",
+        "description": "Create a new service (Admin only)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServiceCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Service created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Service"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Admin access required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cms/services/{id}": {
+      "put": {
+        "tags": ["CMS - Services"],
+        "summary": "Update service",
+        "description": "Update an existing service (Admin only)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Service ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServiceUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Service updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Service"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Admin access required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Service not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["CMS - Services"],
+        "summary": "Delete service",
+        "description": "Delete a service (Admin only)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Service ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Service deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Admin access required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Service not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/cms/team": {
       "get": {
         "tags": ["CMS - Team"],
         "summary": "Get team members",
-        "description": "Get all active team members with multi-language support",
+        "description": "Get all team members with multi-language support",
         "security": [],
         "responses": {
           "200": {
@@ -2018,6 +2391,306 @@
                       }
                     }
                   ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["CMS - Team"],
+        "summary": "Create team member",
+        "description": "Create a new team member (Admin only)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "position"],
+                "properties": {
+                  "name": {
+                    "$ref": "#/components/schemas/MultiLanguageText"
+                  },
+                  "position": {
+                    "$ref": "#/components/schemas/MultiLanguageText"
+                  },
+                  "bio": {
+                    "$ref": "#/components/schemas/MultiLanguageText"
+                  },
+                  "image": {
+                    "type": "string",
+                    "example": "/images/team/member.jpg"
+                  },
+                  "socialLinks": {
+                    "type": "object",
+                    "properties": {
+                      "facebook": {
+                        "type": "string",
+                        "example": "https://facebook.com/member"
+                      },
+                      "instagram": {
+                        "type": "string",
+                        "example": "https://instagram.com/member"
+                      },
+                      "linkedin": {
+                        "type": "string",
+                        "example": "https://linkedin.com/in/member"
+                      }
+                    }
+                  },
+                  "isActive": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "order": {
+                    "type": "integer",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Team member created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/TeamMember"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Admin access required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cms/team/{id}": {
+      "put": {
+        "tags": ["CMS - Team"],
+        "summary": "Update team member",
+        "description": "Update an existing team member (Admin only)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Team member ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "$ref": "#/components/schemas/MultiLanguageText"
+                  },
+                  "position": {
+                    "$ref": "#/components/schemas/MultiLanguageText"
+                  },
+                  "bio": {
+                    "$ref": "#/components/schemas/MultiLanguageText"
+                  },
+                  "image": {
+                    "type": "string",
+                    "example": "/images/team/member.jpg"
+                  },
+                  "socialLinks": {
+                    "type": "object",
+                    "properties": {
+                      "facebook": {
+                        "type": "string",
+                        "example": "https://facebook.com/member"
+                      },
+                      "instagram": {
+                        "type": "string",
+                        "example": "https://instagram.com/member"
+                      },
+                      "linkedin": {
+                        "type": "string",
+                        "example": "https://linkedin.com/in/member"
+                      }
+                    }
+                  },
+                  "isActive": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "order": {
+                    "type": "integer",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Team member updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ApiResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/TeamMember"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Admin access required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Team member not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["CMS - Team"],
+        "summary": "Delete team member",
+        "description": "Delete a team member (Admin only)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Team member ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Team member deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Admin access required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Team member not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }

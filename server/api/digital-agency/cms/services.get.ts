@@ -9,8 +9,6 @@ export default defineEventHandler(async (event) => {
     // Get all services (both active and inactive for management), sorted by order
     const services = await Service.find({}).sort({ order: 1 }).lean()
 
-    console.log('Raw services from DB:', services.map(s => ({ id: s._id, title: s.title })))
-
     // Transform the services
     const transformedServices = services.map(service => {
       // Safely parse title
