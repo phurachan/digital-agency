@@ -49,6 +49,7 @@ export default defineEventHandler(async (event) => {
         position: position || { th: '', en: '' },
         bio: bio || { th: '', en: '' },
         image: member.image,
+        link: member.link,
         socialLinks: socialLinks || {},
         isActive: member.isActive,
         isDisplayInHome: member.isDisplayInHome ?? true,

@@ -41,13 +41,13 @@
               required
             />
 
-            <CmsImageUpload 
-              v-model="form.logo" 
+            <CmsImageUpload
+              v-model="form.logo"
               label="Site Logo (optional)"
             />
 
-            <CmsImageUpload 
-              v-model="form.favicon" 
+            <CmsImageUpload
+              v-model="form.favicon"
               label="Site Favicon (optional)"
             />
           </div>
@@ -100,6 +100,81 @@
               <strong>Primary:</strong> Used for buttons, links, and main brand elements.<br>
               <strong>Secondary:</strong> Used for gradients and accent elements to create visual variety.
             </p>
+          </div>
+        </div>
+
+        <!-- Navbar Settings -->
+        <div class="card p-6">
+          <h2 class="text-xl font-bold text-gray-900 mb-6">Navbar Settings</h2>
+
+          <div class="space-y-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Navbar Display Mode</label>
+              <div class="space-y-2">
+                <label
+                  class="flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors navbar-mode-option"
+                  :class="form.navbarDisplayMode === 'logo' ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 dark:border-blue-400' : 'border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'"
+                >
+                  <input type="radio" v-model="form.navbarDisplayMode" value="logo" class="text-blue-600 focus:ring-blue-500">
+                  <div>
+                    <div class="font-medium text-gray-900 dark:text-gray-100">Logo Only</div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">Display only the logo image</div>
+                  </div>
+                </label>
+                <label
+                  class="flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors navbar-mode-option"
+                  :class="form.navbarDisplayMode === 'text' ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 dark:border-blue-400' : 'border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'"
+                >
+                  <input type="radio" v-model="form.navbarDisplayMode" value="text" class="text-blue-600 focus:ring-blue-500">
+                  <div>
+                    <div class="font-medium text-gray-900 dark:text-gray-100">Text Only</div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">Display only the site name text</div>
+                  </div>
+                </label>
+                <label
+                  class="flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors navbar-mode-option"
+                  :class="form.navbarDisplayMode === 'both' ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 dark:border-blue-400' : 'border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'"
+                >
+                  <input type="radio" v-model="form.navbarDisplayMode" value="both" class="text-blue-600 focus:ring-blue-500">
+                  <div>
+                    <div class="font-medium text-gray-900 dark:text-gray-100">Logo and Text</div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">Display both logo and site name</div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Navbar Text Color</label>
+              <div class="flex items-center space-x-4">
+                <input
+                  v-model="form.navbarTextColor"
+                  type="color"
+                  class="w-16 h-16 border-2 border-gray-300 rounded-lg cursor-pointer"
+                >
+                <BaseInput
+                  v-model="form.navbarTextColor"
+                  type="text"
+                  placeholder="#1a1a1a"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Navbar Background Color</label>
+              <div class="flex items-center space-x-4">
+                <input
+                  v-model="form.navbarBgColor"
+                  type="color"
+                  class="w-16 h-16 border-2 border-gray-300 rounded-lg cursor-pointer"
+                >
+                <BaseInput
+                  v-model="form.navbarBgColor"
+                  type="text"
+                  placeholder="#ffffff"
+                />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -221,8 +296,11 @@ const form = reactive({
   siteTagline: '',
   logo: '',
   favicon: '',
+  navbarDisplayMode: 'both',
   primaryColor: '#6495ed',
   secondaryColor: '#9333ea',
+  navbarTextColor: '#1a1a1a',
+  navbarBgColor: '#ffffff',
   metaDescription: '',
   keywords: '',
   contactEmail: '',
@@ -275,8 +353,11 @@ const loadContent = async () => {
       form.siteTagline = extractValue(settings.siteTagline)
       form.logo = extractValue(settings.logo)
       form.favicon = extractValue(settings.favicon)
+      form.navbarDisplayMode = extractValue(settings.navbarDisplayMode) || 'both'
       form.primaryColor = extractValue(settings.primaryColor) || '#6495ed'
       form.secondaryColor = extractValue(settings.secondaryColor) || '#9333ea'
+      form.navbarTextColor = extractValue(settings.navbarTextColor) || '#1a1a1a'
+      form.navbarBgColor = extractValue(settings.navbarBgColor) || '#ffffff'
       form.metaDescription = extractValue(settings.metaDescription)
       form.keywords = extractValue(settings.keywords)
       form.contactEmail = extractValue(settings.contactEmail)

@@ -5,6 +5,7 @@ export interface IHomeContent extends Document {
   _id: mongoose.Types.ObjectId
   heroTitle: string // JSON string: {"th": "หัวข้อภาษาไทย", "en": "English Title"}
   heroSubtitle: string // JSON string
+  heroDisplayMode?: string // 'gradient' | 'image' | 'video' | 'minimal'
   ctaText: string // JSON string
   ctaButtonText: string // JSON string
   featureTitle: string // JSON string
@@ -32,6 +33,12 @@ const HomeContentSchema = new Schema<IHomeContent>({
     required: [true, MODEL_VALIDATION_MESSAGES.FIELD_REQUIRED],
     trim: true,
     maxlength: [1000, MODEL_VALIDATION_MESSAGES.MAX_LENGTH_200]
+  },
+  heroDisplayMode: {
+    type: String,
+    enum: ['gradient', 'image', 'video', 'minimal', 'cover'],
+    default: 'gradient',
+    trim: true
   },
   ctaText: {
     type: String,

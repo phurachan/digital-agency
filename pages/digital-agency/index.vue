@@ -1,79 +1,75 @@
 <template>
-  <div class="min-h-screen">
-    <!-- Top Navbar -->
-    <CmsTopNavbar />
-    
-    <!-- Navigation -->
-    <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-100" style="top: 40px; scroll-margin-top: 140px;">
+  <div
+    class="app-homepage"
+    :style="{
+      '--primary-color': siteColors.primary,
+      '--secondary-color': siteColors.secondary,
+      '--navbar-text-color': navbarColors.textColor,
+      '--navbar-bg-color': navbarColors.bgColor
+    }"
+  >
+    <!-- Header/Navigation -->
+    <header class="site-header" :class="{ 'scrolled': isScrolled }">
       <div class="container">
-        <div class="flex justify-between items-center py-4">
-          <div class="text-2xl font-bold gradient-text">{{ siteSettings.siteName }}</div>
-          <div class="hidden md:flex space-x-8">
-            <a href="#home" class="text-gray-700 hover:text-blue-500 transition-colors">{{ t('nav.home') }}</a>
-            <a href="#services" class="text-gray-700 hover:text-blue-500 transition-colors">{{ t('nav.services') }}</a>
-            <a href="#about" class="text-gray-700 hover:text-blue-500 transition-colors">{{ t('nav.about') }}</a>
-            <a href="#team" class="text-gray-700 hover:text-blue-500 transition-colors">{{ t('nav.team') }}</a>
-            <a href="#contact" class="text-gray-700 hover:text-blue-500 transition-colors">{{ t('nav.contact') }}</a>
+        <div class="header-content">
+          <div class="logo">
+            <a href="#home">{{ siteSettings.siteName || '' }}</a>
           </div>
-          <NuxtLink :to="$localePath('/digital-agency/contact')" class="btn-primary hidden md:block">{{ homeContent.ctaButtonText }}</NuxtLink>
-          <button class="md:hidden p-2">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
+
+          <nav class="main-nav" :class="{ 'mobile-open': mobileMenuOpen }">
+            <a href="#services" @click="closeMobileMenu">{{ t('index.ourService') }}</a>
+            <a href="#projects" @click="closeMobileMenu">{{ t('index.projects') }}</a>
+            <a href="#why-us" @click="closeMobileMenu">{{ t('index.whyUs') }}</a>
+            <a href="#insights" @click="closeMobileMenu">{{ t('index.insights') }}</a>
+            <a href="#contact" @click="closeMobileMenu">{{ t('common.contactUs') }}</a>
+          </nav>
+
+          <button class="mobile-menu-toggle" @click="toggleMobileMenu">
+            <span></span>
+            <span></span>
+            <span></span>
           </button>
         </div>
       </div>
-    </nav>
+    </header>
 
     <!-- Hero Section -->
-    <section 
-      id="home" 
-      class="section-padding text-white relative"
-      :class="homeContent.heroImage ? 'hero-with-image' : 'gradient-bg'"
-      :style="homeContent.heroImage ? {
-        backgroundImage: `url(${homeContent.heroImage})`,
-        paddingTop: '200px'
-      } : { paddingTop: '200px' }"
+    <section
+      id="home"
+      class="hero-section"
+      :class="`hero-mode-${homeContent.heroDisplayMode || 'gradient'}`"
+      :style="((homeContent.heroDisplayMode === 'image' || homeContent.heroDisplayMode === 'cover') && homeContent.heroImage) ? { backgroundImage: `url(${homeContent.heroImage})` } : {}"
     >
-      <!-- Dark overlay for better text readability when using background image -->
-      <div v-if="homeContent.heroImage" class="absolute inset-0 bg-black/50 z-0"></div>
-      <div class="container relative z-10">
-        <div class="grid lg:grid-cols-2 gap-12 items-center">
-          <div class="fade-in-up">
-            <h1 class="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
-              {{ homeContent.heroTitle }}
-            </h1>
-            <p class="text-xl mb-8 text-blue-100">
-              {{ homeContent.heroSubtitle }}
+      <div v-if="homeContent.heroDisplayMode !== 'cover'" class="container">
+        <div class="hero-content">
+          <h1 class="hero-headline" v-html="homeContent.heroTitle || ''"></h1>
+          <p class="hero-tagline">{{ homeContent.heroSubtitle || '' }}</p>
+        </div>
+      </div>
+
+      <div v-if="homeContent.heroDisplayMode !== 'cover'" class="scroll-indicator">
+        <div class="mouse"></div>
+        <span>{{ t('index.scroll') }}</span>
+      </div>
+    </section>
+
+    <!-- What Makes Us Different -->
+    <section class="what-makes-different">
+      <div class="container">
+        <div class="content-wrapper">
+          <div class="text-content">
+            <h2 class="section-title">{{ homeContent.aboutTitle || '' }}</h2>
+            <p class="section-description">
+              {{ homeContent.aboutDescription || '' }}
             </p>
-            <div class="flex flex-col sm:flex-row gap-4">
-              <NuxtLink :to="$localePath('/digital-agency/contact')" class="btn-primary text-center">
-                {{ homeContent.ctaButtonText }}
-              </NuxtLink>
-              <NuxtLink :to="$localePath('/digital-agency/services')" class="btn-secondary !border-white !text-white hover:bg-white hover:text-blue-600 hover:scale-105 text-center transform transition-all duration-300">
-                {{ t('common.viewServices') }}
-              </NuxtLink>
-            </div>
+            <a href="/digital-agency/about" class="btn-outline">{{ t('index.getToKnowUs') }}</a>
           </div>
-          <div class="relative max-w-md mx-auto">
-            <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-6 md:p-8 transform hover:scale-105 transition-transform duration-300 max-h-96 overflow-hidden">
-              <div class="text-center max-w-xs mx-auto">
-                <!-- Feature Image or Icon -->
-                <div v-if="homeContent.featureImage" class="w-32 h-32 mx-auto mb-6 rounded-2xl overflow-hidden">
-                  <img 
-                    :src="homeContent.featureImage" 
-                    :alt="homeContent.featureTitle || t('home.lightningFast')"
-                    class="w-full h-full object-cover"
-                  >
-                </div>
-                <div v-else class="w-32 h-32 bg-gradient-primary-to-secondary rounded-full mx-auto mb-6 flex items-center justify-center">
-                  <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                  </svg>
-                </div>
-                <h3 class="text-xl md:text-2xl font-bold mb-2 line-clamp-2">{{ homeContent.featureTitle || t('home.lightningFast') }}</h3>
-                <p class="text-blue-100 text-sm md:text-base line-clamp-3">{{ homeContent.featureDescription || t('home.accelerateTransformation') }}</p>
-              </div>
+          <div class="image-content">
+            <img v-if="homeContent.aboutImage" :src="homeContent.aboutImage" alt="About Us" class="mission-image">
+            <div v-else class="placeholder-image">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
             </div>
           </div>
         </div>
@@ -81,455 +77,238 @@
     </section>
 
     <!-- Services Section -->
-    <section id="services" class="section-padding bg-gray-50">
+    <section id="services" class="services-section">
       <div class="container">
-        <div class="text-center mb-16">
-          <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-gray-900">{{ t('home.digitalMarketingServices') }}</h2>
-          <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-            {{ t('home.comprehensiveSolutions') }}
-          </p>
+        <h2 class="section-title-center">{{ t('index.whatWeDo') }}</h2>
+
+        <div class="service-tags">
+          <div class="service-tag">{{ t('index.branding') }}</div>
+          <div class="service-tag">{{ t('index.campaign') }}</div>
+          <div class="service-tag">{{ t('index.socialContent') }}</div>
+          <div class="service-tag">{{ t('index.website') }}</div>
+          <div class="service-tag">{{ t('index.kolMedia') }}</div>
+          <div class="service-tag">{{ t('index.event') }}</div>
         </div>
-        
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+        <div class="cta-center">
+          <a href="#services-detail" class="btn-primary">{{ t('index.seeOurServices') }}</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects Section / Services -->
+    <section id="projects" class="projects-section">
+      <div class="container-fluid">
+        <h2 class="section-title-center">{{ t('index.whatWeveDone') }}</h2>
+
+        <div class="projects-grid">
           <div
-            v-for="service in localizedServices.slice(0, 6)"
+            class="project-card"
+            v-for="service in services"
             :key="service.id"
-            class="card p-8 text-center relative overflow-hidden cursor-pointer group transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
+            :class="{ 'clickable': service.externalURL }"
             @click="handleServiceClick(service)"
           >
-            <!-- Color accent bar -->
-            <div
-              class="absolute top-0 left-0 w-full h-1"
-              :style="{ backgroundColor: service.color || '#6495ed' }"
-            ></div>
-
-            <!-- Service Media (Priority: Image > Video > Icon) -->
-            <div class="w-full h-48 mb-6 rounded-2xl overflow-hidden relative">
-              <!-- Image Display (First Priority) -->
-              <img
-                v-if="service.image"
-                :src="service.image"
-                :alt="service.title"
-                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-              >
-
-              <!-- Video Display (Second Priority) -->
-              <video
-                v-else-if="service.video"
-                :src="service.video"
-                class="w-full h-full object-cover"
-                muted
-                loop
-                autoplay
-                playsinline
-                @mouseenter="$event.target.play()"
-                @mouseleave="$event.target.pause()"
-              ></video>
-
-              <!-- Icon Fallback (Third Priority) -->
-              <div
-                v-else
-                class="w-full h-full rounded-2xl flex items-center justify-center text-white"
-                :style="{ backgroundColor: service.color || '#6495ed' }"
-              >
-                <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path v-if="service.icon === 'search'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                  <path v-else-if="service.icon === 'social'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2M7 4h10M7 4L5.5 20h13L17 4M9 9v6M15 9v6"></path>
-                  <path v-else-if="service.icon === 'code'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                  <path v-else-if="service.icon === 'ads'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM4 19h9a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                  <path v-else-if="service.icon === 'email'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                  <path v-else-if="service.icon === 'analytics'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                  <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            <div class="project-image">
+              <img v-if="service.image" :src="service.image" :alt="service.title" class="service-image">
+              <div v-else class="image-placeholder">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
-            </div>
-
-            <h3 class="text-xl font-bold mb-4 group-hover:text-blue-600 transition-colors duration-300">{{ service.title }}</h3>
-            <p class="text-gray-600 mb-4">{{ service.description }}</p>
-
-            <div v-if="service.features?.length" class="mt-4">
-              <div class="flex flex-wrap gap-2 justify-center">
-                <span
-                  v-for="feature in service.features.slice(0, 3)"
-                  :key="feature"
-                  class="px-2 py-1 text-xs rounded-full text-white"
-                  :style="{ backgroundColor: service.color || '#6495ed', opacity: 0.8 }"
-                >
-                  {{ feature }}
-                </span>
+              <div class="project-overlay">
+                <h3 class="project-title">{{ service.title }}</h3>
+                <p class="project-category">{{ service.description }}</p>
               </div>
             </div>
+          </div>
+        </div>
 
-            <!-- External URL indicator -->
-            <div v-if="service.externalURL" class="absolute top-4 right-4 bg-blue-600 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+        <div class="cta-center">
+          <a href="/digital-agency/services" class="btn-outline">{{ t('index.seeAllServices') }}</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why Us Section -->
+    <section id="why-us" class="why-us-section">
+      <div class="container">
+        <h2 class="section-title-center">{{ t('index.whyChooseUs') }}</h2>
+
+        <div class="why-us-grid">
+          <div class="why-card">
+            <div class="icon-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
+            <h3>{{ t('index.fullService') }}</h3>
+            <p>{{ t('index.fullServiceDesc') }}</p>
           </div>
 
-          <!-- Show message if no services -->
-          <div v-if="localizedServices.length === 0" class="col-span-full text-center py-12">
-            <p class="text-gray-500">{{ t('home.servicesWillAppear') }}</p>
+          <div class="why-card">
+            <div class="icon-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+            </div>
+            <h3>{{ t('index.strategicApproach') }}</h3>
+            <p>{{ t('index.strategicApproachDesc') }}</p>
           </div>
-        </div>
-        
-        <!-- View All Services Button -->
-        <div class="text-center mt-12">
-          <NuxtLink :to="$localePath('/digital-agency/services')" class="btn-primary !inline-flex items-center">
-            {{ t('common.viewAllServices') }}
-            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-            </svg>
-          </NuxtLink>
+
+          <div class="why-card">
+            <div class="icon-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+            </div>
+            <h3>{{ t('index.creativeSolution') }}</h3>
+            <p>{{ t('index.creativeSolutionDesc') }}</p>
+          </div>
+
+          <div class="why-card">
+            <div class="icon-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <h3>{{ t('index.dataReport') }}</h3>
+            <p>{{ t('index.dataReportDesc') }}</p>
+          </div>
+
+          <div class="why-card">
+            <div class="icon-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3>{{ t('index.decadesExp') }}</h3>
+            <p>{{ t('index.decadesExpDesc') }}</p>
+          </div>
+
+          <div class="why-card">
+            <div class="icon-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </div>
+            <h3>{{ t('index.expertTeam') }}</h3>
+            <p>{{ t('index.expertTeamDesc') }}</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- About Section -->
-    <section id="about" class="section-padding">
+    <!-- Client Logos Section -->
+    <section class="clients-section">
       <div class="container">
-        <div class="grid lg:grid-cols-2 gap-16 items-center">
-          <div>
-            <h2 class="text-3xl lg:text-4xl font-bold mb-6 text-gray-900">{{ homeContent.aboutTitle }}</h2>
-            <p class="text-lg text-gray-600 mb-8">
-              {{ homeContent.aboutDescription }}
-            </p>
-            <div class="space-y-6">
-              <div class="flex items-start space-x-4">
-                <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                </div>
-                <div>
-                  <h4 class="font-bold text-gray-900 mb-2">{{ t('home.provenResults') }}</h4>
-                  <p class="text-gray-600">{{ t('home.trackRecord') }}</p>
-                </div>
-              </div>
-              
-              <div class="flex items-start space-x-4">
-                <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                </div>
-                <div>
-                  <h4 class="font-bold text-gray-900 mb-2">{{ t('home.expertTeam') }}</h4>
-                  <p class="text-gray-600">{{ t('home.dedicatedProfessionals') }}</p>
-                </div>
-              </div>
-              
-              <div class="flex items-start space-x-4">
-                <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                </div>
-                <div>
-                  <h4 class="font-bold text-gray-900 mb-2">24/7 Support</h4>
-                  <p class="text-gray-600">Dedicated account management and round-the-clock support</p>
-                </div>
-              </div>
-            </div>
+        <h2 class="section-title-center">{{ t('index.ourHappyClients') }}</h2>
+
+        <div class="clients-grid">
+          <div class="client-logo" v-for="i in 6" :key="i">
+            <div class="logo-placeholder">{{ t('index.logo') }} {{ i }}</div>
           </div>
-          
-          <div class="relative">
-            <div
-              class="rounded-2xl p-8 text-white relative overflow-hidden"
-              :class="homeContent.aboutImage ? 'stats-with-image' : 'bg-gradient-primary-to-secondary'"
-              :style="homeContent.aboutImage ? {
-                backgroundImage: `url(${homeContent.aboutImage})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat'
-              } : {}"
-            >
-              <!-- Dark overlay for better text readability when using background image -->
-              <div v-if="homeContent.aboutImage" class="absolute inset-0 bg-black/60 z-0"></div>
-              <div class="relative z-10 grid grid-cols-2 gap-6 text-center">
-                <div>
-                  <div class="text-3xl font-bold mb-2">500+</div>
-                  <div class="text-blue-100">{{ t('home.projectsCompleted') }}</div>
-                </div>
-                <div>
-                  <div class="text-3xl font-bold mb-2">98%</div>
-                  <div class="text-blue-100">{{ t('home.clientSatisfaction') }}</div>
-                </div>
-                <div>
-                  <div class="text-3xl font-bold mb-2">10+</div>
-                  <div class="text-blue-100">{{ t('home.yearsExperience') }}</div>
-                </div>
-                <div>
-                  <div class="text-3xl font-bold mb-2">24/7</div>
-                  <div class="text-blue-100">{{ t('home.supportAvailable') }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Learn More Button -->
-        <div class="text-center mt-12">
-          <NuxtLink :to="$localePath('/digital-agency/about')" class="btn-primary !inline-flex items-center">
-            {{ t('common.learnMore') }}
-            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-            </svg>
-          </NuxtLink>
         </div>
       </div>
     </section>
 
-    <!-- People Section -->
-    <section id="team" class="section-padding bg-gray-50">
+    <!-- Insights Section / What We Do -->
+    <section id="insights" class="insights-section">
       <div class="container">
-        <div class="text-center mb-16">
-          <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-gray-900">{{ homeContent.peopleTitle }}</h2>
-          <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-            {{ homeContent.peopleDescription }}
-          </p>
-        </div>
+        <h2 class="section-title-center">{{ t('index.readLatestInsights') }}</h2>
 
-        <!-- People Grid -->
-        <div v-if="teamMembers.length > 0" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div v-for="member in teamMembers.slice(0, 3)" :key="member.id" class="card group hover:shadow-xl transition-all duration-300">
-            <!-- Member Image -->
-            <div class="relative overflow-hidden rounded-t-xl">
-              <div v-if="member.image" class="aspect-square">
-                <img 
-                  :src="member.image" 
-                  :alt="member.name"
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                >
-              </div>
-              <div v-else class="aspect-square bg-gradient-to-br from-primary-very-light to-primary-light flex items-center justify-center">
-                <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+        <div class="insights-grid">
+          <article
+            class="insight-card"
+            v-for="item in whatWeDoItems"
+            :key="item.id"
+            :class="{ 'clickable': item.link }"
+            @click="handleItemClick(item)"
+          >
+            <div class="insight-image">
+              <img v-if="item.image" :src="item.image" :alt="item.name" class="insight-img">
+              <div v-else class="image-placeholder">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
               </div>
             </div>
-
-            <!-- Member Info -->
-            <div class="p-6">
-              <h3 class="text-xl font-bold text-gray-900 mb-1">{{ member.name }}</h3>
-              <p class="text-blue-600 font-medium mb-3">{{ member.position }}</p>
-              <p class="text-gray-600 text-sm line-clamp-3">{{ member.description }}</p>
-
-              <!-- Social Links -->
-              <div class="flex space-x-3 mt-4">
-                <a 
-                  v-if="member.email" 
-                  :href="`mailto:${member.email}`" 
-                  class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-blue-100 hover:text-blue-600 transition-colors"
-                >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                  </svg>
-                </a>
-                <a 
-                  v-if="member.linkedin" 
-                  :href="member.linkedin" 
-                  target="_blank"
-                  class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-blue-100 hover:text-blue-600 transition-colors"
-                >
-                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                  </svg>
-                </a>
-                <a 
-                  v-if="member.twitter" 
-                  :href="member.twitter" 
-                  target="_blank"
-                  class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-blue-100 hover:text-blue-600 transition-colors"
-                >
-                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
-                  </svg>
-                </a>
-              </div>
+            <div class="insight-content">
+              <h3>{{ item.name }}</h3>
+              <p class="insight-position">{{ item.position }}</p>
+              <p class="insight-excerpt">{{ item.bio }}</p>
+              <a
+                v-if="item.link"
+                :href="item.link"
+                target="_blank"
+                @click.stop
+                class="read-more"
+              >
+                {{ t('common.learnMore') }} →
+              </a>
+              <a
+                v-else
+                href="#contact"
+                class="read-more"
+              >
+                {{ t('common.learnMore') }} →
+              </a>
             </div>
-          </div>
+          </article>
         </div>
 
-        <!-- Empty State -->
-        <div v-else class="text-center py-12">
-          <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-          </svg>
-          <h3 class="text-xl font-bold text-gray-900 mb-2">{{ t('home.buildingOurShowcase') }}</h3>
-          <p class="text-gray-600">{{ t('home.assembleTalented') }}</p>
-        </div>
-
-        <!-- Meet All People Button -->
-        <div v-if="teamMembers.length > 0" class="text-center mt-12">
-          <NuxtLink :to="$localePath('/digital-agency/team')" class="btn-primary !inline-flex items-center">
-            {{ t('common.meetAllOurPeople') }}
-            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-            </svg>
-          </NuxtLink>
+        <div class="cta-center">
+          <a href="#contact" class="btn-outline">{{ t('common.getStarted') }}</a>
         </div>
       </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="section-padding">
+    <!-- Contact Form Section -->
+    <section id="contact" class="contact-section">
       <div class="container">
-        <div class="text-center mb-16">
-          <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-gray-900">{{ t('home.readyToGetStarted') }}</h2>
-          <p class="text-xl text-gray-600">{{ t('home.letsDiscuss') }}</p>
-        </div>
-        
-        <div class="grid lg:grid-cols-2 gap-16 max-w-6xl mx-auto">
-          <div>
-            <h3 class="text-2xl font-bold mb-6 text-gray-900">{{ t('titles.getInTouch') }}</h3>
-            <div class="space-y-6">
-              <div class="flex items-start space-x-4">
-                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-                  </svg>
-                </div>
-                <div>
-                  <h4 class="font-bold text-gray-900">{{ t('footer.phone') }}</h4>
-                  <p class="text-gray-600">+1 (555) 123-4567</p>
-                </div>
+        <div class="contact-wrapper">
+          <h2 class="section-title-center">{{ t('index.haveAnIdea') }}</h2>
+          <p class="section-subtitle">{{ t('index.makeItHappen') }}</p>
+
+          <form class="contact-form">
+            <div class="form-group">
+              <select class="form-control">
+                <option value="">{{ t('index.lookingFor') }}</option>
+                <option value="branding">{{ t('index.branding') }}</option>
+                <option value="campaign">{{ t('index.campaign') }}</option>
+                <option value="social">{{ t('index.socialContent') }}</option>
+                <option value="website">{{ t('index.website') }}</option>
+                <option value="kol">{{ t('index.kolMedia') }}</option>
+                <option value="event">{{ t('index.event') }}</option>
+                <option value="other">{{ t('index.other') }}</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <input type="text" class="form-control" :placeholder="t('index.yourName')" required>
               </div>
-              
-              <div class="flex items-start space-x-4">
-                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                  </svg>
-                </div>
-                <div>
-                  <h4 class="font-bold text-gray-900">{{ t('footer.email') }}</h4>
-                  <p class="text-gray-600">hello@digitalflow.com</p>
-                </div>
-              </div>
-              
-              <div class="flex items-start space-x-4">
-                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                  </svg>
-                </div>
-                <div>
-                  <h4 class="font-bold text-gray-900">{{ t('footer.office') }}</h4>
-                  <p class="text-gray-600">123 Innovation Drive<br>Tech Valley, CA 94105</p>
-                </div>
+              <div class="form-group">
+                <input type="email" class="form-control" :placeholder="t('index.emailAddress')" required>
               </div>
             </div>
-          </div>
-          
-          <div class="card p-8">
-            <form class="space-y-6">
-              <div class="relative">
-                <input type="text" placeholder=" " class="form-input">
-                <label class="floating-label">{{ t('home.fullName') }}</label>
-              </div>
-              
-              <div class="relative">
-                <input type="email" placeholder=" " class="form-input">
-                <label class="floating-label">{{ t('home.emailAddress') }}</label>
-              </div>
-              
-              <div class="relative">
-                <input type="text" placeholder=" " class="form-input">
-                <label class="floating-label">{{ t('home.company') }}</label>
-              </div>
-              
-              <div class="relative">
-                <textarea placeholder=" " rows="4" class="form-input resize-none"></textarea>
-                <label class="floating-label">{{ t('home.message') }}</label>
-              </div>
-              
-              <button type="submit" class="btn-primary w-full">{{ t('common.sendMessage') }}</button>
-            </form>
-          </div>
-        </div>
-        
-        <!-- Get In Touch Button -->
-        <div class="text-center mt-12">
-          <NuxtLink :to="$localePath('/digital-agency/contact')" class="btn-primary !inline-flex items-center">
-            {{ t('common.getInTouch') }}
-            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-            </svg>
-          </NuxtLink>
+
+            <div class="form-group">
+              <input type="tel" class="form-control" :placeholder="t('index.phoneNumber')">
+            </div>
+
+            <div class="form-group">
+              <textarea class="form-control" rows="5" :placeholder="t('index.tellUsProject')" required></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary btn-large">{{ t('index.sendRequest') }}</button>
+          </form>
         </div>
       </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12">
-      <div class="container">
-        <div class="grid md:grid-cols-4 gap-8">
-          <div>
-            <div class="text-2xl font-bold mb-4">{{ siteSettings.siteName }}</div>
-            <p class="text-gray-400 mb-4">{{ t('footer.elevatingBrands') }}</p>
-            <div class="grid grid-cols-3 gap-3 max-w-[156px]">
-              <a href="#" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors">
-                <img src="/social_icons/icons8-facebook-50.png" alt="Facebook" class="w-7 h-7 object-contain">
-              </a>
-              <a href="#" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-pink-500 transition-colors">
-                <img src="/social_icons/icons8-instagram-50.png" alt="Instagram" class="w-7 h-7 object-contain">
-              </a>
-              <a href="#" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-green-500 transition-colors">
-                <img src="/social_icons/icons8-line-50.png" alt="Line" class="w-7 h-7 object-contain">
-              </a>
-              <a href="#" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-black transition-colors">
-                <img src="/social_icons/icons8-tiktok-50.png" alt="TikTok" class="w-7 h-7 object-contain">
-              </a>
-              <a href="#" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors">
-                <img src="/social_icons/icons8-youtube-50.png" alt="YouTube" class="w-7 h-7 object-contain">
-              </a>
-              <a href="#" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors">
-                <img src="/social_icons/icons8-linkedin-circled-50.png" alt="LinkedIn" class="w-7 h-7 object-contain">
-              </a>
-            </div>
-          </div>
-          
-          <div>
-            <h4 class="text-lg font-bold mb-4">{{ t('footer.services') }}</h4>
-            <ul class="space-y-2 text-gray-400">
-              <li><NuxtLink :to="$localePath('/digital-agency/services')" class="hover:text-white transition-colors">{{ t('footer.seoOptimization') }}</NuxtLink></li>
-              <li><NuxtLink :to="$localePath('/digital-agency/services')" class="hover:text-white transition-colors">{{ t('footer.socialMediaMarketing') }}</NuxtLink></li>
-              <li><NuxtLink :to="$localePath('/digital-agency/services')" class="hover:text-white transition-colors">{{ t('footer.webDevelopment') }}</NuxtLink></li>
-              <li><NuxtLink :to="$localePath('/digital-agency/services')" class="hover:text-white transition-colors">{{ t('footer.ppcAdvertising') }}</NuxtLink></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h4 class="text-lg font-bold mb-4">{{ t('footer.company') }}</h4>
-            <ul class="space-y-2 text-gray-400">
-              <li><NuxtLink :to="$localePath('/digital-agency/about')" class="hover:text-white transition-colors">{{ t('footer.aboutUs') }}</NuxtLink></li>
-              <li><NuxtLink :to="$localePath('/digital-agency/team')" class="hover:text-white transition-colors">{{ t('footer.ourPeople') }}</NuxtLink></li>
-              <li><NuxtLink :to="$localePath('/digital-agency/contact')" class="hover:text-white transition-colors">{{ t('footer.careers') }}</NuxtLink></li>
-              <li><NuxtLink :to="$localePath('/digital-agency')" class="hover:text-white transition-colors">{{ t('footer.blog') }}</NuxtLink></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h4 class="text-lg font-bold mb-4">{{ t('footer.contact') }}</h4>
-            <ul class="space-y-2 text-gray-400">
-              <li>+1 (555) 123-4567</li>
-              <li>hello@digitalflow.com</li>
-              <li>123 Innovation Drive<br>Tech Valley, CA 94105</li>
-              <li class="pt-2">
-                <NuxtLink :to="$localePath('/digital-agency/contact')" class="btn-primary">{{ t('common.getInTouch') }}</NuxtLink>
-              </li>
-            </ul>
-          </div>
-        </div>
-        
-        <div class="border-t border-gray-800 pt-8 mt-8 text-center text-gray-400">
-          <p>&copy; 2025 {{ siteSettings.siteName }}. All rights reserved.</p>
-        </div>
-      </div>
-    </footer>
+    <CmsFooter />
   </div>
 </template>
 
@@ -538,564 +317,940 @@ definePageMeta({
   layout: false
 })
 
-const cmsStore = useCMSStore()
 const { t } = useI18n()
-const { createLocalizedContent, parseJsonField, getLocalizedFeatures } = useMultiLanguage()
+const isScrolled = ref(false)
+const mobileMenuOpen = ref(false)
 
-// Dynamic color calculation functions
-function hexToRgba(hex, alpha = 1) {
-  const r = parseInt(hex.slice(1, 3), 16)
-  const g = parseInt(hex.slice(3, 5), 16)
-  const b = parseInt(hex.slice(5, 7), 16)
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`
-}
+// CMS Store
+const cmsStore = useCMSStore()
+const { createLocalizedContent } = useMultiLanguage()
 
-function adjustColorBrightness(hex, percent) {
-  const num = parseInt(hex.slice(1), 16)
-  const amt = Math.round(2.55 * percent)
-  const R = (num >> 16) + amt
-  const G = (num >> 8 & 0x00FF) + amt
-  const B = (num & 0x0000FF) + amt
-  return '#' + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
-    (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
-    (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1)
-}
-
-// Load CMS content
+// Fetch all CMS data
 await cmsStore.fetchHomeContent()
 await cmsStore.fetchServices()
-await cmsStore.fetchSiteSettings()
 await cmsStore.fetchTeamMembers()
+await cmsStore.fetchContactContent()
+await cmsStore.fetchSiteSettings()
 
-const homeContentRaw = cmsStore.homeContent
-const services = cmsStore.getHomeServices
-const siteSettingsRaw = cmsStore.siteSettings
-const teamMembersRaw = cmsStore.getHomeTeamMembers
-
-// Create reactive localized content using the composable
-const homeContent = computed(() => createLocalizedContent(homeContentRaw))
-
-const siteSettings = computed(() => {
-  const localized = createLocalizedContent(siteSettingsRaw)
+// Computed properties for CMS content
+const homeContent = computed(() => {
+  const content = createLocalizedContent(cmsStore.homeContent || {})
   return {
-    ...localized,
-    socialLinks: parseJsonField(siteSettingsRaw.socialLinks)
+    ...content,
+    heroDisplayMode: cmsStore.homeContent?.heroDisplayMode || 'gradient'
   }
 })
+const siteSettings = computed(() => createLocalizedContent(cmsStore.siteSettings || {}))
+const contactContent = computed(() => createLocalizedContent(cmsStore.contactContent || {}))
 
-const teamMembers = computed(() => {
-  return teamMembersRaw.map(member => {
-    const localized = createLocalizedContent(member)
-    const socialLinks = parseJsonField(member.socialLinks)
-
-    return {
-      ...localized,
-      socialLinks,
-      description: localized.bio, // Using bio as description
-      // Extract individual social links for easier template access
-      email: socialLinks.email,
-      linkedin: socialLinks.linkedin,
-      twitter: socialLinks.twitter,
-      facebook: socialLinks.facebook,
-      instagram: socialLinks.instagram
-    }
-  })
+// Services (What we've done)
+const services = computed(() => {
+  const allServices = cmsStore.services || []
+  return allServices
+    .filter(service => service.isActive)
+    .slice(0, 6)
+    .map(service => {
+      const localized = createLocalizedContent(service)
+      return {
+        ...localized,
+        externalURL: service.externalURL,
+        video: service.video
+      }
+    })
 })
 
-const localizedServices = computed(() => {
-  return services.map(service => {
-    const localized = createLocalizedContent(service)
-    return {
-      ...service, // Keep all original service data including externalURL
-      ...localized, // Override with localized content
-      features: getLocalizedFeatures(service.features)
-    }
-  })
+// Team Members (What we do)
+const whatWeDoItems = computed(() => {
+  const teamMembers = cmsStore.teamMembers || []
+  return teamMembers
+    .filter(member => member.isActive && member.isDisplayInHome)
+    .map(member => {
+      const localized = createLocalizedContent(member)
+      return {
+        ...localized,
+        link: member.link
+      }
+    })
 })
 
-// Dynamic color calculations
-const dynamicColors = computed(() => {
-  const primary = siteSettings.value.primaryColor || '#6495ed'
-  const secondary = siteSettings.value.secondaryColor || '#9333ea'
+// Site colors
+const siteColors = computed(() => ({
+  primary: cmsStore.siteSettings?.primaryColor || '#4949e9',
+  secondary: cmsStore.siteSettings?.secondaryColor || '#dbf142'
+}))
 
-  return {
-    primary,
-    secondary,
-    primaryDark: adjustColorBrightness(primary, -0.1),
-    primaryLight: adjustColorBrightness(primary, 0.1),
-    primaryVeryLight: adjustColorBrightness(primary, 0.4),
-    secondaryDark: adjustColorBrightness(secondary, -0.1),
-    secondaryLight: adjustColorBrightness(secondary, 0.1),
-    primaryRgba10: hexToRgba(primary, 0.1),
-    primaryRgba20: hexToRgba(primary, 0.2),
-    primaryRgba30: hexToRgba(primary, 0.3),
-    primaryRgba50: hexToRgba(primary, 0.5),
-    secondaryRgba10: hexToRgba(secondary, 0.1),
-    secondaryRgba20: hexToRgba(secondary, 0.2),
-    secondaryRgba30: hexToRgba(secondary, 0.3),
-    secondaryRgba50: hexToRgba(secondary, 0.5),
-    primaryShadow: hexToRgba(primary, 0.2),
+// Navbar colors from SiteSettings
+const navbarColors = computed(() => ({
+  textColor: cmsStore.siteSettings?.navbarTextColor || '#1a1a1a',
+  bgColor: cmsStore.siteSettings?.navbarBgColor || 'rgba(255, 255, 255, 0.98)'
+}))
+
+const toggleMobileMenu = () => {
+  mobileMenuOpen.value = !mobileMenuOpen.value
+}
+
+const closeMobileMenu = () => {
+  mobileMenuOpen.value = false
+}
+
+// Handle item click - redirect if link exists
+const handleItemClick = (item) => {
+  if (item.link) {
+    window.open(item.link, '_blank')
   }
-})
-
-// Update page title with CMS data
-const pageTitle = computed(() => `${siteSettings.value.siteName} - ${siteSettings.value.siteTagline}`)
-
-useSeoMeta({
-  title: pageTitle,
-  ogTitle: pageTitle,
-  description: () => homeContent.value.heroSubtitle,
-  ogDescription: () => homeContent.value.heroSubtitle,
-  ogImage: () => homeContent.value.heroImage || '/og-image.jpg',
-  twitterCard: 'summary_large_image',
-})
-
-// Handle service click - navigate to external URL if available
-const { $localePath } = useNuxtApp()
+}
 
 const handleServiceClick = (service) => {
   if (service.externalURL) {
-    // Open external URL in new tab
-    window.open(service.externalURL, '_blank', 'noopener,noreferrer')
-  } else {
-    // Fallback to services page if no external URL
-    navigateTo($localePath('/digital-agency/services'))
+    window.open(service.externalURL, '_blank')
   }
 }
 
-// Smooth scrolling for navigation with navbar offset
 onMounted(() => {
+
+  // Handle scroll for header
+  const handleScroll = () => {
+    isScrolled.value = window.scrollY > 50
+  }
+
+  window.addEventListener('scroll', handleScroll)
+
+  // Smooth scroll for anchor links
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
       e.preventDefault()
       const target = document.querySelector(this.getAttribute('href'))
       if (target) {
-        // Calculate offset for fixed navbar (40px top navbar + ~80px main navbar)
-        const navbarHeight = 40
-        const targetPosition = target.offsetTop - navbarHeight
+        const headerOffset = 80
+        const elementPosition = target.offsetTop
+        const offsetPosition = elementPosition - headerOffset
 
         window.scrollTo({
-          top: targetPosition,
+          top: offsetPosition,
           behavior: 'smooth'
         })
       }
     })
   })
 })
+
+useSeoMeta({
+  title: 'Digital Marketing Agency',
+  description: 'We are a digital agency who turn the sense of creativity into innovative marketing',
+})
 </script>
 
 <style scoped>
-/* Dynamic CSS Variables for this page only */
-.min-h-screen {
-  --primary-color: v-bind('dynamicColors.primary');
-  --secondary-color: v-bind('dynamicColors.secondary');
-  --primary-dark: v-bind('dynamicColors.primaryDark');
-  --primary-light: v-bind('dynamicColors.primaryLight');
-  --primary-very-light: v-bind('dynamicColors.primaryVeryLight');
-  --secondary-dark: v-bind('dynamicColors.secondaryDark');
-  --secondary-light: v-bind('dynamicColors.secondaryLight');
-  --primary-rgba-10: v-bind('dynamicColors.primaryRgba10');
-  --primary-rgba-20: v-bind('dynamicColors.primaryRgba20');
-  --primary-rgba-30: v-bind('dynamicColors.primaryRgba30');
-  --primary-rgba-50: v-bind('dynamicColors.primaryRgba50');
-  --secondary-rgba-10: v-bind('dynamicColors.secondaryRgba10');
-  --secondary-rgba-20: v-bind('dynamicColors.secondaryRgba20');
-  --secondary-rgba-30: v-bind('dynamicColors.secondaryRgba30');
-  --secondary-rgba-50: v-bind('dynamicColors.secondaryRgba50');
-  --text-dark: #2d3748;
-  --text-light: #718096;
-  --bg-light: #f7fafc;
+/* Custom Font */
+@font-face {
+  font-family: 'PG Stockholm';
+  src: url('~/assets/fonts/02-TH-Krub/TH Krub.ttf') format('truetype');
+  /* src: url('assets/fonts/12-TH-KoHo/TH KoHo.ttf') format('truetype'); */
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
-  /* Override root background for this page */
-  --root-bg: white;
-  --color-base-100: white;
+/* Reset & Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-  /* Page-specific font and text styling */
-  font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+.app-homepage {
+  font-family: 'PG Stockholm', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  color: #1a1a1a;
   line-height: 1.6;
-  color: var(--text-dark);
-  box-sizing: border-box;
-  background-color: white;
+  overflow-x: hidden;
 }
 
-.min-h-screen *,
-.min-h-screen *::before,
-.min-h-screen *::after {
-  box-sizing: border-box;
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
-/* Button Styles */
-.btn-primary {
-  @apply text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl inline-block text-center cursor-pointer;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-  border: none;
-  min-width: 140px;
-  position: relative;
-  overflow: hidden;
+.container-fluid {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
-.btn-primary::before {
-  content: '';
-  position: absolute;
+/* Header */
+.site-header {
+  position: fixed;
   top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-  transition: left 0.5s;
-}
-
-.btn-primary:hover::before {
-  left: 100%;
-}
-
-.btn-primary:hover {
-  background-color: var(--primary-dark);
-  box-shadow: 0 8px 25px var(--primary-rgba-30);
-  transform: scale(1.05) translateY(-2px);
-}
-
-.btn-primary:active {
-  transform: scale(1.02) translateY(0);
-  box-shadow: 0 4px 15px var(--primary-rgba-20);
-}
-
-.btn-secondary {
-  background-color: transparent;
-  border: 2px solid;
-  font-weight: 600;
-  padding: 0.75rem 2rem;
-  border-radius: 0.5rem;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: transparent;
   transition: all 0.3s ease;
-  display: inline-block;
-  text-align: center;
-  cursor: pointer;
-  border-color: var(--primary-color);
-  color: var(--primary-color);
-  min-width: 140px;
-  position: relative;
-  overflow: hidden;
+  padding: 20px 0;
 }
 
-.btn-secondary::before {
+.site-header.scrolled {
+  background: var(--navbar-bg-color, rgba(255, 255, 255, 0.98));
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  padding: 15px 0;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo a {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--navbar-text-color, #1a1a1a);
+  text-decoration: none;
+  letter-spacing: -0.5px;
+}
+
+.main-nav {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+}
+
+.main-nav a {
+  color: var(--navbar-text-color, #1a1a1a);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 23px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.main-nav a:hover {
+  color: color-mix(in srgb, var(--navbar-text-color, #1a1a1a) 80%, black 20%);
+}
+
+.main-nav a.highlight {
+  color: var(--primary-color, #4949e9);
+  font-weight: 600;
+}
+
+.mobile-menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.mobile-menu-toggle span {
+  width: 25px;
+  height: 2px;
+  background: var(--navbar-text-color, #1a1a1a);
+  transition: all 0.3s ease;
+}
+
+/* Hero Section */
+.hero-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  padding: 120px 20px 80px;
+}
+
+/* Gradient Mode (default) */
+.hero-mode-gradient {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.hero-mode-gradient::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
-  width: 0;
-  height: 100%;
-  background-color: var(--primary-color);
-  transition: width 0.3s ease;
-  z-index: -1;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.85);
+  z-index: 0;
 }
 
-.btn-secondary:hover::before {
-  width: 100%;
-}
-
-.btn-secondary:hover {
-  color: white;
-  border-color: var(--primary-color);
-  transform: scale(1.02);
-  box-shadow: 0 4px 15px var(--primary-rgba-20);
-}
-
-/* Button Group Spacing */
-.btn-primary + .btn-secondary,
-.btn-secondary + .btn-primary {
-  margin-left: 1rem;
-}
-
-/* Responsive Button Adjustments */
-@media (max-width: 640px) {
-  .btn-primary,
-  .btn-secondary {
-    width: 100%;
-    padding: 1rem 2rem;
-    font-size: 1rem;
-    min-width: unset;
-  }
-
-  .btn-primary + .btn-secondary,
-  .btn-secondary + .btn-primary {
-    margin-left: 0;
-    margin-top: 0.75rem;
-  }
-}
-
-/* Card Styles */
-.card {
-  background-color: white;
-  border-radius: 0.75rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-  transform: translateY(0);
-}
-
-.card:hover {
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  transform: translateY(-4px);
-}
-
-/* Form Styles */
-.form-input {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid rgb(209, 213, 219);
-  border-radius: 0.5rem;
-  outline: none;
-  transition: all 0.3s ease;
-  background-color: white;
-  font-size: 16px;
-  line-height: 1.5;
-}
-
-.form-input:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px var(--primary-rgba-20);
-  transform: translateY(-1px);
-}
-
-.form-input:hover:not(:focus) {
-  border-color: var(--primary-light);
-}
-
-.form-input::placeholder {
-  color: #a0aec0;
-}
-
-/* Floating Label Styles */
-.floating-label {
+/* Image Mode */
+.hero-mode-image::before {
+  content: '';
   position: absolute;
-  left: 1rem;
-  top: 0.75rem;
-  color: rgb(107, 114, 128);
-  pointer-events: none;
-  transition: all 0.2s ease;
-  font-size: 16px;
-  transform-origin: left top;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 0;
 }
 
-.form-input:focus ~ .floating-label,
-.form-input:not(:placeholder-shown) ~ .floating-label {
-  font-size: 0.75rem;
-  color: var(--primary-color);
-  transform: translateY(-1.5rem) scale(0.85);
-  background: white;
-  padding: 0 4px;
+.hero-mode-image .hero-headline,
+.hero-mode-image .hero-tagline {
+  color: #ffffff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-/* Removed redundant .relative class and @apply peer to fix build errors */
-
-/* Layout Utilities */
-.section-padding {
-  padding-top: 4rem;
-  padding-bottom: 4rem;
-  scroll-margin-top: 60px; /* Account for fixed navbar */
+/* Minimal Mode */
+.hero-mode-minimal {
+  background: #ffffff;
 }
 
-@media (min-width: 1024px) {
-  .section-padding {
-    padding-top: 6rem;
-    padding-bottom: 6rem;
-  }
+.hero-mode-minimal .hero-headline {
+  color: #1a1a1a;
 }
 
-.container {
-  max-width: 80rem;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+.hero-mode-minimal .hero-tagline {
+  color: #666666;
 }
 
-@media (min-width: 640px) {
-  .container {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
+/* Cover Mode - Full image without text or overlay */
+.hero-mode-cover {
+  background: #000000;
 }
 
-@media (min-width: 1024px) {
-  .container {
-    padding-left: 2rem;
-    padding-right: 2rem;
-  }
+/* No overlay for cover mode */
+
+/* Video Mode (placeholder for future) */
+.hero-mode-video {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
 }
 
-/* Animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.hero-mode-video::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 0;
 }
 
-.fade-in-up {
-  animation: fadeInUp 0.6s ease-out;
+.hero-mode-video .hero-headline,
+.hero-mode-video .hero-tagline {
+  color: #ffffff;
 }
 
-/* Gradient backgrounds */
-.gradient-bg {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+.hero-section .container {
+  position: relative;
+  z-index: 1;
 }
 
-.hero-with-image {
-  min-height: 80vh;
-  max-height: 100vh;
-  background-attachment: fixed;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+.hero-content {
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
-@media (max-width: 768px) {
-  .hero-with-image {
-    background-attachment: scroll;
-    min-height: 70vh;
-    max-height: 85vh;
-  }
+.hero-headline {
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 24px;
+  color: #1a1a1a;
 }
 
 .gradient-text {
-  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  background: linear-gradient(135deg, var(--primary-color, #4949e9) 0%, var(--secondary-color, #dbf142) 100%);
   -webkit-background-clip: text;
-  background-clip: text;
   -webkit-text-fill-color: transparent;
-  color: transparent;
+  background-clip: text;
 }
 
-/* Text utilities */
-.line-clamp-3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+.hero-tagline {
+  font-size: clamp(24px, 2vw, 28px);
+  color: #4a5568;
+  margin-top: 20px;
 }
 
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+.scroll-indicator {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: #718096;
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  z-index: 1;
 }
 
-/* Primary color utilities */
-.text-primary {
-  color: var(--primary-color);
+.mouse {
+  width: 24px;
+  height: 40px;
+  border: 2px solid #718096;
+  border-radius: 12px;
+  position: relative;
 }
 
-.bg-primary {
-  background-color: var(--primary-color);
+.mouse::before {
+  content: '';
+  width: 4px;
+  height: 8px;
+  background: #718096;
+  border-radius: 2px;
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: scroll 2s infinite;
 }
 
-.border-primary {
-  border-color: var(--primary-color);
+@keyframes scroll {
+  0%, 100% { opacity: 0; top: 8px; }
+  50% { opacity: 1; top: 16px; }
 }
 
-.hover\:text-primary:hover {
-  color: var(--primary-color);
-  transition: color 0.2s ease;
+/* Sections */
+section {
+  padding: 100px 0;
 }
 
-.hover\:bg-primary:hover {
-  background-color: var(--primary-color);
-  transition: background-color 0.2s ease;
+.section-title {
+  font-size: clamp(40px, 4vw, 56px);
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #1a1a1a;
 }
 
-/* Secondary color utilities */
-.text-secondary {
-  color: var(--secondary-color);
+.section-title-center {
+  font-size: clamp(40px, 4vw, 56px);
+  font-weight: 700;
+  text-align: center;
+  /* margin-bottom: 60px; */
+  color: #1a1a1a;
 }
 
-.bg-secondary {
-  background-color: var(--secondary-color);
+.section-description {
+  font-size: 26px;
+  color: #4a5568;
+  line-height: 1.8;
+  margin-bottom: 30px;
 }
 
-.border-secondary {
-  border-color: var(--secondary-color);
+.section-subtitle {
+  text-align: center;
+  font-size: 26px;
+  color: #718096;
+  margin-bottom: 50px;
 }
 
-/* Light variations */
-.bg-primary-light {
-  background-color: var(--primary-light);
+/* What Makes Different */
+.what-makes-different {
+  background: #fff;
 }
 
-.bg-primary-very-light {
-  background-color: var(--primary-very-light);
+.content-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
 }
 
-.text-primary-dark {
-  color: var(--primary-dark);
+.mission-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
 }
 
-/* Gradient utilities */
-.gradient-primary {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+.placeholder-image {
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: linear-gradient(135deg, var(--primary-color, #4949e9) 0%, var(--secondary-color, #dbf142) 100%);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
 }
 
-.gradient-secondary {
-  background: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-dark) 100%);
+.placeholder-image svg {
+  width: 80px;
+  height: 80px;
+  opacity: 0.5;
 }
 
-.gradient-primary-soft {
-  background: linear-gradient(135deg, var(--primary-very-light) 0%, var(--primary-light) 100%);
+/* Services Section */
+.services-section {
+  background: #f7fafc;
 }
 
-/* Hover effects with dynamic colors */
-.hover-lift:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 25px var(--primary-rgba-20);
+.service-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 50px;
+}
+
+.service-tag {
+  padding: 16px 32px;
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 24px;
+  color: #2d3748;
+  cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.hover-glow:hover {
-  box-shadow: 0 0 20px var(--primary-rgba-30);
-  transition: box-shadow 0.3s ease;
+.service-tag:hover {
+  border-color: var(--primary-color, #4949e9);
+  color: var(--primary-color, #4949e9);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(73, 73, 233, 0.1);
 }
 
-/* Custom gradient utilities */
-.bg-gradient-primary-to-secondary {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%) !important;
+/* Projects Section */
+.projects-section {
+  background: #fff;
 }
 
-/* Text contrast fixes for dark backgrounds */
-.gradient-bg h1,
-.gradient-bg p,
-.gradient-bg .text-blue-100,
-.bg-gradient-primary-to-secondary h1,
-.bg-gradient-primary-to-secondary p,
-.bg-gradient-primary-to-secondary .text-blue-100,
-.bg-gradient-primary-to-secondary div {
-  color: white !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 30px;
+  margin-bottom: 60px;
 }
 
-.hero-with-image h1,
-.hero-with-image p,
-.hero-with-image .text-blue-100 {
-  color: white !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+.project-card {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
-/* Fix for text-blue-100 class in dark sections */
-.text-blue-100 {
-  color: rgba(255, 255, 255, 0.8) !important;
+.project-card.clickable {
+  cursor: pointer;
 }
 
-/* Ensure buttons are visible on dark backgrounds */
-
-/* Section anchor navigation */
-section[id] {
-  scroll-margin-top: 60px; /* Account for fixed navbar */
+.project-card.clickable:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
-/* Hero section special handling */
-#home {
-  scroll-margin-top: 0; /* Hero doesn't need offset since it's at the top */
+.project-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.project-image {
+  position: relative;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+}
+
+.service-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #a0aec0;
+}
+
+.image-placeholder svg {
+  width: 60px;
+  height: 60px;
+}
+
+.project-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  color: white;
+  padding: 30px 20px 20px;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.project-card:hover .project-overlay {
+  transform: translateY(0);
+}
+
+.project-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.project-category {
+  font-size: 22px;
+  opacity: 0.9;
+}
+
+/* Why Us Section */
+.why-us-section {
+  background: #f7fafc;
+}
+
+.why-us-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 40px;
+}
+
+.why-card {
+  text-align: center;
+  padding: 40px 30px;
+  background: white;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.why-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.icon-wrapper {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  background: linear-gradient(135deg, var(--primary-color, #4949e9) 0%, var(--secondary-color, #dbf142) 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.icon-wrapper svg {
+  width: 40px;
+  height: 40px;
+}
+
+.why-card h3 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #1a1a1a;
+  letter-spacing: 0.5px;
+}
+
+.why-card p {
+  font-size: 22px;
+  color: #718096;
+  line-height: 1.6;
+}
+
+/* Clients Section */
+.clients-section {
+  background: #fff;
+}
+
+.clients-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 30px;
+  align-items: center;
+}
+
+.client-logo {
+  aspect-ratio: 3/2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f7fafc;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.client-logo:hover {
+  background: #edf2f7;
+  transform: scale(1.05);
+}
+
+.logo-placeholder {
+  color: #cbd5e0;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+/* Insights Section */
+.insights-section {
+  background: #f7fafc;
+}
+
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 40px;
+  margin-bottom: 60px;
+}
+
+.insight-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.insight-card.clickable {
+  cursor: pointer;
+}
+
+.insight-card.clickable:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.insight-card:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+}
+
+.insight-image {
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  background: #f7fafc;
+}
+
+.insight-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.insight-card:hover .insight-img {
+  transform: scale(1.05);
+}
+
+.insight-content {
+  padding: 30px;
+}
+
+.insight-content h3 {
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #1a1a1a;
+}
+
+.insight-position {
+  font-size: 22px;
+  color: var(--primary-color, #4949e9);
+  font-weight: 600;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.insight-excerpt {
+  font-size: 23px;
+  color: #718096;
+  line-height: 1.7;
+  margin-bottom: 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.read-more {
+  color: var(--primary-color, #4949e9);
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.read-more:hover {
+  color: #3636d6;
+}
+
+/* Contact Section */
+.contact-section {
+  background: linear-gradient(135deg, var(--primary-color, #4949e9) 0%, var(--secondary-color, #dbf142) 100%);
+  color: white;
+}
+
+.contact-wrapper {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.contact-section .section-title-center,
+.contact-section .section-subtitle {
+  color: white;
+}
+
+.contact-form {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 50px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 15px 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 24px;
+  transition: all 0.3s ease;
+}
+
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: white;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+select.form-control {
+  cursor: pointer;
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* Buttons */
+.btn-primary,
+.btn-outline {
+  display: inline-block;
+  padding: 16px 40px;
+  font-weight: 600;
+  font-size: 24px;
+  text-decoration: none;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-color, #4949e9) 0%, var(--secondary-color, #dbf142) 100%);
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(73, 73, 233, 0.3);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid #1a1a1a;
+  color: #1a1a1a;
+}
+
+.btn-outline:hover {
+  background: #1a1a1a;
+  color: white;
+}
+
+.contact-section .btn-primary {
+  background: white;
+  color: var(--primary-color, #4949e9);
+}
+
+.btn-large {
+  width: 100%;
+  padding: 18px 40px;
+  font-size: 26px;
+}
+
+.cta-center {
+  text-align: center;
+  margin-top: 40px;
+}
+
+/* Footer */
+/* Responsive */
+@media (max-width: 768px) {
+  .mobile-menu-toggle {
+    display: flex;
+  }
+
+  .main-nav {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    background: white;
+    flex-direction: column;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transform: translateY(-150%);
+    transition: transform 0.3s ease;
+  }
+
+  .main-nav.mobile-open {
+    transform: translateY(0);
+  }
+
+  .content-wrapper {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-form {
+    padding: 30px 20px;
+  }
+
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .service-tags {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .service-tag {
+    text-align: center;
+  }
 }
 </style>

@@ -59,14 +59,12 @@ const switchLanguage = async (lang) => {
   }
 }
 
-// Get contact phone from site settings
+// Get contact phone from contact content
 const cmsStore = useCMSStore()
-const { createLocalizedContent } = useMultiLanguage()
-await cmsStore.fetchSiteSettings()
-const siteSettingsRaw = cmsStore.siteSettings
+await cmsStore.fetchContactContent()
+const contactContentRaw = cmsStore.contactContent
 
-const siteSettings = computed(() => createLocalizedContent(siteSettingsRaw))
-const contactPhone = computed(() => siteSettings.value.contactPhone || '+1 (555) 123-4567')
+const contactPhone = computed(() => contactContentRaw?.phone || '+1 (555) 123-4567')
 </script>
 
 <style scoped>

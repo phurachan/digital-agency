@@ -55,6 +55,7 @@ export default defineEventHandler(async (event) => {
       position: result.position,
       bio: result.bio,
       image: result.image,
+      link: result.link,
       socialLinks: result.socialLinks,
       isActive: result.isActive,
       isDisplayInHome: result.isDisplayInHome ?? true,

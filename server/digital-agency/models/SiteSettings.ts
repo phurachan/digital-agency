@@ -10,10 +10,13 @@ export interface ISiteSettings extends Document {
   socialLinks: string // JSON object: {"facebook": "url", "twitter": "url", etc.}
   logo?: string
   favicon?: string
+  navbarDisplayMode?: string // 'logo' | 'text' | 'both'
   metaDescription?: string // JSON string: {"th": "", "en": ""}
   keywords?: string // JSON string: {"th": "", "en": ""}
   contactEmail?: string // JSON string: {"th": "", "en": ""}
   contactPhone?: string // JSON string: {"th": "", "en": ""}
+  navbarTextColor?: string
+  navbarBgColor?: string
   createdAt: Date
   updatedAt: Date
 }
@@ -57,6 +60,12 @@ const SiteSettingsSchema = new Schema<ISiteSettings>({
     type: String,
     trim: true
   },
+  navbarDisplayMode: {
+    type: String,
+    enum: ['logo', 'text', 'both'],
+    default: 'both',
+    trim: true
+  },
   metaDescription: {
     type: String,
     trim: true,
@@ -76,6 +85,16 @@ const SiteSettingsSchema = new Schema<ISiteSettings>({
     type: String,
     trim: true,
     default: '{"th": "", "en": ""}'
+  },
+  navbarTextColor: {
+    type: String,
+    trim: true,
+    default: '#1a1a1a'
+  },
+  navbarBgColor: {
+    type: String,
+    trim: true,
+    default: 'rgba(255, 255, 255, 0.98)'
   }
 }, {
   timestamps: true,

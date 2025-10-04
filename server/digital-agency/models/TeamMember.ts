@@ -7,6 +7,7 @@ export interface ITeamMember extends Document {
   position: string // JSON string
   bio?: string // JSON string
   image?: string
+  link?: string // URL to redirect when item is clicked
   socialLinks?: string // JSON object: {"facebook": "url", "twitter": "url", etc.}
   isActive: boolean
   isDisplayInHome: boolean
@@ -34,6 +35,10 @@ const TeamMemberSchema = new Schema<ITeamMember>({
     maxlength: [1000, MODEL_VALIDATION_MESSAGES.MAX_LENGTH_200]
   },
   image: {
+    type: String,
+    trim: true
+  },
+  link: {
     type: String,
     trim: true
   },

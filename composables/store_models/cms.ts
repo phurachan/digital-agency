@@ -4,6 +4,7 @@ export interface HomeContent {
   id?: string
   heroTitle: string
   heroSubtitle: string
+  heroDisplayMode?: string
   ctaText: string
   ctaButtonText: string
   featureTitle: string
@@ -58,6 +59,7 @@ export interface TeamMember {
   position: string
   bio?: string
   image: string | null
+  link?: string
   socialLinks?: string
   isActive: boolean
   order?: number
@@ -98,6 +100,9 @@ export interface SiteSettings {
   socialLinks: string
   logo: string | null
   favicon: string | null
+  navbarDisplayMode?: string
+  navbarTextColor?: string
+  navbarBgColor?: string
   metaDescription?: string
   keywords?: string
   contactEmail?: string
@@ -127,6 +132,7 @@ export interface TeamContent {
 export interface HomeContentRequest {
   heroTitle?: string
   heroSubtitle?: string
+  heroDisplayMode?: string
   ctaText?: string
   ctaButtonText?: string
   featureTitle?: string
@@ -174,6 +180,7 @@ export interface TeamMemberRequest {
   position?: string
   bio?: string
   image?: string | null
+  link?: string
   socialLinks?: string
   isActive?: boolean
   order?: number
@@ -206,6 +213,13 @@ export interface SiteSettingsRequest {
   socialLinks?: string
   logo?: string | null
   favicon?: string | null
+  navbarDisplayMode?: string
+  navbarTextColor?: string
+  navbarBgColor?: string
+  metaDescription?: string
+  keywords?: string
+  contactEmail?: string
+  contactPhone?: string
 }
 
 export interface ServicesContentRequest {

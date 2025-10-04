@@ -40,7 +40,14 @@ export default defineEventHandler(async (event) => {
       secondaryColor: body.secondaryColor,
       socialLinks: body.socialLinks,
       logo: body.logo || null,
-      favicon: body.favicon || null
+      favicon: body.favicon || null,
+      navbarDisplayMode: body.navbarDisplayMode || 'both',
+      navbarTextColor: body.navbarTextColor,
+      navbarBgColor: body.navbarBgColor,
+      metaDescription: body.metaDescription,
+      keywords: body.keywords,
+      contactEmail: body.contactEmail,
+      contactPhone: body.contactPhone
     }
 
     // Check if content exists
@@ -71,6 +78,13 @@ export default defineEventHandler(async (event) => {
       socialLinks: result.socialLinks,
       logo: result.logo,
       favicon: result.favicon,
+      navbarDisplayMode: result.navbarDisplayMode,
+      navbarTextColor: result.navbarTextColor,
+      navbarBgColor: result.navbarBgColor,
+      metaDescription: result.metaDescription,
+      keywords: result.keywords,
+      contactEmail: result.contactEmail,
+      contactPhone: result.contactPhone,
       createdAt: result.createdAt,
       updatedAt: result.updatedAt
     }

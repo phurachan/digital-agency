@@ -69,9 +69,23 @@
               required
             />
 
-            <CmsImageUpload 
-              v-model="formData.heroImage" 
-              label="Hero Background Image (optional)"
+            <BaseSelect
+              v-model="formData.heroDisplayMode"
+              label="Hero Display Mode"
+              :options="[
+                { value: 'gradient', label: 'Gradient Background' },
+                { value: 'image', label: 'Image Background (with text overlay)' },
+                { value: 'cover', label: 'Cover Image Only (no text)' },
+                { value: 'video', label: 'Video Background (Coming Soon)', disabled: true },
+                { value: 'minimal', label: 'Minimal (White Background)' }
+              ]"
+              help-text="Choose how the hero section should be displayed"
+            />
+
+            <CmsImageUpload
+              v-if="formData.heroDisplayMode === 'image' || formData.heroDisplayMode === 'cover'"
+              v-model="formData.heroImage"
+              label="Hero Background Image"
             />
             <p class="text-sm text-gray-500 mt-2">
               <strong>📐 Recommended:</strong> 1920×1080px (16:9 ratio) or larger<br>
@@ -250,6 +264,7 @@ const formData = reactive({
   // Text fields as JSON {en: "English", th: "Thai"}
   heroTitle: { en: '', th: '' },
   heroSubtitle: { en: '', th: '' },
+  heroDisplayMode: 'gradient',
   featureTitle: { en: 'Expert Management Solutions', th: 'โซลูชั่นการจัดการจากผู้เชี่ยวชาญ' },
   featureDescription: { en: 'Streamline your business operations and enhance productivity', th: 'ปรับปรุงการดำเนินธุรกิจแลเพิ่มผลิตภาพ' },
   ctaText: { en: '', th: '' },
@@ -289,12 +304,12 @@ const loadContent = async () => {
   try {
     await cmsStore.fetchHomeContent()
     const response = cmsStore.homeContent
-    console.log('Loaded home content:', response)
 
     if (response) {
       // The API already transforms JSON strings to objects, so use them directly
       formData.heroTitle = response.heroTitle || { en: '', th: '' }
       formData.heroSubtitle = response.heroSubtitle || { en: '', th: '' }
+      formData.heroDisplayMode = response.heroDisplayMode || 'gradient'
       formData.featureTitle = response.featureTitle || { en: 'Expert Management Solutions', th: 'โซลูชั่นการจัดการจากผู้เชี่ยวชาญ' }
       formData.featureDescription = response.featureDescription || { en: 'Streamline your business operations and enhance productivity', th: 'ปรับปรุงการดำเนินธุรกิจและเพิ่มผลิตภาพ' }
       formData.ctaText = response.ctaText || { en: '', th: '' }
@@ -328,6 +343,7 @@ const handleSubmit = async () => {
       // Text fields as JSON strings
       heroTitle: JSON.stringify(formData.heroTitle),
       heroSubtitle: JSON.stringify(formData.heroSubtitle),
+      heroDisplayMode: formData.heroDisplayMode,
       featureTitle: JSON.stringify(formData.featureTitle),
       featureDescription: JSON.stringify(formData.featureDescription),
       ctaText: JSON.stringify(formData.ctaText),

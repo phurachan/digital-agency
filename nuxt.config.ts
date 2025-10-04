@@ -59,6 +59,13 @@ export default defineNuxtConfig({
     }
   },
   runtimeConfig: {
+    // Server-side runtime config (private)
+    awsAccessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
+    awsSecretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
+    awsRegion: process.env.AWS_REGION || 'ap-southeast-1',
+    awsS3Bucket: process.env.AWS_S3_BUCKET || '',
+    awsS3Url: process.env.AWS_S3_URL || '', // Optional: CloudFront or custom domain
+
     public: {
       apiBase: '/api',
       // apiBaseUrl: 'http://localhost:3001/api/digital-agency',

@@ -34,6 +34,7 @@ export default defineEventHandler(async (event) => {
       id: content._id.toString(),
       heroTitle: safeJsonParse(content.heroTitle),
       heroSubtitle: safeJsonParse(content.heroSubtitle),
+      heroDisplayMode: content.heroDisplayMode,
       ctaText: safeJsonParse(content.ctaText),
       ctaButtonText: safeJsonParse(content.ctaButtonText),
       featureTitle: safeJsonParse(content.featureTitle),

@@ -2,23 +2,17 @@
   <div class="min-h-screen">
     <!-- Top Navbar -->
     <CmsTopNavbar />
-    
+
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-100" style="top: 40px;">
-      <div class="container">
-        <div class="flex justify-between items-center py-4">
-          <NuxtLink :to="$localePath('/digital-agency')" class="text-2xl font-bold gradient-text">{{ siteSettings.siteName }}</NuxtLink>
-          <div class="hidden md:flex space-x-8">
-            <NuxtLink :to="$localePath('/digital-agency')" class="text-gray-700 hover:text-blue-500 transition-colors">{{ t('nav.home') }}</NuxtLink>
-            <NuxtLink :to="$localePath('/digital-agency/services')" class="text-gray-700 hover:text-blue-500 transition-colors">{{ t('nav.services') }}</NuxtLink>
-            <NuxtLink :to="$localePath('/digital-agency/about')" class="text-gray-700 hover:text-blue-500 transition-colors">{{ t('nav.about') }}</NuxtLink>
-            <NuxtLink :to="$localePath('/digital-agency/team')" class="text-gray-700 hover:text-blue-500 transition-colors">{{ t('nav.team') }}</NuxtLink>
-            <NuxtLink :to="$localePath('/digital-agency/contact')" class="text-blue-500 font-medium">{{ t('nav.contact') }}</NuxtLink>
-          </div>
-          <button class="btn-primary hidden md:block">{{ t('common.getStarted') }}</button>
-        </div>
-      </div>
-    </nav>
+    <CmsNavbar>
+      <template #nav-links>
+        <NuxtLink :to="$localePath('/digital-agency')">{{ t('nav.home') }}</NuxtLink>
+        <NuxtLink :to="$localePath('/digital-agency/services')">{{ t('index.ourService') }}</NuxtLink>
+        <NuxtLink :to="$localePath('/digital-agency/team')">{{ t('index.whyUs') }}</NuxtLink>
+        <NuxtLink :to="$localePath('/digital-agency/about')">{{ t('nav.about') }}</NuxtLink>
+        <NuxtLink :to="$localePath('/digital-agency/contact')">{{ t('common.contactUs') }}</NuxtLink>
+      </template>
+    </CmsNavbar>
 
     <!-- Hero Section -->
     <section 
@@ -288,69 +282,7 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12">
-      <div class="container">
-        <div class="grid md:grid-cols-4 gap-8">
-          <div>
-            <div class="text-2xl font-bold mb-4">{{ siteSettings.siteName }}</div>
-            <p class="text-gray-400 mb-4">{{ t('footer.elevatingBrands') }}</p>
-            <div class="grid grid-cols-3 gap-3 max-w-[156px]">
-              <a href="#" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors">
-                <img src="/social_icons/icons8-facebook-50.png" alt="Facebook" class="w-7 h-7 object-contain">
-              </a>
-              <a href="#" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-pink-500 transition-colors">
-                <img src="/social_icons/icons8-instagram-50.png" alt="Instagram" class="w-7 h-7 object-contain">
-              </a>
-              <a href="#" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-green-500 transition-colors">
-                <img src="/social_icons/icons8-line-50.png" alt="Line" class="w-7 h-7 object-contain">
-              </a>
-              <a href="#" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-black transition-colors">
-                <img src="/social_icons/icons8-tiktok-50.png" alt="TikTok" class="w-7 h-7 object-contain">
-              </a>
-              <a href="#" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors">
-                <img src="/social_icons/icons8-youtube-50.png" alt="YouTube" class="w-7 h-7 object-contain">
-              </a>
-              <a href="#" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors">
-                <img src="/social_icons/icons8-linkedin-circled-50.png" alt="LinkedIn" class="w-7 h-7 object-contain">
-              </a>
-            </div>
-          </div>
-          
-          <div>
-            <h4 class="text-lg font-bold mb-4">{{ t('footer.services') }}</h4>
-            <ul class="space-y-2 text-gray-400">
-              <li><NuxtLink :to="$localePath('/digital-agency/services')" class="hover:text-white transition-colors">{{ t('footer.seoOptimization') }}</NuxtLink></li>
-              <li><a href="#" class="hover:text-white transition-colors">{{ t('footer.socialMediaMarketing') }}</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">{{ t('footer.webDevelopment') }}</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">{{ t('footer.ppcAdvertising') }}</a></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h4 class="text-lg font-bold mb-4">{{ t('footer.company') }}</h4>
-            <ul class="space-y-2 text-gray-400">
-              <li><NuxtLink :to="$localePath('/digital-agency/about')" class="hover:text-white transition-colors">{{ t('footer.aboutUs') }}</NuxtLink></li>
-              <li><a href="#" class="hover:text-white transition-colors">{{ t('footer.ourPeople') }}</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">{{ t('footer.careers') }}</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">{{ t('footer.blog') }}</a></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h4 class="text-lg font-bold mb-4">{{ t('footer.contact') }}</h4>
-            <ul class="space-y-2 text-gray-400">
-              <li>+1 (555) 123-4567</li>
-              <li>hello@digitalflow.com</li>
-              <li>123 Innovation Drive<br>Tech Valley, CA 94105</li>
-            </ul>
-          </div>
-        </div>
-        
-        <div class="border-t border-gray-800 pt-8 mt-8 text-center text-gray-400">
-          <p>&copy; 2025 {{ siteSettings.siteName }}. All rights reserved.</p>
-        </div>
-      </div>
-    </footer>
+    <CmsFooter />
   </div>
 </template>
 
@@ -505,11 +437,19 @@ useSeoMeta({
   --color-base-100: white;
 
   /* Page-specific font and text styling */
-  font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+  font-family: 'PG Stockholm', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   line-height: 1.6;
   color: var(--text-dark);
   box-sizing: border-box;
   background-color: white;
+}
+
+@font-face {
+  font-family: 'PG Stockholm';
+  src: url('~/assets/fonts/02-TH-Krub/TH Krub.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
 .min-h-screen *,

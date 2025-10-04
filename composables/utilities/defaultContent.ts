@@ -35,6 +35,7 @@ export const getDefaultSiteSettings = (): SiteSettings => ({
   }),
   logo: null,
   favicon: null,
+  navbarDisplayMode: 'both',
   metaDescription: 'Elevating brands through innovative digital marketing solutions',
   keywords: 'digital marketing, web development, SEO, social media',
   contactEmail: 'hello@digitalagency.com',

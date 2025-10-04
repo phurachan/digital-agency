@@ -2,6 +2,7 @@ import User from '~/server/digital-agency/models/User'
 import { extractTokenFromHeader, verifyToken } from '~/server/digital-agency/utils/jwt'
 import { connectMongoDB } from '~/server/digital-agency/utils/mongodb'
 import { createSuccessResponse, createPredefinedError, API_RESPONSE_CODES } from '~/server/digital-agency/utils/responseHandler'
+import { uploadToS3, generateUniqueFilename, isS3Enabled } from '~/server/digital-agency/utils/s3'
 import { promises as fs } from 'fs'
 import { join } from 'path'
 
@@ -74,25 +75,59 @@ export default defineEventHandler(async (event) => {
     }
 
     // Generate unique filename
-    const timestamp = Date.now()
-    const randomString = Math.random().toString(36).substring(2, 15)
-    const extension = file.filename.split('.').pop()
-    const filename = `${timestamp}_${randomString}.${extension}`
+    const filename = generateUniqueFilename(file.filename)
 
-    // Ensure uploads directory exists
-    const uploadsDir = join(process.cwd(), 'public', 'uploads')
-    try {
-      await fs.access(uploadsDir)
-    } catch {
-      await fs.mkdir(uploadsDir, { recursive: true })
+    let publicUrl: string
+    let storageType: 'local' | 's3'
+    let s3Key: string | undefined
+
+    // Determine folder based on file type
+    const folder = isVideo ? 'videos' : 'files'
+
+    // Check if S3 is enabled and configured
+    if (isS3Enabled()) {
+      // Upload to AWS S3
+      try {
+        const s3Result = await uploadToS3({
+          fileName: filename,
+          fileData: file.data,
+          contentType: file.type || 'application/octet-stream',
+          folder // Store in appropriate folder (videos/files)
+        })
+
+        publicUrl = s3Result.url
+        storageType = 's3'
+        s3Key = s3Result.key
+      } catch (s3Error) {
+        console.error('S3 upload failed, falling back to local storage:', s3Error)
+
+        // Fallback to local storage if S3 fails
+        const uploadsDir = join(process.cwd(), 'public', 'uploads')
+        try {
+          await fs.access(uploadsDir)
+        } catch {
+          await fs.mkdir(uploadsDir, { recursive: true })
+        }
+
+        const filePath = join(uploadsDir, filename)
+        await fs.writeFile(filePath, file.data)
+        publicUrl = `/uploads/${filename}`
+        storageType = 'local'
+      }
+    } else {
+      // Upload to local storage (default behavior)
+      const uploadsDir = join(process.cwd(), 'public', 'uploads')
+      try {
+        await fs.access(uploadsDir)
+      } catch {
+        await fs.mkdir(uploadsDir, { recursive: true })
+      }
+
+      const filePath = join(uploadsDir, filename)
+      await fs.writeFile(filePath, file.data)
+      publicUrl = `/uploads/${filename}`
+      storageType = 'local'
     }
-
-    // Save file
-    const filePath = join(uploadsDir, filename)
-    await fs.writeFile(filePath, file.data)
-
-    // Return public URL
-    const publicUrl = `/uploads/${filename}`
 
     const responseData = {
       url: publicUrl,
@@ -101,6 +136,8 @@ export default defineEventHandler(async (event) => {
       size: file.data.length,
       type: file.type,
       isVideo: isVideo,
+      storageType,
+      s3Key,
       uploadedAt: new Date().toISOString()
     }
 

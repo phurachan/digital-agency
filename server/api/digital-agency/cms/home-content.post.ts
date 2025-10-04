@@ -36,6 +36,7 @@ export default defineEventHandler(async (event) => {
     const contentData = {
       heroTitle: body.heroTitle,
       heroSubtitle: body.heroSubtitle,
+      heroDisplayMode: body.heroDisplayMode,
       heroImage: body.heroImage || null,
       featureTitle: body.featureTitle,
       featureDescription: body.featureDescription,
@@ -72,6 +73,7 @@ export default defineEventHandler(async (event) => {
       id: result._id.toString(),
       heroTitle: result.heroTitle,
       heroSubtitle: result.heroSubtitle,
+      heroDisplayMode: result.heroDisplayMode,
       ctaText: result.ctaText,
       ctaButtonText: result.ctaButtonText,
       featureTitle: result.featureTitle,

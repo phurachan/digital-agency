@@ -160,10 +160,20 @@
               required
             />
 
-            <BaseInput
+            <BaseFileUpload
               v-model="memberForm.image"
+              label="Profile Image"
+              accept="image/*"
+              :max-size="5 * 1024 * 1024"
+              help-text="Upload a profile image (max 5MB)"
+              upload-endpoint="/api/digital-agency/upload/image"
+            />
+
+            <BaseInput
+              v-model="memberForm.link"
               type="url"
-              label="Profile Image URL"
+              label="Click Link URL"
+              help-text="URL to redirect when this item is clicked (optional)"
             />
 
             <BaseInput
@@ -265,6 +275,7 @@ const memberForm = reactive({
   position: '',
   description: '',
   image: '',
+  link: '',
   email: '',
   linkedin: '',
   twitter: '',
@@ -320,6 +331,7 @@ const editMember = (localizedMember) => {
   memberForm.position = (typeof originalMember.position === 'object' ? originalMember.position[locale.value] || originalMember.position.en || '' : originalMember.position) || ''
   memberForm.description = (typeof originalMember.bio === 'object' ? originalMember.bio[locale.value] || originalMember.bio.en || '' : originalMember.bio) || ''
   memberForm.image = originalMember.image || ''
+  memberForm.link = originalMember.link || ''
   memberForm.email = originalMember.email || ''
   memberForm.linkedin = originalMember.linkedin || ''
   memberForm.twitter = originalMember.twitter || ''
@@ -340,6 +352,7 @@ const resetForm = () => {
   memberForm.position = ''
   memberForm.description = ''
   memberForm.image = ''
+  memberForm.link = ''
   memberForm.email = ''
   memberForm.linkedin = ''
   memberForm.twitter = ''
@@ -359,6 +372,7 @@ const saveMember = async () => {
       position: memberForm.position,
       description: memberForm.description,
       image: memberForm.image,
+      link: memberForm.link,
       email: memberForm.email,
       linkedin: memberForm.linkedin,
       twitter: memberForm.twitter,
