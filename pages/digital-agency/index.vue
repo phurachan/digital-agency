@@ -16,13 +16,53 @@
             <a href="#home">{{ siteSettings.siteName || '' }}</a>
           </div>
 
-          <nav class="main-nav" :class="{ 'mobile-open': mobileMenuOpen }">
-            <a href="#services" @click="closeMobileMenu">{{ t('index.ourService') }}</a>
-            <a href="#projects" @click="closeMobileMenu">{{ t('index.projects') }}</a>
-            <a href="#why-us" @click="closeMobileMenu">{{ t('index.whyUs') }}</a>
-            <a href="#insights" @click="closeMobileMenu">{{ t('index.insights') }}</a>
-            <a href="#contact" @click="closeMobileMenu">{{ t('common.contactUs') }}</a>
-          </nav>
+          <div class="nav-wrapper">
+            <nav class="main-nav" :class="{ 'mobile-open': mobileMenuOpen }">
+              <a href="#services" @click="closeMobileMenu">{{ t('index.ourService') }}</a>
+              <a href="#projects" @click="closeMobileMenu">{{ t('index.projects') }}</a>
+              <a href="#why-us" @click="closeMobileMenu">{{ t('index.whyUs') }}</a>
+              <a href="#insights" @click="closeMobileMenu">{{ t('index.insights') }}</a>
+              <a href="#contact" @click="closeMobileMenu">{{ t('common.contactUs') }}</a>
+
+              <!-- Language Switcher in Mobile Menu -->
+              <div class="language-switcher-mobile">
+                <button
+                  @click="switchLanguage('en')"
+                  :class="currentLanguage === 'en' ? 'active' : ''"
+                  class="lang-btn"
+                >
+                  EN
+                </button>
+                <span class="lang-divider">|</span>
+                <button
+                  @click="switchLanguage('th')"
+                  :class="currentLanguage === 'th' ? 'active' : ''"
+                  class="lang-btn"
+                >
+                  ไทย
+                </button>
+              </div>
+            </nav>
+
+            <!-- Language Switcher Desktop -->
+            <div class="language-switcher-desktop">
+              <button
+                @click="switchLanguage('en')"
+                :class="currentLanguage === 'en' ? 'active' : ''"
+                class="lang-btn"
+              >
+                EN
+              </button>
+              <span class="lang-divider">|</span>
+              <button
+                @click="switchLanguage('th')"
+                :class="currentLanguage === 'th' ? 'active' : ''"
+                class="lang-btn"
+              >
+                ไทย
+              </button>
+            </div>
+          </div>
 
           <button class="mobile-menu-toggle" @click="toggleMobileMenu">
             <span></span>
@@ -258,7 +298,7 @@
         </div>
 
         <div class="cta-center">
-          <a href="#contact" class="btn-outline">{{ t('common.getStarted') }}</a>
+          <NuxtLink :to="$localePath('/digital-agency/team')" class="btn-outline">{{ t('common.meetAllOurPeople') }}</NuxtLink>
         </div>
       </div>
     </section>
@@ -317,9 +357,32 @@ definePageMeta({
   layout: false
 })
 
-const { t } = useI18n()
+const { t, locale, setLocale } = useI18n()
+const router = useRouter()
+const route = useRoute()
+const { $localePath } = useNuxtApp()
+
 const isScrolled = ref(false)
 const mobileMenuOpen = ref(false)
+
+// Language switcher
+const currentLanguage = computed(() => locale.value)
+
+const switchLanguage = async (lang) => {
+  await setLocale(lang)
+
+  // Get current path without locale prefix
+  const currentPath = route.path.replace(/^\/(th|en)/, '') || '/digital-agency'
+
+  // Navigate to the same page with new locale
+  if (lang === 'th') {
+    // For Thai (default), no prefix needed
+    await navigateTo(currentPath)
+  } else {
+    // For other languages, use localePath
+    await navigateTo($localePath(currentPath))
+  }
+}
 
 // CMS Store
 const cmsStore = useCMSStore()
@@ -412,6 +475,9 @@ onMounted(() => {
   const handleScroll = () => {
     isScrolled.value = window.scrollY > 50
   }
+
+  // Check initial scroll position
+  handleScroll()
 
   window.addEventListener('scroll', handleScroll)
 
@@ -509,6 +575,12 @@ useSeoMeta({
   letter-spacing: -0.5px;
 }
 
+.nav-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
 .main-nav {
   display: flex;
   gap: 40px;
@@ -548,6 +620,47 @@ useSeoMeta({
   height: 2px;
   background: var(--navbar-text-color, #1a1a1a);
   transition: all 0.3s ease;
+}
+
+/* Language Switcher */
+.language-switcher-desktop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.language-switcher-mobile {
+  display: none;
+  align-items: center;
+  gap: 8px;
+}
+
+.lang-btn {
+  background: none;
+  border: none;
+  color: var(--navbar-text-color, #1a1a1a);
+  font-weight: 500;
+  font-size: 18px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0.6;
+}
+
+.lang-btn:hover {
+  opacity: 0.8;
+}
+
+.lang-btn.active {
+  opacity: 1;
+  font-weight: 700;
+  color: var(--navbar-text-color, #1a1a1a);
+}
+
+.lang-divider {
+  color: var(--navbar-text-color, #1a1a1a);
+  opacity: 0.3;
+  font-size: 18px;
 }
 
 /* Hero Section */
@@ -1218,6 +1331,20 @@ textarea.form-control {
 
   .main-nav.mobile-open {
     transform: translateY(0);
+  }
+
+  .language-switcher-desktop {
+    display: none !important;
+  }
+
+  .language-switcher-mobile {
+    display: flex !important;
+    margin-left: 0;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+    width: 100%;
+    justify-content: center;
   }
 
   .content-wrapper {

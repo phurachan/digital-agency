@@ -7,11 +7,10 @@
     <CmsNavbar>
       <template #nav-links>
         <NuxtLink :to="$localePath('/digital-agency')">{{ t('nav.home') }}</NuxtLink>
-        <NuxtLink :to="$localePath('/digital-agency') + '#services'">{{ t('index.ourService') }}</NuxtLink>
-        <NuxtLink :to="$localePath('/digital-agency') + '#projects'">{{ t('index.projects') }}</NuxtLink>
-        <NuxtLink :to="$localePath('/digital-agency') + '#why-us'">{{ t('index.whyUs') }}</NuxtLink>
-        <NuxtLink :to="$localePath('/digital-agency') + '#insights'">{{ t('index.insights') }}</NuxtLink>
-        <NuxtLink :to="$localePath('/digital-agency') + '#contact'">{{ t('common.contactUs') }}</NuxtLink>
+        <NuxtLink :to="$localePath('/digital-agency/services')">{{ t('index.ourService') }}</NuxtLink>
+        <NuxtLink :to="$localePath('/digital-agency/team')">{{ t('nav.team') }}</NuxtLink>
+        <NuxtLink :to="$localePath('/digital-agency/about')">{{ t('nav.about') }}</NuxtLink>
+        <NuxtLink :to="$localePath('/digital-agency/contact')">{{ t('common.contactUs') }}</NuxtLink>
       </template>
     </CmsNavbar>
 
@@ -26,8 +25,8 @@
       <div v-if="teamContent.heroImage" class="absolute inset-0 bg-black/40"></div>
       
       <div class="container text-center relative z-10">
-        <h1 class="text-4xl lg:text-5xl font-bold mb-6">{{ teamContent.heroTitle }}</h1>
-        <p class="text-xl text-blue-100 max-w-3xl mx-auto">
+        <h1 class="font-bold mb-6" style="font-size: clamp(40px, 5vw, 72px);">{{ teamContent.heroTitle }}</h1>
+        <p class="text-blue-100 max-w-3xl mx-auto" style="font-size: clamp(24px, 2vw, 28px);">
           {{ teamContent.heroSubtitle }}
         </p>
       </div>
@@ -62,9 +61,9 @@
 
             <!-- Member Info -->
             <div class="p-6">
-              <h3 class="text-xl font-bold text-gray-900 mb-1">{{ member.name }}</h3>
-              <p class="text-blue-600 font-medium mb-3">{{ member.position }}</p>
-              <p class="text-gray-600 mb-4 line-clamp-3">{{ member.description }}</p>
+              <h3 class="font-bold text-gray-900 mb-1" style="font-size: 30px;">{{ member.name }}</h3>
+              <p class="text-blue-600 font-medium mb-3" style="font-size: 22px;">{{ member.position }}</p>
+              <p class="text-gray-600 mb-4 line-clamp-3" style="font-size: 23px;">{{ member.description }}</p>
 
               <!-- Social Links -->
               <div class="flex space-x-3">
@@ -107,8 +106,8 @@
           <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
           </svg>
-          <h3 class="text-2xl font-bold text-gray-900 mb-2">Coming Soon</h3>
-          <p class="text-gray-600">We're building our showcase. Check back soon to meet the people behind our success!</p>
+          <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ t('team.comingSoon') }}</h3>
+          <p class="text-gray-600">{{ t('team.buildingShowcase') }}</p>
         </div>
       </div>
     </section>
@@ -117,9 +116,9 @@
     <section class="section-padding bg-gray-50">
       <div class="container">
         <div class="text-center mb-16">
-          <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-gray-900">Our Values</h2>
-          <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-            The principles that guide our people and shape our approach to excellence
+          <h2 class="font-bold mb-4 text-gray-900" style="font-size: clamp(40px, 4vw, 56px);">{{ t('team.ourValues') }}</h2>
+          <p class="text-gray-600 max-w-2xl mx-auto" style="font-size: 26px;">
+            {{ t('team.principlesGuide') }}
           </p>
         </div>
 
@@ -130,8 +129,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-3">Innovation</h3>
-            <p class="text-gray-600">We stay ahead of digital trends and constantly explore new strategies to keep your business competitive.</p>
+            <h3 class="font-bold text-gray-900 mb-3" style="font-size: 24px;">{{ t('team.innovation') }}</h3>
+            <p class="text-gray-600" style="font-size: 22px;">{{ t('team.innovationDesc') }}</p>
           </div>
 
           <div class="text-center">
@@ -140,8 +139,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-3">Excellence</h3>
-            <p class="text-gray-600">We deliver high-quality work and measurable results, ensuring every campaign exceeds expectations.</p>
+            <h3 class="font-bold text-gray-900 mb-3" style="font-size: 24px;">{{ t('team.excellence') }}</h3>
+            <p class="text-gray-600" style="font-size: 22px;">{{ t('team.excellenceDesc') }}</p>
           </div>
 
           <div class="text-center">
@@ -150,8 +149,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
               </svg>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-3">Collaboration</h3>
-            <p class="text-gray-600">We work closely with our clients as partners, ensuring transparent communication and shared success.</p>
+            <h3 class="font-bold text-gray-900 mb-3" style="font-size: 24px;">{{ t('team.collaboration') }}</h3>
+            <p class="text-gray-600" style="font-size: 22px;">{{ t('team.collaborationDesc') }}</p>
           </div>
         </div>
       </div>
@@ -160,8 +159,8 @@
     <!-- CTA Section -->
     <section class="section-padding gradient-bg text-white">
       <div class="container text-center">
-        <h2 class="text-3xl lg:text-4xl font-bold mb-6">{{ t('team.readyToWork') }}</h2>
-        <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+        <h2 class="font-bold mb-6" style="font-size: clamp(40px, 4vw, 56px);">{{ t('team.readyToWork') }}</h2>
+        <p class="text-blue-100 mb-8 max-w-2xl mx-auto" style="font-size: 26px;">
           {{ t('team.letTalentedPeople') }}
         </p>
         <NuxtLink :to="$localePath('/digital-agency/contact')" class="btn-primary hover:bg-gray-100">{{ t('common.getInTouch') }}</NuxtLink>

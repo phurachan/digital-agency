@@ -7,11 +7,10 @@
     <CmsNavbar>
       <template #nav-links>
         <NuxtLink :to="$localePath('/digital-agency')">{{ t('nav.home') }}</NuxtLink>
-        <NuxtLink :to="$localePath('/digital-agency') + '#services'">{{ t('index.ourService') }}</NuxtLink>
-        <NuxtLink :to="$localePath('/digital-agency') + '#projects'">{{ t('index.projects') }}</NuxtLink>
-        <NuxtLink :to="$localePath('/digital-agency') + '#why-us'">{{ t('index.whyUs') }}</NuxtLink>
-        <NuxtLink :to="$localePath('/digital-agency') + '#insights'">{{ t('index.insights') }}</NuxtLink>
-        <NuxtLink :to="$localePath('/digital-agency') + '#contact'">{{ t('common.contactUs') }}</NuxtLink>
+        <NuxtLink :to="$localePath('/digital-agency/services')">{{ t('index.ourService') }}</NuxtLink>
+        <NuxtLink :to="$localePath('/digital-agency/team')">{{ t('nav.team') }}</NuxtLink>
+        <NuxtLink :to="$localePath('/digital-agency/about')">{{ t('nav.about') }}</NuxtLink>
+        <NuxtLink :to="$localePath('/digital-agency/contact')">{{ t('common.contactUs') }}</NuxtLink>
       </template>
     </CmsNavbar>
 
@@ -26,8 +25,8 @@
       <div v-if="servicesContent.heroImage" class="absolute inset-0 bg-black/40"></div>
       
       <div class="container text-center relative z-10">
-        <h1 class="text-4xl lg:text-5xl font-bold mb-6">{{ servicesContent.heroTitle }}</h1>
-        <p class="text-xl text-blue-100 max-w-3xl mx-auto">
+        <h1 class="font-bold mb-6" style="font-size: clamp(40px, 5vw, 72px);">{{ servicesContent.heroTitle }}</h1>
+        <p class="text-blue-100 max-w-3xl mx-auto" style="font-size: clamp(24px, 2vw, 28px);">
           {{ servicesContent.heroSubtitle }}
         </p>
       </div>
@@ -91,13 +90,13 @@
             </div>
 
             <div class="flex items-center justify-between mb-4">
-              <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">{{ service.title }}</h3>
-              <div v-if="service.price" class="text-lg font-semibold text-primary">
+              <h3 class="font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300" style="font-size: 28px;">{{ service.title }}</h3>
+              <div v-if="service.price" class="font-semibold text-primary" style="font-size: 26px;">
                 ฿{{ service.price.toLocaleString() }}
               </div>
             </div>
 
-            <p class="text-gray-600 mb-6 line-clamp-3">{{ service.description }}</p>
+            <p class="text-gray-600 mb-6 line-clamp-3" style="font-size: 22px;">{{ service.description }}</p>
 
             <!-- Features list -->
             <ul v-if="service.features && service.features.length" class="space-y-2 mb-6">
@@ -136,33 +135,33 @@
     <section class="section-padding bg-gray-50">
       <div class="container">
         <div class="text-center mb-16">
-          <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-gray-900">Our Process</h2>
-          <p class="text-xl text-gray-600">A proven methodology that delivers consistent results</p>
+          <h2 class="font-bold mb-4 text-gray-900" style="font-size: clamp(40px, 4vw, 56px);">{{ t('services.ourProcess') }}</h2>
+          <p class="text-gray-600" style="font-size: 26px;">{{ t('services.provenMethodology') }}</p>
         </div>
-        
+
         <div class="grid md:grid-cols-4 gap-8">
           <div class="text-center">
             <div class="w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">1</div>
-            <h3 class="text-xl font-bold mb-2 text-gray-900">Discovery</h3>
-            <p class="text-gray-600">We analyze your business, audience, and competition to create a tailored strategy.</p>
+            <h3 class="font-bold mb-2 text-gray-900" style="font-size: 24px;">{{ t('services.discovery') }}</h3>
+            <p class="text-gray-600" style="font-size: 22px;">{{ t('services.discoveryDesc') }}</p>
           </div>
-          
+
           <div class="text-center">
             <div class="w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">2</div>
-            <h3 class="text-xl font-bold mb-2 text-gray-900">Strategy</h3>
-            <p class="text-gray-600">Develop comprehensive digital marketing strategies aligned with your goals.</p>
+            <h3 class="font-bold mb-2 text-gray-900" style="font-size: 24px;">{{ t('services.strategy') }}</h3>
+            <p class="text-gray-600" style="font-size: 22px;">{{ t('services.strategyDesc') }}</p>
           </div>
-          
+
           <div class="text-center">
             <div class="w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">3</div>
-            <h3 class="text-xl font-bold mb-2 text-gray-900">Execute</h3>
-            <p class="text-gray-600">Implement campaigns with precision using cutting-edge tools and techniques.</p>
+            <h3 class="font-bold mb-2 text-gray-900" style="font-size: 24px;">{{ t('services.execute') }}</h3>
+            <p class="text-gray-600" style="font-size: 22px;">{{ t('services.executeDesc') }}</p>
           </div>
-          
+
           <div class="text-center">
             <div class="w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">4</div>
-            <h3 class="text-xl font-bold mb-2 text-gray-900">Optimize</h3>
-            <p class="text-gray-600">Continuously monitor and refine strategies for maximum performance.</p>
+            <h3 class="font-bold mb-2 text-gray-900" style="font-size: 24px;">{{ t('services.optimize') }}</h3>
+            <p class="text-gray-600" style="font-size: 22px;">{{ t('services.optimizeDesc') }}</p>
           </div>
         </div>
       </div>
@@ -171,8 +170,8 @@
     <!-- CTA Section -->
     <section class="section-padding gradient-bg text-white">
       <div class="container text-center">
-        <h2 class="text-3xl lg:text-4xl font-bold mb-6">{{ t('services.readyToTransform') }}</h2>
-        <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+        <h2 class="font-bold mb-6" style="font-size: clamp(40px, 4vw, 56px);">{{ t('services.readyToTransform') }}</h2>
+        <p class="text-blue-100 mb-8 max-w-2xl mx-auto" style="font-size: 26px;">
           {{ t('services.discussServices') }}
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">

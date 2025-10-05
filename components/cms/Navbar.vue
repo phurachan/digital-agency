@@ -1,6 +1,6 @@
 <template>
   <header
-    class="site-header"
+    class="site-header flex justify-center"
     :class="{ 'scrolled': isScrolled }"
     :style="{
       '--navbar-text-color': navbarTextColor,

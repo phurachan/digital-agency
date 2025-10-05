@@ -8,7 +8,7 @@
       <template #nav-links>
         <NuxtLink :to="$localePath('/digital-agency')">{{ t('nav.home') }}</NuxtLink>
         <NuxtLink :to="$localePath('/digital-agency/services')">{{ t('index.ourService') }}</NuxtLink>
-        <NuxtLink :to="$localePath('/digital-agency/team')">{{ t('index.whyUs') }}</NuxtLink>
+        <NuxtLink :to="$localePath('/digital-agency/team')">{{ t('nav.team') }}</NuxtLink>
         <NuxtLink :to="$localePath('/digital-agency/about')">{{ t('nav.about') }}</NuxtLink>
         <NuxtLink :to="$localePath('/digital-agency/contact')">{{ t('common.contactUs') }}</NuxtLink>
       </template>
@@ -25,8 +25,8 @@
       <div v-if="aboutContent.heroImage" class="absolute inset-0 bg-black/40"></div>
       
       <div class="container text-center relative z-10">
-        <h1 class="text-4xl lg:text-5xl font-bold mb-6">{{ t('about.aboutCompany', { siteName: siteSettings.siteName }) }}</h1>
-        <p class="text-xl text-blue-100 max-w-3xl mx-auto">
+        <h1 class="font-bold mb-6" style="font-size: clamp(40px, 5vw, 72px);">{{ t('about.aboutCompany', { siteName: siteSettings.siteName }) }}</h1>
+        <p class="text-blue-100 max-w-3xl mx-auto" style="font-size: clamp(24px, 2vw, 28px);">
           {{ t('about.passionateHelping') }}
         </p>
       </div>
@@ -37,8 +37,8 @@
       <div class="container">
         <div class="grid lg:grid-cols-2 gap-16 items-center">
           <div>
-            <h2 class="text-3xl lg:text-4xl font-bold mb-6 text-gray-900">{{ aboutContent.missionTitle }}</h2>
-            <p class="text-lg text-gray-600 mb-6">
+            <h2 class="font-bold mb-6 text-gray-900" style="font-size: clamp(40px, 4vw, 56px);">{{ aboutContent.missionTitle }}</h2>
+            <p class="text-gray-600 mb-6" style="font-size: 26px;">
               {{ aboutContent.missionText }}
             </p>
             <div class="grid grid-cols-2 gap-6">
@@ -62,8 +62,8 @@
               <div v-if="aboutContent.missionImage" class="absolute inset-0 bg-black/60"></div>
               
               <div class="relative z-10">
-                <h3 class="text-2xl font-bold mb-4">{{ aboutContent.visionTitle }}</h3>
-                <p class="text-gray-100 mb-6">{{ aboutContent.visionText }}</p>
+                <h3 class="font-bold mb-4" style="font-size: 30px;">{{ aboutContent.visionTitle }}</h3>
+                <p class="text-gray-100 mb-6" style="font-size: 26px;">{{ aboutContent.visionText }}</p>
                 <ul class="space-y-4">
                   <li 
                     v-for="item in parsedVisionItems" 
@@ -88,8 +88,8 @@
     <section class="section-padding">
       <div class="container">
         <div class="text-center mb-16">
-          <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-gray-900">{{ aboutContent.valuesTitle }}</h2>
-          <p class="text-xl text-gray-600">{{ aboutContent.valuesText }}</p>
+          <h2 class="font-bold mb-4 text-gray-900" style="font-size: clamp(40px, 4vw, 56px);">{{ aboutContent.valuesTitle }}</h2>
+          <p class="text-gray-600" style="font-size: 26px;">{{ aboutContent.valuesText }}</p>
         </div>
         
         <div class="grid md:grid-cols-3 gap-8">
@@ -101,8 +101,8 @@
             <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6" :class="getValueIconClass(index)">
               <div v-html="getValueIcon(value.icon || 'default')"></div>
             </div>
-            <h3 class="text-2xl font-bold mb-4 text-gray-900">{{ value.title }}</h3>
-            <p class="text-gray-600">{{ value.description }}</p>
+            <h3 class="font-bold mb-4 text-gray-900" style="font-size: 24px;">{{ value.title }}</h3>
+            <p class="text-gray-600" style="font-size: 22px;">{{ value.description }}</p>
           </div>
         </div>
       </div>
@@ -112,8 +112,8 @@
     <section class="section-padding bg-gray-50">
       <div class="container">
         <div class="text-center mb-16">
-          <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-gray-900">{{ aboutContent.historyTitle }}</h2>
-          <p class="text-xl text-gray-600">{{ aboutContent.historyText }}</p>
+          <h2 class="font-bold mb-4 text-gray-900" style="font-size: clamp(40px, 4vw, 56px);">{{ aboutContent.historyTitle }}</h2>
+          <p class="text-gray-600" style="font-size: 26px;">{{ aboutContent.historyText }}</p>
         </div>
         
         <div class="max-w-4xl mx-auto">
@@ -125,8 +125,8 @@
             >
               <div class="w-16 h-16 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0" :class="getJourneyColor(index)">{{ journey.year }}</div>
               <div class="card p-6 flex-grow">
-                <h3 class="text-xl font-bold mb-2 text-gray-900">{{ journey.title }}</h3>
-                <p class="text-gray-600">{{ journey.description }}</p>
+                <h3 class="font-bold mb-2 text-gray-900" style="font-size: 24px;">{{ journey.title }}</h3>
+                <p class="text-gray-600" style="font-size: 22px;">{{ journey.description }}</p>
               </div>
             </div>
           </div>
@@ -137,8 +137,8 @@
     <!-- CTA Section -->
     <section class="section-padding gradient-bg text-white">
       <div class="container text-center">
-        <h2 class="text-3xl lg:text-4xl font-bold mb-6">{{ t('common.workTogether') }}</h2>
-        <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+        <h2 class="font-bold mb-6" style="font-size: clamp(40px, 4vw, 56px);">{{ t('common.workTogether') }}</h2>
+        <p class="text-blue-100 mb-8 max-w-2xl mx-auto" style="font-size: 26px;">
           {{ t('about.joinBusinesses', { siteName: siteSettings.siteName }) }}
         </p>
         <NuxtLink :to="$localePath('/digital-agency/contact')" class="btn-primary hover:bg-gray-100">{{ t('common.startJourney') }}</NuxtLink>

@@ -8,7 +8,7 @@
       <template #nav-links>
         <NuxtLink :to="$localePath('/digital-agency')">{{ t('nav.home') }}</NuxtLink>
         <NuxtLink :to="$localePath('/digital-agency/services')">{{ t('index.ourService') }}</NuxtLink>
-        <NuxtLink :to="$localePath('/digital-agency/team')">{{ t('index.whyUs') }}</NuxtLink>
+        <NuxtLink :to="$localePath('/digital-agency/team')">{{ t('nav.team') }}</NuxtLink>
         <NuxtLink :to="$localePath('/digital-agency/about')">{{ t('nav.about') }}</NuxtLink>
         <NuxtLink :to="$localePath('/digital-agency/contact')">{{ t('common.contactUs') }}</NuxtLink>
       </template>
@@ -25,8 +25,8 @@
       <div v-if="contactContent.heroImage" class="absolute inset-0 bg-black/40"></div>
       
       <div class="container text-center relative z-10">
-        <h1 class="text-4xl lg:text-5xl font-bold mb-6">{{ contactContent.title }}</h1>
-        <p class="text-xl text-blue-100 max-w-3xl mx-auto">
+        <h1 class="font-bold mb-6" style="font-size: clamp(40px, 5vw, 72px);">{{ contactContent.title }}</h1>
+        <p class="text-blue-100 max-w-3xl mx-auto" style="font-size: clamp(24px, 2vw, 28px);">
           {{ contactContent.subtitle }}
         </p>
       </div>
@@ -38,10 +38,9 @@
         <div class="grid lg:grid-cols-2 gap-16 max-w-6xl mx-auto">
           <!-- Contact Information -->
           <div>
-            <h2 class="text-3xl font-bold mb-8 text-gray-900">Let's Start a Conversation</h2>
-            <p class="text-lg text-gray-600 mb-8">
-              Whether you're looking to boost your online presence, increase conversions, or dominate search results, 
-              our team is here to help. Reach out today for a free consultation.
+            <h2 class="font-bold mb-8 text-gray-900" style="font-size: clamp(40px, 4vw, 56px);">{{ t('contact.letsStartConversation') }}</h2>
+            <p class="text-gray-600 mb-8" style="font-size: 26px;">
+              {{ t('contact.helpYouDescription') }}
             </p>
             
             <!-- Contact Info Cards -->
@@ -53,12 +52,12 @@
                   </svg>
                 </div>
                 <div>
-                  <h4 class="font-bold text-gray-900 mb-1">Phone</h4>
-                  <p class="text-gray-600">+1 (555) 123-4567</p>
-                  <p class="text-sm text-gray-500">Available Mon-Fri 9AM-6PM PST</p>
+                  <h4 class="font-bold text-gray-900 mb-1" style="font-size: 24px;">{{ t('contact.phoneLabel') }}</h4>
+                  <p class="text-gray-600" style="font-size: 22px;">{{ contactContent.phone || '+1 (555) 123-4567' }}</p>
+                  <p class="text-gray-500" style="font-size: 18px;">{{ t('contact.availableHours') }}</p>
                 </div>
               </div>
-              
+
               <div class="flex items-start space-x-4">
                 <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
                   <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -66,12 +65,12 @@
                   </svg>
                 </div>
                 <div>
-                  <h4 class="font-bold text-gray-900 mb-1">Email</h4>
-                  <p class="text-gray-600">hello@digitalflow.com</p>
-                  <p class="text-sm text-gray-500">We respond within 24 hours</p>
+                  <h4 class="font-bold text-gray-900 mb-1" style="font-size: 24px;">{{ t('contact.emailLabel') }}</h4>
+                  <p class="text-gray-600" style="font-size: 22px;">{{ contactContent.email || 'hello@digitalflow.com' }}</p>
+                  <p class="text-gray-500" style="font-size: 18px;">{{ t('contact.respondWithin24') }}</p>
                 </div>
               </div>
-              
+
               <div class="flex items-start space-x-4">
                 <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
                   <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -80,28 +79,28 @@
                   </svg>
                 </div>
                 <div>
-                  <h4 class="font-bold text-gray-900 mb-1">Office</h4>
-                  <p class="text-gray-600">123 Innovation Drive<br>Tech Valley, CA 94105</p>
-                  <p class="text-sm text-gray-500">Visit us for in-person consultations</p>
+                  <h4 class="font-bold text-gray-900 mb-1" style="font-size: 24px;">{{ t('contact.officeLabel') }}</h4>
+                  <p class="text-gray-600" style="font-size: 22px;">{{ contactContent.address || t('contact.officeAddress') }}</p>
+                  <p class="text-gray-500" style="font-size: 18px;">{{ t('contact.visitInPerson') }}</p>
                 </div>
               </div>
             </div>
 
             <!-- Business Hours -->
             <div class="card p-6">
-              <h3 class="text-xl font-bold mb-4 text-gray-900">Business Hours</h3>
+              <h3 class="font-bold mb-4 text-gray-900" style="font-size: 24px;">{{ t('contact.businessHours') }}</h3>
               <div class="space-y-2">
                 <div class="flex justify-between">
-                  <span class="text-gray-600">Monday - Friday</span>
-                  <span class="font-medium">9:00 AM - 6:00 PM</span>
+                  <span class="text-gray-600">{{ t('contact.mondayFriday') }}</span>
+                  <span class="font-medium">{{ t('contact.mondayFridayHours') }}</span>
                 </div>
                 <div class="flex justify-between">
-                  <span class="text-gray-600">Saturday</span>
-                  <span class="font-medium">10:00 AM - 4:00 PM</span>
+                  <span class="text-gray-600">{{ t('contact.saturday') }}</span>
+                  <span class="font-medium">{{ t('contact.saturdayHours') }}</span>
                 </div>
                 <div class="flex justify-between">
-                  <span class="text-gray-600">Sunday</span>
-                  <span class="font-medium">Closed</span>
+                  <span class="text-gray-600">{{ t('contact.sunday') }}</span>
+                  <span class="font-medium">{{ t('contact.closed') }}</span>
                 </div>
               </div>
             </div>
@@ -112,120 +111,120 @@
             <form @submit.prevent="submitForm" class="space-y-6">
               <div class="grid md:grid-cols-2 gap-6">
                 <div class="relative">
-                  <input 
-                    v-model="form.firstName" 
-                    type="text" 
-                    placeholder=" " 
+                  <input
+                    v-model="form.firstName"
+                    type="text"
+                    placeholder=" "
                     class="form-input peer"
                     required
                   >
-                  <label class="floating-label">First Name</label>
+                  <label class="floating-label">{{ t('contact.form.firstName') }}</label>
                 </div>
-                
+
                 <div class="relative">
-                  <input 
-                    v-model="form.lastName" 
-                    type="text" 
-                    placeholder=" " 
+                  <input
+                    v-model="form.lastName"
+                    type="text"
+                    placeholder=" "
                     class="form-input peer"
                     required
                   >
-                  <label class="floating-label">Last Name</label>
+                  <label class="floating-label">{{ t('contact.form.lastName') }}</label>
                 </div>
               </div>
-              
+
               <div class="relative">
-                <input 
-                  v-model="form.email" 
-                  type="email" 
-                  placeholder=" " 
+                <input
+                  v-model="form.email"
+                  type="email"
+                  placeholder=" "
                   class="form-input peer"
                   required
                 >
-                <label class="floating-label">Email Address</label>
+                <label class="floating-label">{{ t('contact.form.email') }}</label>
               </div>
-              
+
               <div class="relative">
-                <input 
-                  v-model="form.phone" 
-                  type="tel" 
-                  placeholder=" " 
+                <input
+                  v-model="form.phone"
+                  type="tel"
+                  placeholder=" "
                   class="form-input peer"
                 >
-                <label class="floating-label">Phone Number (Optional)</label>
+                <label class="floating-label">{{ t('contact.form.phone') }}</label>
               </div>
-              
+
               <div class="relative">
-                <input 
-                  v-model="form.company" 
-                  type="text" 
-                  placeholder=" " 
+                <input
+                  v-model="form.company"
+                  type="text"
+                  placeholder=" "
                   class="form-input peer"
                 >
-                <label class="floating-label">Company Name</label>
+                <label class="floating-label">{{ t('contact.form.company') }}</label>
               </div>
-              
+
               <div class="relative">
                 <select v-model="form.service" class="form-input peer" required>
-                  <option value="">Select a service</option>
-                  <option value="seo">SEO Optimization</option>
-                  <option value="social-media">Social Media Marketing</option>
-                  <option value="web-development">Web Development</option>
-                  <option value="ppc">PPC Advertising</option>
-                  <option value="email-marketing">Email Marketing</option>
-                  <option value="analytics">Analytics & Reporting</option>
-                  <option value="consultation">Free Consultation</option>
-                  <option value="other">Other</option>
+                  <option value="">{{ t('contact.form.selectService') }}</option>
+                  <option value="seo">{{ t('contact.form.services.seo') }}</option>
+                  <option value="social-media">{{ t('contact.form.services.socialMedia') }}</option>
+                  <option value="web-development">{{ t('contact.form.services.webDevelopment') }}</option>
+                  <option value="ppc">{{ t('contact.form.services.ppc') }}</option>
+                  <option value="email-marketing">{{ t('contact.form.services.emailMarketing') }}</option>
+                  <option value="analytics">{{ t('contact.form.services.analytics') }}</option>
+                  <option value="consultation">{{ t('contact.form.services.consultation') }}</option>
+                  <option value="other">{{ t('contact.form.services.other') }}</option>
                 </select>
-                <label class="floating-label">Service Interest</label>
+                <label class="floating-label">{{ t('contact.form.serviceInterest') }}</label>
               </div>
-              
+
               <div class="relative">
                 <select v-model="form.budget" class="form-input peer">
-                  <option value="">Select your budget range</option>
-                  <option value="under-5k">Under $5,000/month</option>
-                  <option value="5k-10k">$5,000 - $10,000/month</option>
-                  <option value="10k-25k">$10,000 - $25,000/month</option>
-                  <option value="25k-50k">$25,000 - $50,000/month</option>
-                  <option value="50k-plus">$50,000+/month</option>
+                  <option value="">{{ t('contact.form.selectBudget') }}</option>
+                  <option value="under-5k">{{ t('contact.form.budget.under5k') }}</option>
+                  <option value="5k-10k">{{ t('contact.form.budget.5kTo10k') }}</option>
+                  <option value="10k-25k">{{ t('contact.form.budget.10kTo25k') }}</option>
+                  <option value="25k-50k">{{ t('contact.form.budget.25kTo50k') }}</option>
+                  <option value="50k-plus">{{ t('contact.form.budget.50kPlus') }}</option>
                 </select>
-                <label class="floating-label">Budget Range</label>
+                <label class="floating-label">{{ t('contact.form.budgetRange') }}</label>
               </div>
-              
+
               <div class="relative">
-                <textarea 
-                  v-model="form.message" 
-                  placeholder=" " 
-                  rows="4" 
+                <textarea
+                  v-model="form.message"
+                  placeholder=" "
+                  rows="4"
                   class="form-input resize-none peer"
                   required
                 ></textarea>
-                <label class="floating-label">Tell us about your project</label>
+                <label class="floating-label">{{ t('contact.form.message') }}</label>
               </div>
-              
+
               <!-- Checkbox -->
               <div class="flex items-start space-x-3">
-                <input 
-                  v-model="form.newsletter" 
-                  type="checkbox" 
-                  id="newsletter" 
+                <input
+                  v-model="form.newsletter"
+                  type="checkbox"
+                  id="newsletter"
                   class="mt-1 w-5 h-5 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
                 >
-                <label for="newsletter" class="text-sm text-gray-600">
-                  I'd like to receive updates about digital marketing tips and {{ siteSettings.siteName }} news
+                <label for="newsletter" class="text-gray-600" style="font-size: 18px;">
+                  {{ t('contact.form.newsletter', { siteName: siteSettings.siteName }) }}
                 </label>
               </div>
-              
-              <button 
-                type="submit" 
+
+              <button
+                type="submit"
                 class="btn-primary w-full"
                 :disabled="isSubmitting"
               >
-                {{ isSubmitting ? 'Sending...' : 'Send Message' }}
+                {{ isSubmitting ? t('contact.form.sending') : t('contact.form.sendMessage') }}
               </button>
-              
-              <p class="text-sm text-gray-500 text-center">
-                By submitting this form, you agree to our privacy policy and terms of service.
+
+              <p class="text-gray-500 text-center" style="font-size: 18px;">
+                {{ t('contact.form.privacyNotice') }}
               </p>
             </form>
             
@@ -235,7 +234,7 @@
                 <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                 </svg>
-                <span class="text-green-700 font-medium">Thank you! We'll be in touch within 24 hours.</span>
+                <span class="text-green-700 font-medium">{{ t('contact.form.successMessage') }}</span>
               </div>
             </div>
           </div>
@@ -247,8 +246,8 @@
     <section class="section-padding bg-gray-50">
       <div class="container max-w-4xl mx-auto">
         <div class="text-center mb-16">
-          <h2 class="text-3xl lg:text-4xl font-bold mb-4 text-gray-900">Frequently Asked Questions</h2>
-          <p class="text-xl text-gray-600">Get quick answers to common questions</p>
+          <h2 class="font-bold mb-4 text-gray-900" style="font-size: clamp(40px, 4vw, 56px);">{{ t('contact.faqTitle') }}</h2>
+          <p class="text-gray-600" style="font-size: 26px;">{{ t('contact.faqSubtitle') }}</p>
         </div>
         
         <div class="space-y-4">
@@ -257,13 +256,13 @@
               @click="toggleFaq(index)" 
               class="w-full p-6 text-left flex justify-between items-center"
             >
-              <h3 class="text-lg font-bold text-gray-900">{{ faq.question }}</h3>
+              <h3 class="font-bold text-gray-900" style="font-size: 24px;">{{ faq.question }}</h3>
               <svg class="w-5 h-5 text-gray-500 transform transition-transform" :class="{ 'rotate-180': openFaq === index }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
               </svg>
             </button>
             <div v-show="openFaq === index" class="px-6 pb-6">
-              <p class="text-gray-600">{{ faq.answer }}</p>
+              <p class="text-gray-600" style="font-size: 22px;">{{ faq.answer }}</p>
             </div>
           </div>
         </div>
@@ -273,9 +272,9 @@
     <!-- CTA Section -->
     <section class="section-padding gradient-bg text-white">
       <div class="container text-center">
-        <h2 class="text-3xl lg:text-4xl font-bold mb-6">{{ t('home.readyToGetStarted') }}</h2>
-        <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-          Join hundreds of businesses that have transformed their digital presence with {{ siteSettings.siteName }}
+        <h2 class="font-bold mb-6" style="font-size: clamp(40px, 4vw, 56px);">{{ t('home.readyToGetStarted') }}</h2>
+        <p class="text-blue-100 mb-8 max-w-2xl mx-auto" style="font-size: 26px;">
+          {{ t('contact.joinBusinesses', { siteName: siteSettings.siteName }) }}
         </p>
         <button class="btn-primary hover:bg-gray-100">{{ t('common.scheduleConsultation') }}</button>
       </div>
@@ -497,7 +496,7 @@ useSeoMeta({
 /* Form Styles */
 .form-input {
   @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none transition-all duration-300 bg-white;
-  font-size: 16px;
+  font-size: 24px;
   line-height: 1.5;
 }
 
@@ -518,13 +517,13 @@ useSeoMeta({
 /* Floating Label Styles */
 .floating-label {
   @apply absolute left-4 top-3 text-gray-500 pointer-events-none transition-all duration-200;
-  font-size: 16px;
+  font-size: 24px;
   transform-origin: left top;
 }
 
 .form-input:focus ~ .floating-label,
 .form-input:not(:placeholder-shown) ~ .floating-label {
-  @apply text-xs;
+  font-size: 18px;
   color: var(--primary-color);
   transform: translateY(-1.5rem) scale(0.85);
   background: white;

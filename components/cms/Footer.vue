@@ -107,6 +107,7 @@ const socialLinks = computed(() => {
   color: #cbd5e0;
   text-decoration: none;
   transition: color 0.3s ease;
+  font-size: 18px;
 }
 
 .footer-col a:hover {
@@ -116,6 +117,7 @@ const socialLinks = computed(() => {
 address {
   font-style: normal;
   line-height: 1.8;
+  font-size: 18px;
 }
 
 address p {
