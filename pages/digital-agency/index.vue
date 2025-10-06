@@ -9,7 +9,7 @@
     }"
   >
     <!-- Header/Navigation -->
-    <header class="site-header" :class="{ 'scrolled': isScrolled }">
+    <header class="site-header">
       <div class="container">
         <div class="header-content">
           <div class="logo">
@@ -45,8 +45,17 @@
       id="home"
       class="hero-section"
       :class="`hero-mode-${homeContent.heroDisplayMode || 'gradient'}`"
-      :style="((homeContent.heroDisplayMode === 'image' || homeContent.heroDisplayMode === 'cover') && homeContent.heroImage) ? { backgroundImage: `url(${homeContent.heroImage})` } : {}"
+      :style="(homeContent.heroDisplayMode === 'image' && homeContent.heroImage) ? { backgroundImage: `url(${homeContent.heroImage})` } : {}"
     >
+      <!-- Cover Mode: Full image display -->
+      <img
+        v-if="homeContent.heroDisplayMode === 'cover' && homeContent.heroImage"
+        :src="homeContent.heroImage"
+        alt="Hero Cover"
+        class="hero-cover-image"
+      />
+
+      <!-- Other Modes: With text content -->
       <div v-if="homeContent.heroDisplayMode !== 'cover'" class="container">
         <div class="hero-content">
           <h1 class="hero-headline" v-html="homeContent.heroTitle || ''"></h1>
@@ -329,7 +338,6 @@ const router = useRouter()
 const route = useRoute()
 const { $localePath } = useNuxtApp()
 
-const isScrolled = ref(false)
 const mobileMenuOpen = ref(false)
 
 // CMS Store
@@ -418,17 +426,6 @@ const handleServiceClick = (service) => {
 }
 
 onMounted(() => {
-
-  // Handle scroll for header
-  const handleScroll = () => {
-    isScrolled.value = window.scrollY > 50
-  }
-
-  // Check initial scroll position
-  handleScroll()
-
-  window.addEventListener('scroll', handleScroll)
-
   // Smooth scroll for anchor links
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -477,6 +474,7 @@ useSeoMeta({
   color: #1a1a1a;
   line-height: 1.6;
   overflow-x: hidden;
+  position: relative;
 }
 
 .container {
@@ -498,15 +496,8 @@ useSeoMeta({
   left: 0;
   right: 0;
   z-index: 1000;
-  background: transparent;
-  transition: all 0.3s ease;
-  padding: 20px 0;
-}
-
-.site-header.scrolled {
   background: var(--navbar-bg-color, rgba(255, 255, 255, 0.98));
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-  padding: 15px 0;
+  padding: 20px 0;
 }
 
 .header-content {
@@ -615,11 +606,27 @@ useSeoMeta({
   display: flex;
   align-items: center;
   justify-content: center;
-  background-size: cover;
+  background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
   position: relative;
   padding: 120px 20px 80px;
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: 80vh;
+    padding: 100px 20px 60px;
+    background-size: contain;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    min-height: 70vh;
+    padding: 90px 15px 50px;
+    background-size: contain;
+  }
 }
 
 /* Gradient Mode (default) */
@@ -671,7 +678,32 @@ useSeoMeta({
 
 /* Cover Mode - Full image without text or overlay */
 .hero-mode-cover {
-  background: #000000;
+  min-height: auto;
+  padding-top: 80px;
+  padding-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+  display: block;
+  background: var(--primary-color, #4949e9);
+}
+
+.hero-cover-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .hero-mode-cover {
+    padding-top: 70px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-mode-cover {
+    padding-top: 80px;
+  }
 }
 
 /* No overlay for cover mode */
@@ -1267,7 +1299,7 @@ textarea.form-control {
     top: 70px;
     left: 0;
     right: 0;
-    background: white;
+    background: var(--navbar-bg-color, rgba(255, 255, 255, 0.98));
     flex-direction: column;
     padding: 30px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);

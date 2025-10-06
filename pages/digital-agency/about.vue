@@ -40,12 +40,12 @@
             </p>
             <div class="grid grid-cols-2 gap-6">
               <div class="text-center p-4 bg-blue-50 rounded-lg">
-                <div class="text-3xl font-bold text-blue-600 mb-2">500+</div>
-                <div class="text-gray-700">Happy Clients</div>
+                <div class="text-3xl font-bold text-blue-600 mb-2">{{ aboutContent.happyClientsValue || '500+' }}</div>
+                <div class="text-gray-700">{{ aboutContent.happyClientsLabel || t('about.happyClients') }}</div>
               </div>
               <div class="text-center p-4 bg-green-50 rounded-lg">
-                <div class="text-3xl font-bold text-green-600 mb-2">10+</div>
-                <div class="text-gray-700">Years Experience</div>
+                <div class="text-3xl font-bold text-green-600 mb-2">{{ aboutContent.experienceValue || '10+' }}</div>
+                <div class="text-gray-700">{{ aboutContent.experienceLabel || t('about.yearsExperience') }}</div>
               </div>
             </div>
           </div>

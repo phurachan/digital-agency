@@ -1,7 +1,6 @@
 <template>
   <header
     class="site-header flex justify-center"
-    :class="{ 'scrolled': isScrolled }"
     :style="{
       '--navbar-text-color': navbarTextColor,
       '--navbar-bg-color': navbarBgColor
@@ -52,7 +51,6 @@ const { t } = useI18n()
 const cmsStore = useCMSStore()
 const { createLocalizedContent } = useMultiLanguage()
 
-const isScrolled = ref(false)
 const mobileMenuOpen = ref(false)
 
 const siteSettings = computed(() => createLocalizedContent(cmsStore.siteSettings || {}))
@@ -66,18 +64,6 @@ const toggleMobileMenu = () => {
 const closeMobileMenu = () => {
   mobileMenuOpen.value = false
 }
-
-// Scroll event listener
-onMounted(() => {
-  const handleScroll = () => {
-    isScrolled.value = window.scrollY > 50
-  }
-  window.addEventListener('scroll', handleScroll)
-
-  onUnmounted(() => {
-    window.removeEventListener('scroll', handleScroll)
-  })
-})
 </script>
 
 <style scoped>
@@ -88,15 +74,13 @@ onMounted(() => {
   right: 0;
   z-index: 1000;
   background: var(--navbar-bg-color, rgba(255, 255, 255, 0.98));
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  padding: 15px 0;
+  padding: 20px 0;
 }
 
-.site-header.scrolled {
-  background: var(--navbar-bg-color, rgba(255, 255, 255, 0.98));
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-  padding: 15px 0;
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 .header-content {
@@ -209,7 +193,7 @@ onMounted(() => {
     top: 70px;
     left: 0;
     right: 0;
-    background: white;
+    background: var(--navbar-bg-color, rgba(255, 255, 255, 0.98));
     flex-direction: column;
     padding: 30px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
