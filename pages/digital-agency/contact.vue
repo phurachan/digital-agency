@@ -403,6 +403,11 @@ const toggleFaq = (index) => {
 useSeoMeta({
   title: `Contact Us | ${siteSettings.siteName} - Get Your Free Consultation`,
   description: `Ready to transform your digital presence? Contact ${siteSettings.siteName} today for a free consultation. Our digital marketing experts are ready to help grow your business.`,
+  ogImage: cmsStore.siteSettings?.logo,
+  ogImageAlt: siteSettings.siteName,
+  twitterCard: 'summary_large_image',
+  twitterImage: cmsStore.siteSettings?.logo,
+  twitterImageAlt: siteSettings.siteName,
 })
 </script>
 

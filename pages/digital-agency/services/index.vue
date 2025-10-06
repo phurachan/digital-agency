@@ -262,6 +262,11 @@ const dynamicColors = computed(() => {
 useSeoMeta({
   title: `${servicesContent.value.heroTitle} | ${siteSettings.value.siteName}`,
   description: () => servicesContent.value.heroSubtitle || 'Comprehensive digital marketing services including video production, poster design, social media content, branding, and digital marketing to grow your business.',
+  ogImage: cmsStore.siteSettings?.logo,
+  ogImageAlt: siteSettings.value.siteName,
+  twitterCard: 'summary_large_image',
+  twitterImage: cmsStore.siteSettings?.logo,
+  twitterImageAlt: siteSettings.value.siteName,
 })
 </script>
 

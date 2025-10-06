@@ -248,6 +248,11 @@ const dynamicColors = computed(() => {
 useSeoMeta({
   title: `Insights | ${siteSettings.siteName} - Meet Our Talented Team`,
   description: `Meet the talented people at ${siteSettings.siteName}. Our experienced professionals are dedicated to helping you achieve success and drive exceptional results.`,
+  ogImage: cmsStore.siteSettings?.logo,
+  ogImageAlt: siteSettings.siteName,
+  twitterCard: 'summary_large_image',
+  twitterImage: cmsStore.siteSettings?.logo,
+  twitterImageAlt: siteSettings.siteName,
 })
 </script>
 

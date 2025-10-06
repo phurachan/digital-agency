@@ -451,8 +451,17 @@ onMounted(() => {
 })
 
 useSeoMeta({
-  title: 'Digital Marketing Agency',
-  description: 'We are a digital agency who turn the sense of creativity into innovative marketing',
+  title: siteSettings.value.siteName || 'Digital Marketing Agency',
+  description: siteSettings.value.metaDescription || 'We are a digital agency who turn the sense of creativity into innovative marketing',
+  ogImage: cmsStore.siteSettings?.logo,
+  ogImageAlt: siteSettings.value.siteName,
+  ogTitle: siteSettings.value.siteName,
+  ogDescription: siteSettings.value.metaDescription,
+  twitterCard: 'summary_large_image',
+  twitterImage: cmsStore.siteSettings?.logo,
+  twitterImageAlt: siteSettings.value.siteName,
+  twitterTitle: siteSettings.value.siteName,
+  twitterDescription: siteSettings.value.metaDescription,
 })
 </script>
 

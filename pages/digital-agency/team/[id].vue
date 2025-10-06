@@ -237,6 +237,11 @@ const dynamicColors = computed(() => {
 useSeoMeta({
   title: `${memberData.value.name} - ${memberData.value.position} | ${siteSettings.value.siteName}`,
   description: memberData.value.bio || `${memberData.value.name} - ${memberData.value.position} at ${siteSettings.value.siteName}`,
+  ogImage: memberData.value.image || cmsStore.siteSettings?.logo,
+  ogImageAlt: memberData.value.name,
+  twitterCard: 'summary_large_image',
+  twitterImage: memberData.value.image || cmsStore.siteSettings?.logo,
+  twitterImageAlt: memberData.value.name,
 })
 </script>
 

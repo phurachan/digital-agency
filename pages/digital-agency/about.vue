@@ -303,6 +303,11 @@ const dynamicColors = computed(() => {
 useSeoMeta({
   title: `About Us | ${siteSettings.siteName} - Digital Marketing Agency`,
   description: `Learn about ${siteSettings.siteName}'s mission, values, and expert team. Discover why we're the trusted digital marketing partner for businesses.`,
+  ogImage: cmsStore.siteSettings?.logo,
+  ogImageAlt: siteSettings.siteName,
+  twitterCard: 'summary_large_image',
+  twitterImage: cmsStore.siteSettings?.logo,
+  twitterImageAlt: siteSettings.siteName,
 })
 </script>
 
