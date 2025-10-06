@@ -1,6 +1,12 @@
 <template>
   <ClientOnly>
-    <div class="drawer lg:drawer-open">
+    <div
+      class="drawer lg:drawer-open"
+      :style="{
+        '--primary-color': siteColors.primary,
+        '--secondary-color': siteColors.secondary
+      }"
+    >
       <input id="admin-drawer" type="checkbox" class="drawer-toggle" />
 
       <!-- Main Content -->
@@ -228,12 +234,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '~/stores/auth'
+import { useCMSStore } from '~/stores/cms'
 
 const route = useRoute()
 const authStore = useAuthStore()
+const cmsStore = useCMSStore()
 
 // Theme change handler
 const onThemeChange = (theme) => {
@@ -281,11 +289,22 @@ const hideTooltip = () => {
   tooltipData.value = null
 }
 
+// Site colors from settings
+const siteColors = computed(() => ({
+  primary: cmsStore.siteSettings?.primaryColor || '#4949e9',
+  secondary: cmsStore.siteSettings?.secondaryColor || '#dbf142'
+}))
+
 // Initialize on mount
 onMounted(async () => {
   checkIsMobile()
   if (typeof window !== 'undefined') {
     window.addEventListener('resize', checkIsMobile)
+  }
+
+  // Load site settings for colors
+  if (!cmsStore.siteSettings) {
+    await cmsStore.fetchSiteSettings()
   }
 })
 
@@ -433,5 +452,100 @@ const logout = async () => {
 .menu-lg > li > a,
 .menu-lg > li > a > span {
   font-size: 1rem !important;
+}
+
+/* Apply dynamic colors from site settings to DaisyUI theme */
+:deep(.drawer) {
+  /* Primary color variations */
+  --p: color-mix(in oklch, var(--primary-color, #4949e9) 100%, black 0%);
+  --pc: #ffffff;
+  --pf: color-mix(in oklch, var(--primary-color, #4949e9) 80%, black 20%);
+
+  /* Secondary color variations */
+  --s: color-mix(in oklch, var(--secondary-color, #dbf142) 100%, black 0%);
+  --sc: #000000;
+  --sf: color-mix(in oklch, var(--secondary-color, #dbf142) 80%, black 20%);
+}
+
+/* Override DaisyUI primary/secondary colors with our CSS variables */
+:deep(.btn-primary) {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: #ffffff;
+}
+
+:deep(.btn-primary:hover) {
+  background-color: color-mix(in srgb, var(--primary-color) 80%, black 20%);
+  border-color: color-mix(in srgb, var(--primary-color) 80%, black 20%);
+}
+
+:deep(.btn-secondary) {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  color: #000000;
+}
+
+:deep(.btn-secondary:hover) {
+  background-color: color-mix(in srgb, var(--secondary-color) 80%, black 20%);
+  border-color: color-mix(in srgb, var(--secondary-color) 80%, black 20%);
+}
+
+:deep(.badge-primary) {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: #ffffff;
+}
+
+:deep(.badge-secondary) {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  color: #000000;
+}
+
+:deep(.text-primary) {
+  color: var(--primary-color) !important;
+}
+
+:deep(.text-secondary) {
+  color: var(--secondary-color) !important;
+}
+
+:deep(.bg-primary) {
+  background-color: var(--primary-color) !important;
+}
+
+:deep(.bg-secondary) {
+  background-color: var(--secondary-color) !important;
+}
+
+:deep(.border-primary) {
+  border-color: var(--primary-color) !important;
+}
+
+:deep(.border-secondary) {
+  border-color: var(--secondary-color) !important;
+}
+
+/* Gradient in sidebar header */
+:deep(.bg-gradient-to-r) {
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color)) !important;
+}
+
+/* Active menu items */
+:deep(.menu li > *:where(.active)) {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+/* Ring colors */
+:deep(.ring-primary) {
+  --tw-ring-color: var(--primary-color) !important;
+}
+
+/* Alert variants with primary/secondary */
+:deep(.alert-info .badge-primary),
+:deep(.indicator-item.badge-primary) {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
 }
 </style>

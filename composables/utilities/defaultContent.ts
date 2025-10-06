@@ -19,7 +19,7 @@ export const getDefaultHomeContent = (): HomeContent => ({
   aboutDescription: 'With over a decade of experience in digital marketing, we\'ve helped hundreds of businesses transform their online presence and achieve remarkable growth.',
   heroImage: null,
   aboutImage: null,
-  peopleTitle: 'Meet Our People',
+  peopleTitle: 'Meet Insights',
   peopleDescription: 'Get to know the talented individuals who drive our success and make exceptional results possible'
 })
 
@@ -49,7 +49,7 @@ export const getDefaultServicesContent = (): ServicesContent => ({
 })
 
 export const getDefaultTeamContent = (): TeamContent => ({
-  heroTitle: 'Meet Our People',
+  heroTitle: 'Meet Insights',
   heroSubtitle: 'Get to know the talented individuals who drive our success and make exceptional results possible.',
   heroImage: null
 })

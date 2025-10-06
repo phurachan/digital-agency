@@ -13,24 +13,8 @@
         </div>
 
         <!-- Language Switcher -->
-        <div class="flex items-center space-x-1">
-          <button
-            @click="switchLanguage('en')"
-            :class="currentLanguage === 'en' ? 'text-white font-semibold' : 'text-gray-300 hover:text-white'"
-            class="px-2 py-1 uppercase transition-colors"
-            style="font-size: 16px;"
-          >
-            EN
-          </button>
-          <span class="text-gray-400" style="font-size: 16px;">|</span>
-          <button
-            @click="switchLanguage('th')"
-            :class="currentLanguage === 'th' ? 'text-white font-semibold' : 'text-gray-300 hover:text-white'"
-            class="px-2 py-1 uppercase transition-colors"
-            style="font-size: 16px;"
-          >
-            ไทย
-          </button>
+        <div class="cms-language-switcher">
+          <BaseLanguageSwitcher />
         </div>
       </div>
     </div>
@@ -38,29 +22,6 @@
 </template>
 
 <script setup>
-const { locale, setLocale } = useI18n()
-const router = useRouter()
-const route = useRoute()
-const { $localePath } = useNuxtApp()
-
-const currentLanguage = computed(() => locale.value)
-
-const switchLanguage = async (lang) => {
-  await setLocale(lang)
-
-  // Get current path without locale prefix
-  const currentPath = route.path.replace(/^\/(th|en)/, '') || '/digital-agency'
-
-  // Navigate to the same page with new locale
-  if (lang === 'th') {
-    // For Thai (default), no prefix needed
-    await navigateTo(currentPath)
-  } else {
-    // For other languages, use localePath
-    await navigateTo($localePath(currentPath))
-  }
-}
-
 // Get contact phone from contact content
 const cmsStore = useCMSStore()
 await cmsStore.fetchContactContent()
@@ -78,5 +39,40 @@ const contactPhone = computed(() => contactContentRaw?.phone || '+1 (555) 123-45
   z-index: 60;
   background-color: #2e364e;
   height: 40px;
+}
+
+/* Style for language switcher in top navbar */
+.cms-language-switcher {
+  /* Override DaisyUI dropdown styles for top navbar */
+}
+
+.cms-language-switcher :deep(.btn) {
+  background-color: transparent;
+  border: none;
+  color: #d1d5db;
+  min-height: auto;
+  height: auto;
+  padding: 0.25rem 0.5rem;
+}
+
+.cms-language-switcher :deep(.btn:hover) {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.cms-language-switcher :deep(.dropdown-content) {
+  background-color: #2e364e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 9999 !important;
+}
+
+.cms-language-switcher :deep(.menu li > a) {
+  color: #d1d5db;
+}
+
+.cms-language-switcher :deep(.menu li > a:hover),
+.cms-language-switcher :deep(.menu li > a.active) {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
 }
 </style>

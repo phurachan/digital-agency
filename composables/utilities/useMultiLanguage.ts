@@ -130,7 +130,7 @@ export const useMultiLanguage = () => {
       featureDescription: 'Accelerate your digital transformation',
       aboutTitle: 'About Us',
       aboutDescription: 'We are passionate about helping businesses thrive in the digital landscape',
-      peopleTitle: 'Meet Our People',
+      peopleTitle: 'Meet Insights',
       peopleDescription: 'Get to know the talented individuals who drive our success',
       siteName: 'Digital Agency',
       siteTagline: 'Your Creative Digital Partner',

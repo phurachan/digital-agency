@@ -13,15 +13,22 @@
           <a :href="logoLink">{{ siteSettings.siteName || '' }}</a>
         </div>
 
-        <nav class="main-nav" :class="{ 'mobile-open': mobileMenuOpen }">
-          <slot name="nav-links">
-            <a href="/digital-agency#services" @click="closeMobileMenu">{{ t('index.ourService') }}</a>
-            <a href="/digital-agency#projects" @click="closeMobileMenu">{{ t('index.projects') }}</a>
-            <a href="/digital-agency#why-us" @click="closeMobileMenu">{{ t('index.whyUs') }}</a>
-            <a href="/digital-agency#insights" @click="closeMobileMenu">{{ t('index.insights') }}</a>
-            <a href="/digital-agency#contact" @click="closeMobileMenu">{{ t('common.contactUs') }}</a>
-          </slot>
-        </nav>
+        <div class="nav-wrapper">
+          <nav class="main-nav" :class="{ 'mobile-open': mobileMenuOpen }">
+            <slot name="nav-links">
+              <a href="/digital-agency#services" @click="closeMobileMenu">{{ t('index.ourService') }}</a>
+              <a href="/digital-agency#projects" @click="closeMobileMenu">{{ t('index.projects') }}</a>
+              <a href="/digital-agency#why-us" @click="closeMobileMenu">{{ t('index.whyUs') }}</a>
+              <a href="/digital-agency#insights" @click="closeMobileMenu">{{ t('index.insights') }}</a>
+              <a href="/digital-agency#contact" @click="closeMobileMenu">{{ t('common.contactUs') }}</a>
+            </slot>
+          </nav>
+
+          <!-- Language Switcher -->
+          <div class="language-switcher">
+            <BaseLanguageSwitcher />
+          </div>
+        </div>
 
         <button class="mobile-menu-toggle" @click="toggleMobileMenu">
           <span></span>
@@ -76,7 +83,7 @@ onMounted(() => {
 <style scoped>
 .site-header {
   position: fixed;
-  top: 40px;
+  top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
@@ -96,6 +103,12 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.nav-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
 .logo a {
@@ -145,6 +158,45 @@ onMounted(() => {
   height: 2px;
   background: var(--navbar-text-color, #1a1a1a);
   transition: all 0.3s ease;
+}
+
+/* Language Switcher */
+.language-switcher {
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+}
+
+/* Light mode styling for language switcher */
+.language-switcher :deep(.btn) {
+  color: var(--navbar-text-color, #1a1a1a);
+  background-color: transparent;
+}
+
+.language-switcher :deep(.btn:hover) {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--navbar-text-color, #1a1a1a);
+}
+
+.language-switcher :deep(.dropdown-content) {
+  z-index: 9999 !important;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+}
+
+.language-switcher :deep(.menu li > a) {
+  color: #1f2937;
+}
+
+.language-switcher :deep(.menu li > a:hover) {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+.language-switcher :deep(.menu li > a.active) {
+  background-color: #eff6ff;
+  color: #1f2937;
 }
 
 @media (max-width: 768px) {

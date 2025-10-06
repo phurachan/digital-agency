@@ -23,44 +23,11 @@
               <a href="#why-us" @click="closeMobileMenu">{{ t('index.whyUs') }}</a>
               <a href="#insights" @click="closeMobileMenu">{{ t('index.insights') }}</a>
               <a href="#contact" @click="closeMobileMenu">{{ t('common.contactUs') }}</a>
-
-              <!-- Language Switcher in Mobile Menu -->
-              <div class="language-switcher-mobile">
-                <button
-                  @click="switchLanguage('en')"
-                  :class="currentLanguage === 'en' ? 'active' : ''"
-                  class="lang-btn"
-                >
-                  EN
-                </button>
-                <span class="lang-divider">|</span>
-                <button
-                  @click="switchLanguage('th')"
-                  :class="currentLanguage === 'th' ? 'active' : ''"
-                  class="lang-btn"
-                >
-                  ไทย
-                </button>
-              </div>
             </nav>
 
-            <!-- Language Switcher Desktop -->
-            <div class="language-switcher-desktop">
-              <button
-                @click="switchLanguage('en')"
-                :class="currentLanguage === 'en' ? 'active' : ''"
-                class="lang-btn"
-              >
-                EN
-              </button>
-              <span class="lang-divider">|</span>
-              <button
-                @click="switchLanguage('th')"
-                :class="currentLanguage === 'th' ? 'active' : ''"
-                class="lang-btn"
-              >
-                ไทย
-              </button>
+            <!-- Language Switcher -->
+            <div class="language-switcher">
+              <BaseLanguageSwitcher />
             </div>
           </div>
 
@@ -131,7 +98,7 @@
         </div>
 
         <div class="cta-center">
-          <a href="#services-detail" class="btn-primary">{{ t('index.seeOurServices') }}</a>
+          <a href="/digital-agency/services" class="btn-primary">{{ t('index.seeOurServices') }}</a>
         </div>
       </div>
     </section>
@@ -364,25 +331,6 @@ const { $localePath } = useNuxtApp()
 
 const isScrolled = ref(false)
 const mobileMenuOpen = ref(false)
-
-// Language switcher
-const currentLanguage = computed(() => locale.value)
-
-const switchLanguage = async (lang) => {
-  await setLocale(lang)
-
-  // Get current path without locale prefix
-  const currentPath = route.path.replace(/^\/(th|en)/, '') || '/digital-agency'
-
-  // Navigate to the same page with new locale
-  if (lang === 'th') {
-    // For Thai (default), no prefix needed
-    await navigateTo(currentPath)
-  } else {
-    // For other languages, use localePath
-    await navigateTo($localePath(currentPath))
-  }
-}
 
 // CMS Store
 const cmsStore = useCMSStore()
@@ -623,44 +571,42 @@ useSeoMeta({
 }
 
 /* Language Switcher */
-.language-switcher-desktop {
+.language-switcher {
   display: flex;
   align-items: center;
-  gap: 8px;
+  position: relative;
+  z-index: 10;
 }
 
-.language-switcher-mobile {
-  display: none;
-  align-items: center;
-  gap: 8px;
-}
-
-.lang-btn {
-  background: none;
-  border: none;
+/* Light mode styling for language switcher */
+.language-switcher :deep(.btn) {
   color: var(--navbar-text-color, #1a1a1a);
-  font-weight: 500;
-  font-size: 18px;
-  padding: 8px 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  opacity: 0.6;
+  background-color: transparent;
 }
 
-.lang-btn:hover {
-  opacity: 0.8;
-}
-
-.lang-btn.active {
-  opacity: 1;
-  font-weight: 700;
+.language-switcher :deep(.btn:hover) {
+  background-color: rgba(0, 0, 0, 0.05);
   color: var(--navbar-text-color, #1a1a1a);
 }
 
-.lang-divider {
-  color: var(--navbar-text-color, #1a1a1a);
-  opacity: 0.3;
-  font-size: 18px;
+.language-switcher :deep(.dropdown-content) {
+  z-index: 9999 !important;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+}
+
+.language-switcher :deep(.menu li > a) {
+  color: #1f2937;
+}
+
+.language-switcher :deep(.menu li > a:hover) {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+.language-switcher :deep(.menu li > a.active) {
+  background-color: #eff6ff;
+  color: #1f2937;
 }
 
 /* Hero Section */
@@ -1331,20 +1277,6 @@ textarea.form-control {
 
   .main-nav.mobile-open {
     transform: translateY(0);
-  }
-
-  .language-switcher-desktop {
-    display: none !important;
-  }
-
-  .language-switcher-mobile {
-    display: flex !important;
-    margin-left: 0;
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid #e2e8f0;
-    width: 100%;
-    justify-content: center;
   }
 
   .content-wrapper {

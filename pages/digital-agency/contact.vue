@@ -1,8 +1,5 @@
 <template>
   <div class="min-h-screen">
-    <!-- Top Navbar -->
-    <CmsTopNavbar />
-
     <!-- Navigation -->
     <CmsNavbar>
       <template #nav-links>
@@ -15,9 +12,9 @@
     </CmsNavbar>
 
     <!-- Hero Section -->
-    <section 
-      class="section-padding text-white relative overflow-hidden" 
-      style="padding-top: 240px;"
+    <section
+      class="section-padding text-white relative overflow-hidden"
+      style="padding-top: 160px;"
       :class="contactContent.heroImage ? 'bg-cover bg-center bg-no-repeat' : 'bg-gradient-primary-to-secondary'"
       :style="contactContent.heroImage ? { backgroundImage: `url(${contactContent.heroImage})` } : {}"
     >

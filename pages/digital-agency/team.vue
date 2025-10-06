@@ -1,8 +1,5 @@
 <template>
   <div class="min-h-screen">
-    <!-- Top Navbar -->
-    <CmsTopNavbar />
-
     <!-- Navigation -->
     <CmsNavbar>
       <template #nav-links>
@@ -15,9 +12,9 @@
     </CmsNavbar>
 
     <!-- Hero Section -->
-    <section 
-      class="section-padding text-white relative overflow-hidden" 
-      style="padding-top: 240px;"
+    <section
+      class="section-padding text-white relative overflow-hidden"
+      style="padding-top: 160px;"
       :class="teamContent.heroImage ? 'bg-cover bg-center bg-no-repeat' : 'bg-gradient-primary-to-secondary'"
       :style="teamContent.heroImage ? { backgroundImage: `url(${teamContent.heroImage})` } : {}"
     >
@@ -261,7 +258,7 @@ const dynamicColors = computed(() => {
 })
 
 useSeoMeta({
-  title: `Our People | ${siteSettings.siteName} - Meet Our Talented Team`,
+  title: `Insights | ${siteSettings.siteName} - Meet Our Talented Team`,
   description: `Meet the talented people at ${siteSettings.siteName}. Our experienced professionals are dedicated to helping you achieve success and drive exceptional results.`,
 })
 </script>

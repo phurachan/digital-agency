@@ -271,7 +271,7 @@ const formData = reactive({
   ctaButtonText: { en: '', th: '' },
   aboutTitle: { en: '', th: '' },
   aboutDescription: { en: '', th: '' },
-  peopleTitle: { en: 'Meet Our People', th: 'พบกับทีมงานของเรา' },
+  peopleTitle: { en: 'Meet Insights', th: 'พบกับทีมงานของเรา' },
   peopleDescription: { en: 'Get to know the talented individuals who drive our success', th: 'ทำความรู้จักกับบุคคลที่มีความสามารถผลักดันความสำเร็จ' },
   // Images (language-neutral)
   heroImage: '',
@@ -316,7 +316,7 @@ const loadContent = async () => {
       formData.ctaButtonText = response.ctaButtonText || { en: '', th: '' }
       formData.aboutTitle = response.aboutTitle || { en: '', th: '' }
       formData.aboutDescription = response.aboutDescription || { en: '', th: '' }
-      formData.peopleTitle = response.peopleTitle || { en: 'Meet Our People', th: 'พบกับทีมงานของเรา' }
+      formData.peopleTitle = response.peopleTitle || { en: 'Meet Insights', th: 'พบกับทีมงานของเรา' }
       formData.peopleDescription = response.peopleDescription || { en: 'Get to know the talented individuals who drive our success', th: 'ทำความรู้จักกับบุคคลที่มีความสามารถผลักดันความสำเร็จ' }
 
       // Images (language-neutral)
