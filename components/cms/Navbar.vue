@@ -1,6 +1,7 @@
 <template>
   <header
     class="site-header flex justify-center"
+    :class="{ 'nav-hidden': navbarHidden }"
     :style="{
       '--navbar-text-color': navbarTextColor,
       '--navbar-bg-color': navbarBgColor
@@ -52,6 +53,9 @@ const cmsStore = useCMSStore()
 const { createLocalizedContent } = useMultiLanguage()
 
 const mobileMenuOpen = ref(false)
+const navbarHidden = ref(false)
+let lastScrollY = 0
+let ticking = false
 
 const siteSettings = computed(() => createLocalizedContent(cmsStore.siteSettings || {}))
 const navbarTextColor = computed(() => cmsStore.siteSettings?.navbarTextColor || '#1a1a1a')
@@ -64,6 +68,38 @@ const toggleMobileMenu = () => {
 const closeMobileMenu = () => {
   mobileMenuOpen.value = false
 }
+
+// Handle scroll for navbar hide/show
+onMounted(() => {
+  const handleScroll = () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        const currentScrollY = window.scrollY
+
+        // ต้องเลื่อนมากกว่า 50px จากตำแหน่งเดิม
+        if (Math.abs(currentScrollY - lastScrollY) < 50) {
+          ticking = false
+          return
+        }
+
+        // เลื่อนลงและเลื่อนเกิน 150px = ซ่อน navbar
+        if (currentScrollY > lastScrollY && currentScrollY > 150) {
+          navbarHidden.value = true
+        }
+        // เลื่อนขึ้น = แสดง navbar
+        else if (currentScrollY < lastScrollY) {
+          navbarHidden.value = false
+        }
+
+        lastScrollY = currentScrollY
+        ticking = false
+      })
+      ticking = true
+    }
+  }
+
+  window.addEventListener('scroll', handleScroll, { passive: true })
+})
 </script>
 
 <style scoped>
@@ -75,6 +111,11 @@ const closeMobileMenu = () => {
   z-index: 1000;
   background: var(--navbar-bg-color, rgba(255, 255, 255, 0.98));
   padding: 20px 0;
+  transition: transform 0.3s ease;
+}
+
+.site-header.nav-hidden {
+  transform: translateY(-100%);
 }
 
 .container {
