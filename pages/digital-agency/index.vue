@@ -450,18 +450,41 @@ onMounted(() => {
   })
 })
 
+// Get absolute URL for current page
+const getAbsoluteUrl = () => {
+  if (import.meta.client) {
+    return window.location.href
+  }
+  return ''
+}
+
+// Get absolute URL for image
+const getAbsoluteImageUrl = (imageUrl) => {
+  if (!imageUrl) return ''
+  if (imageUrl.startsWith('http')) return imageUrl
+  if (import.meta.client) {
+    return new URL(imageUrl, window.location.origin).href
+  }
+  return imageUrl
+}
+
 useSeoMeta({
-  title: siteSettings.value.siteName || 'Digital Marketing Agency',
-  description: siteSettings.value.metaDescription || 'We are a digital agency who turn the sense of creativity into innovative marketing',
-  ogImage: cmsStore.siteSettings?.logo,
-  ogImageAlt: siteSettings.value.siteName,
-  ogTitle: siteSettings.value.siteName,
-  ogDescription: siteSettings.value.metaDescription,
+  title: () => siteSettings.value.siteName || 'Digital Marketing Agency',
+  description: () => siteSettings.value.metaDescription || 'We are a digital agency who turn the sense of creativity into innovative marketing',
+  ogType: 'website',
+  ogUrl: () => getAbsoluteUrl(),
+  ogImage: () => getAbsoluteImageUrl(cmsStore.siteSettings?.logo),
+  ogImageWidth: '1200',
+  ogImageHeight: '630',
+  ogImageAlt: () => siteSettings.value.siteName || 'Site Logo',
+  ogTitle: () => siteSettings.value.siteName || 'Digital Marketing Agency',
+  ogDescription: () => siteSettings.value.metaDescription || 'We are a digital agency who turn the sense of creativity into innovative marketing',
+  ogSiteName: () => siteSettings.value.siteName || 'Digital Marketing Agency',
   twitterCard: 'summary_large_image',
-  twitterImage: cmsStore.siteSettings?.logo,
-  twitterImageAlt: siteSettings.value.siteName,
-  twitterTitle: siteSettings.value.siteName,
-  twitterDescription: siteSettings.value.metaDescription,
+  twitterImage: () => getAbsoluteImageUrl(cmsStore.siteSettings?.logo),
+  twitterImageAlt: () => siteSettings.value.siteName || 'Site Logo',
+  twitterTitle: () => siteSettings.value.siteName || 'Digital Marketing Agency',
+  twitterDescription: () => siteSettings.value.metaDescription || 'We are a digital agency who turn the sense of creativity into innovative marketing',
 })
 </script>
 

@@ -260,13 +260,13 @@ const dynamicColors = computed(() => {
 })
 
 useSeoMeta({
-  title: `${servicesContent.value.heroTitle} | ${siteSettings.value.siteName}`,
+  title: () => `${servicesContent.value.heroTitle || 'Our Services'} | ${siteSettings.value.siteName || 'Digital Marketing Agency'}`,
   description: () => servicesContent.value.heroSubtitle || 'Comprehensive digital marketing services including video production, poster design, social media content, branding, and digital marketing to grow your business.',
-  ogImage: cmsStore.siteSettings?.logo,
-  ogImageAlt: siteSettings.value.siteName,
+  ogImage: () => cmsStore.siteSettings?.logo,
+  ogImageAlt: () => siteSettings.value.siteName || 'Site Logo',
   twitterCard: 'summary_large_image',
-  twitterImage: cmsStore.siteSettings?.logo,
-  twitterImageAlt: siteSettings.value.siteName,
+  twitterImage: () => cmsStore.siteSettings?.logo,
+  twitterImageAlt: () => siteSettings.value.siteName || 'Site Logo',
 })
 </script>
 

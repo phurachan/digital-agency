@@ -246,13 +246,13 @@ const dynamicColors = computed(() => {
 })
 
 useSeoMeta({
-  title: `Insights | ${siteSettings.siteName} - Meet Our Talented Team`,
-  description: `Meet the talented people at ${siteSettings.siteName}. Our experienced professionals are dedicated to helping you achieve success and drive exceptional results.`,
-  ogImage: cmsStore.siteSettings?.logo,
-  ogImageAlt: siteSettings.siteName,
+  title: () => `Insights | ${siteSettings.value.siteName || 'Digital Marketing Agency'} - Meet Our Talented Team`,
+  description: () => `Meet the talented people at ${siteSettings.value.siteName || 'our company'}. Our experienced professionals are dedicated to helping you achieve success and drive exceptional results.`,
+  ogImage: () => cmsStore.siteSettings?.logo,
+  ogImageAlt: () => siteSettings.value.siteName || 'Site Logo',
   twitterCard: 'summary_large_image',
-  twitterImage: cmsStore.siteSettings?.logo,
-  twitterImageAlt: siteSettings.siteName,
+  twitterImage: () => cmsStore.siteSettings?.logo,
+  twitterImageAlt: () => siteSettings.value.siteName || 'Site Logo',
 })
 </script>
 

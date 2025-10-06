@@ -401,13 +401,13 @@ const toggleFaq = (index) => {
 }
 
 useSeoMeta({
-  title: `Contact Us | ${siteSettings.siteName} - Get Your Free Consultation`,
-  description: `Ready to transform your digital presence? Contact ${siteSettings.siteName} today for a free consultation. Our digital marketing experts are ready to help grow your business.`,
-  ogImage: cmsStore.siteSettings?.logo,
-  ogImageAlt: siteSettings.siteName,
+  title: () => `Contact Us | ${siteSettings.value.siteName || 'Digital Marketing Agency'} - Get Your Free Consultation`,
+  description: () => `Ready to transform your digital presence? Contact ${siteSettings.value.siteName || 'us'} today for a free consultation. Our digital marketing experts are ready to help grow your business.`,
+  ogImage: () => cmsStore.siteSettings?.logo,
+  ogImageAlt: () => siteSettings.value.siteName || 'Site Logo',
   twitterCard: 'summary_large_image',
-  twitterImage: cmsStore.siteSettings?.logo,
-  twitterImageAlt: siteSettings.siteName,
+  twitterImage: () => cmsStore.siteSettings?.logo,
+  twitterImageAlt: () => siteSettings.value.siteName || 'Site Logo',
 })
 </script>
 

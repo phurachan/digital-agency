@@ -301,13 +301,13 @@ const dynamicColors = computed(() => {
 })
 
 useSeoMeta({
-  title: `About Us | ${siteSettings.siteName} - Digital Marketing Agency`,
-  description: `Learn about ${siteSettings.siteName}'s mission, values, and expert team. Discover why we're the trusted digital marketing partner for businesses.`,
-  ogImage: cmsStore.siteSettings?.logo,
-  ogImageAlt: siteSettings.siteName,
+  title: () => `About Us | ${siteSettings.value.siteName || 'Digital Marketing Agency'} - Digital Marketing Agency`,
+  description: () => `Learn about ${siteSettings.value.siteName || 'our'}'s mission, values, and expert team. Discover why we're the trusted digital marketing partner for businesses.`,
+  ogImage: () => cmsStore.siteSettings?.logo,
+  ogImageAlt: () => siteSettings.value.siteName || 'Site Logo',
   twitterCard: 'summary_large_image',
-  twitterImage: cmsStore.siteSettings?.logo,
-  twitterImageAlt: siteSettings.siteName,
+  twitterImage: () => cmsStore.siteSettings?.logo,
+  twitterImageAlt: () => siteSettings.value.siteName || 'Site Logo',
 })
 </script>
 

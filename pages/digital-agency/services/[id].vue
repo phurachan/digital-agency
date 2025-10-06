@@ -230,13 +230,13 @@ const dynamicColors = computed(() => {
 })
 
 useSeoMeta({
-  title: `${serviceData.value.title} | ${siteSettings.value.siteName}`,
-  description: serviceData.value.description || `${serviceData.value.title} - ${siteSettings.value.siteName}`,
-  ogImage: serviceData.value.image || cmsStore.siteSettings?.logo,
-  ogImageAlt: serviceData.value.title,
+  title: () => `${serviceData.value.title || 'Service'} | ${siteSettings.value.siteName || 'Digital Marketing Agency'}`,
+  description: () => serviceData.value.description || `${serviceData.value.title} - ${siteSettings.value.siteName}`,
+  ogImage: () => serviceData.value.image || cmsStore.siteSettings?.logo,
+  ogImageAlt: () => serviceData.value.title || 'Service',
   twitterCard: 'summary_large_image',
-  twitterImage: serviceData.value.image || cmsStore.siteSettings?.logo,
-  twitterImageAlt: serviceData.value.title,
+  twitterImage: () => serviceData.value.image || cmsStore.siteSettings?.logo,
+  twitterImageAlt: () => serviceData.value.title || 'Service',
 })
 </script>
 
