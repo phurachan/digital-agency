@@ -155,7 +155,8 @@ export const useMultiLanguage = () => {
       'heroImage', 'featureImage', 'aboutImage', 'missionImage',
       'image', 'icon', 'color', 'price', 'order', 'isActive',
       'primaryColor', 'secondaryColor', 'logo', 'favicon',
-      'phone', 'email', 'createdAt', 'updatedAt', 'id', '_id'
+      'phone', 'email', 'createdAt', 'updatedAt', 'id', '_id',
+      'externalURL', 'video', 'link'
     ]
 
     nonMultilingualFields.forEach(field => {

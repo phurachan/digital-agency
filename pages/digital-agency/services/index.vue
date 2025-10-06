@@ -105,18 +105,11 @@
               </li>
             </ul>
 
-            <!-- External URL indicator -->
-            <div v-if="service.externalURL" class="absolute top-4 right-4 bg-blue-600 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-              </svg>
-            </div>
-
             <button
               class="btn-primary w-full group-hover:scale-105 transition-transform duration-300"
               @click.stop="handleServiceClick(service)"
             >
-              {{ service.externalURL ? t('common.learnMore') : t('common.getInTouch') }}
+              {{ t('services.viewMore') }}
             </button>
           </div>
 
@@ -234,17 +227,12 @@ const services = computed(() => {
   })
 })
 
-// Handle service click - navigate to external URL if available
+// Handle service click - navigate to detail page
 const { $localePath } = useNuxtApp()
 
 const handleServiceClick = (service) => {
-  if (service.externalURL) {
-    // Open external URL in new tab
-    window.open(service.externalURL, '_blank', 'noopener,noreferrer')
-  } else {
-    // Could implement a service detail page here, for now just show contact
-    navigateTo($localePath('/digital-agency/contact'))
-  }
+  // Navigate to service detail page
+  navigateTo($localePath(`/digital-agency/services/${service.id}`))
 }
 
 // Dynamic color calculations

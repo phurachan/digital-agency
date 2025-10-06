@@ -9,7 +9,7 @@
     }"
   >
     <!-- Header/Navigation -->
-    <header class="site-header">
+    <header class="site-header" :class="{ 'nav-hidden': navbarHidden }">
       <div class="container">
         <div class="header-content">
           <div class="logo">
@@ -118,12 +118,11 @@
         <h2 class="section-title-center">{{ t('index.whatWeveDone') }}</h2>
 
         <div class="projects-grid">
-          <div
-            class="project-card"
+          <NuxtLink
+            :to="$localePath(`/digital-agency/services/${service.id}`)"
+            class="project-card clickable"
             v-for="service in services"
             :key="service.id"
-            :class="{ 'clickable': service.externalURL }"
-            @click="handleServiceClick(service)"
           >
             <div class="project-image">
               <img v-if="service.image" :src="service.image" :alt="service.title" class="service-image">
@@ -137,7 +136,7 @@
                 <p class="project-category">{{ service.description }}</p>
               </div>
             </div>
-          </div>
+          </NuxtLink>
         </div>
 
         <div class="cta-center">
@@ -234,12 +233,11 @@
         <h2 class="section-title-center">{{ t('index.readLatestInsights') }}</h2>
 
         <div class="insights-grid">
-          <article
-            class="insight-card"
+          <NuxtLink
+            :to="$localePath(`/digital-agency/team/${item.id}`)"
+            class="insight-card clickable"
             v-for="item in whatWeDoItems"
             :key="item.id"
-            :class="{ 'clickable': item.link }"
-            @click="handleItemClick(item)"
           >
             <div class="insight-image">
               <img v-if="item.image" :src="item.image" :alt="item.name" class="insight-img">
@@ -253,24 +251,11 @@
               <h3>{{ item.name }}</h3>
               <p class="insight-position">{{ item.position }}</p>
               <p class="insight-excerpt">{{ item.bio }}</p>
-              <a
-                v-if="item.link"
-                :href="item.link"
-                target="_blank"
-                @click.stop
-                class="read-more"
-              >
-                {{ t('common.learnMore') }} →
-              </a>
-              <a
-                v-else
-                href="#contact"
-                class="read-more"
-              >
-                {{ t('common.learnMore') }} →
-              </a>
+              <span class="read-more">
+                {{ t('services.viewMore') }} →
+              </span>
             </div>
-          </article>
+          </NuxtLink>
         </div>
 
         <div class="cta-center">
@@ -339,6 +324,9 @@ const route = useRoute()
 const { $localePath } = useNuxtApp()
 
 const mobileMenuOpen = ref(false)
+const navbarHidden = ref(false)
+let lastScrollY = 0
+let ticking = false
 
 // CMS Store
 const cmsStore = useCMSStore()
@@ -412,20 +400,37 @@ const closeMobileMenu = () => {
   mobileMenuOpen.value = false
 }
 
-// Handle item click - redirect if link exists
-const handleItemClick = (item) => {
-  if (item.link) {
-    window.open(item.link, '_blank')
-  }
-}
-
-const handleServiceClick = (service) => {
-  if (service.externalURL) {
-    window.open(service.externalURL, '_blank')
-  }
-}
-
 onMounted(() => {
+  // Handle scroll for navbar hide/show
+  const handleScroll = () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        const currentScrollY = window.scrollY
+
+        // ต้องเลื่อนมากกว่า 50px จากตำแหน่งเดิม
+        if (Math.abs(currentScrollY - lastScrollY) < 50) {
+          ticking = false
+          return
+        }
+
+        // เลื่อนลงและเลื่อนเกิน 150px = ซ่อน navbar
+        if (currentScrollY > lastScrollY && currentScrollY > 150) {
+          navbarHidden.value = true
+        }
+        // เลื่อนขึ้น = แสดง navbar
+        else if (currentScrollY < lastScrollY) {
+          navbarHidden.value = false
+        }
+
+        lastScrollY = currentScrollY
+        ticking = false
+      })
+      ticking = true
+    }
+  }
+
+  window.addEventListener('scroll', handleScroll, { passive: true })
+
   // Smooth scroll for anchor links
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -498,6 +503,11 @@ useSeoMeta({
   z-index: 1000;
   background: var(--navbar-bg-color, rgba(255, 255, 255, 0.98));
   padding: 20px 0;
+  transition: transform 0.3s ease;
+}
+
+.site-header.nav-hidden {
+  transform: translateY(-100%);
 }
 
 .header-content {

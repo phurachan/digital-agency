@@ -10,7 +10,7 @@
     "home": "Home",
     "services": "Services",
     "about": "About",
-    "team": "People",
+    "team": "Insights",
     "contact": "Contact"
   },
   "common": {
@@ -282,7 +282,17 @@
     "execute": "Execute",
     "executeDesc": "Implement campaigns with precision using cutting-edge tools and techniques.",
     "optimize": "Optimize",
-    "optimizeDesc": "Continuously monitor and refine strategies for maximum performance."
+    "optimizeDesc": "Continuously monitor and refine strategies for maximum performance.",
+    "features": "Service Features",
+    "pricing": "Pricing",
+    "startingFrom": "Starting From",
+    "interestedInService": "Interested in This Service?",
+    "contactUsToday": "Contact us today to discuss how we can help grow your business with this service",
+    "viewAllServices": "View All Services",
+    "viewMore": "View More Details",
+    "viewProject": "View Project",
+    "viewProjectDescription": "Visit the live project to see this service in action and explore all its features",
+    "relatedServices": "Related Services"
   },
   "team": {
     "meetPeople": "Meet Insights",
@@ -299,7 +309,14 @@
     "collaboration": "Collaboration",
     "collaborationDesc": "We work closely with our clients as partners, ensuring transparent communication and shared success.",
     "comingSoon": "Coming Soon",
-    "buildingShowcase": "We're building our showcase. Check back soon to meet the people behind our success!"
+    "buildingShowcase": "We're building our showcase. Check back soon to meet the people behind our success!",
+    "about": "About",
+    "connectWith": "Connect with {name}",
+    "learnMore": "Learn More",
+    "visitProfile": "Visit Profile",
+    "workWithUs": "Work With Our Team",
+    "interestedWorking": "Interested in working with our talented team? Get in touch today",
+    "viewAllMembers": "View All Team Members"
   },
   "contact": {
     "readyTransform": "Ready to transform your digital presence? Let's discuss how we can help accelerate your business growth.",
