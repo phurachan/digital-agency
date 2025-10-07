@@ -1,7 +1,7 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  const isAdminPath = to.path.startsWith('/digital-agency/admin')
-  const isManagePath = to.path.startsWith('/digital-agency/manage')
-  const isLoginPath = to.path === '/digital-agency/login'
+  const isAdminPath = to.path.startsWith('/admin')
+  const isManagePath = to.path.startsWith('/manage')
+  const isLoginPath = to.path === '/login'
 
   const authStore = useAuthStore()
 
@@ -32,7 +32,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   // Handle login page - redirect to admin if already authenticated
   if (isLoginPath) {
     if (authStore.isAuthenticated) {
-      return navigateTo('/digital-agency/admin')
+      return navigateTo('/admin')
     }
     return
   }
@@ -44,7 +44,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   // If not authenticated, redirect to login with current path
   if (!authStore.isAuthenticated) {
-    const redirectUrl = `/digital-agency/login?redirect=${encodeURIComponent(to.fullPath)}`
+    const redirectUrl = `/login?redirect=${encodeURIComponent(to.fullPath)}`
     return navigateTo(redirectUrl)
   }
 })

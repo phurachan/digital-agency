@@ -43,7 +43,7 @@
 const props = defineProps({
   linkTo: {
     type: String,
-    default: '/digital-agency'
+    default: '/'
   },
   useLink: {
     type: Boolean,

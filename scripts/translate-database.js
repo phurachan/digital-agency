@@ -71,7 +71,7 @@ const translations = {
 
 async function login() {
   try {
-    const response = await fetch('http://localhost:3000/api/digital-agency/auth/login', {
+    const response = await fetch('http://localhost:3000/api/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -98,7 +98,7 @@ async function updateServices(token) {
 
   for (const [id, data] of Object.entries(translations.services)) {
     try {
-      const response = await fetch(`http://localhost:3000/api/digital-agency/cms/services/${id}`, {
+      const response = await fetch(`http://localhost:3000/api/cms/services/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -124,7 +124,7 @@ async function updateTeamMembers(token) {
 
   for (const [id, data] of Object.entries(translations.teamMembers)) {
     try {
-      const response = await fetch(`http://localhost:3000/api/digital-agency/cms/team/${id}`, {
+      const response = await fetch(`http://localhost:3000/api/cms/team/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

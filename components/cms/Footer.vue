@@ -5,11 +5,11 @@
         <div class="footer-col">
           <h4>{{ t('footer.quickLinks') }}</h4>
           <ul>
-            <li><a href="/digital-agency#services">{{ t('index.ourService') }}</a></li>
-            <li><a href="/digital-agency#projects">{{ t('index.projects') }}</a></li>
-            <li><a href="/digital-agency#why-us">{{ t('index.whyUs') }}</a></li>
-            <li><a href="/digital-agency#insights">{{ t('index.insights') }}</a></li>
-            <li><a href="/digital-agency#contact">{{ t('common.contactUs') }}</a></li>
+            <li><a href="#services">{{ t('index.ourService') }}</a></li>
+            <li><a href="#projects">{{ t('index.projects') }}</a></li>
+            <li><a href="#why-us">{{ t('index.whyUs') }}</a></li>
+            <li><a href="#insights">{{ t('index.insights') }}</a></li>
+            <li><a href="#contact">{{ t('common.contactUs') }}</a></li>
           </ul>
         </div>
 

@@ -98,7 +98,7 @@ const props = defineProps({
   },
   uploadEndpoint: {
     type: String,
-    default: '/api/digital-agency/upload/image'
+    default: '/api/upload/image'
   }
 })
 

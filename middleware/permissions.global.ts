@@ -1,11 +1,11 @@
 export default defineNuxtRouteMiddleware(async (to) => {
-  // Skip middleware for API routes, login page, and all public pages (anything NOT starting with /digital-agency/admin or /digital-agency/manage)
-  if (to.path.startsWith('/api/') || to.path === '/digital-agency/login') {
+  // Skip middleware for API routes, login page, and all public pages (anything NOT starting with /admin or /manage)
+  if (to.path.startsWith('/api/') || to.path === '/login') {
     return
   }
 
-  const isAdminPath = to.path.startsWith('/digital-agency/admin')
-  const isManagePath = to.path.startsWith('/digital-agency/manage')
+  const isAdminPath = to.path.startsWith('/admin')
+  const isManagePath = to.path.startsWith('/manage')
 
   // Only run permission checks for admin and manage pages
   if (!isAdminPath && !isManagePath) {
@@ -23,7 +23,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   // If no token, redirect to login immediately
   if (!tokenCookie.value) {
-    return navigateTo(`/digital-agency/login?redirect=${encodeURIComponent(to.fullPath)}`)
+    return navigateTo(`/login?redirect=${encodeURIComponent(to.fullPath)}`)
   }
 
   // If no user data, allow access (will be handled by store initialization)
@@ -43,7 +43,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
     // Check if user is authenticated after initialization
     if (!authStore.isAuthenticated) {
-      return navigateTo(`/digital-agency/login?redirect=${encodeURIComponent(to.fullPath)}`)
+      return navigateTo(`/login?redirect=${encodeURIComponent(to.fullPath)}`)
     }
 
     // If user is authenticated but user data isn't loaded yet, allow access
@@ -53,10 +53,10 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
     // Define route permissions mapping
     const routePermissions: Record<string, string[]> = {
-      '/digital-agency/admin': ['dashboard.access'],
-      '/digital-agency/admin/components': ['components.access'],
-      '/digital-agency/admin/demo': ['demo.access'],
-      '/digital-agency/admin/user_management': ['user_management.access'],
+      '/admin': ['dashboard.access'],
+      '/admin/components': ['components.access'],
+      '/admin/demo': ['demo.access'],
+      '/admin/user_management': ['user_management.access'],
     }
 
     // Get the base path (without query parameters)
@@ -78,18 +78,18 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
       if (!hasRequiredPermission) {
         // Redirect to dashboard if user doesn't have permission
-        if (basePath !== '/digital-agency/admin') {
-          return navigateTo('/digital-agency/admin')
+        if (basePath !== '/admin') {
+          return navigateTo('/admin')
         } else {
           // If user can't access dashboard, redirect to login
-          return navigateTo(`/digital-agency/login?redirect=${encodeURIComponent(to.fullPath)}`)
+          return navigateTo(`/login?redirect=${encodeURIComponent(to.fullPath)}`)
         }
       }
     }
 
     // For dynamic routes, check module access
-    if (basePath.startsWith('/digital-agency/admin/user_management/') && !canAccessModule('user_management')) {
-      return navigateTo('/digital-agency/admin')
+    if (basePath.startsWith('/admin/user_management/') && !canAccessModule('user_management')) {
+      return navigateTo('/admin')
     }
   } catch (error) {
     console.warn('Error in permissions middleware:', error)

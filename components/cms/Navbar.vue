@@ -16,11 +16,11 @@
         <div class="nav-wrapper">
           <nav class="main-nav" :class="{ 'mobile-open': mobileMenuOpen }">
             <slot name="nav-links">
-              <a href="/digital-agency#services" @click="closeMobileMenu">{{ t('index.ourService') }}</a>
-              <a href="/digital-agency#projects" @click="closeMobileMenu">{{ t('index.projects') }}</a>
-              <a href="/digital-agency#why-us" @click="closeMobileMenu">{{ t('index.whyUs') }}</a>
-              <a href="/digital-agency#insights" @click="closeMobileMenu">{{ t('index.insights') }}</a>
-              <a href="/digital-agency#contact" @click="closeMobileMenu">{{ t('common.contactUs') }}</a>
+              <a href="#services" @click="closeMobileMenu">{{ t('index.ourService') }}</a>
+              <a href="#projects" @click="closeMobileMenu">{{ t('index.projects') }}</a>
+              <a href="#why-us" @click="closeMobileMenu">{{ t('index.whyUs') }}</a>
+              <a href="#insights" @click="closeMobileMenu">{{ t('index.insights') }}</a>
+              <a href="#contact" @click="closeMobileMenu">{{ t('common.contactUs') }}</a>
             </slot>
           </nav>
 
@@ -44,7 +44,7 @@
 const props = defineProps({
   logoLink: {
     type: String,
-    default: '/digital-agency'
+    default: '/'
   }
 })
 

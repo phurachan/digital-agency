@@ -68,7 +68,7 @@ export default defineNuxtConfig({
 
     public: {
       apiBase: '/api',
-      // apiBaseUrl: 'http://localhost:3001/api/digital-agency',
+      // apiBaseUrl: 'http://localhost:3001/api',
     }
   },
   vite: {

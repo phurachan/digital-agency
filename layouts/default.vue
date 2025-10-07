@@ -315,10 +315,10 @@ const menuSections = ref([
     icon: "chart-bar",
     items: [
       {
-        path: "/digital-agency/admin",
+        path: "/admin",
         label: "Overview",
         icon: "home",
-        activeWhen: ["/digital-agency/admin"]
+        activeWhen: ["/admin"]
       }
     ]
   },
@@ -327,64 +327,64 @@ const menuSections = ref([
     icon: "pencil-square",
     items: [
       {
-        path: "/digital-agency/manage",
+        path: "/manage",
         label: "Dashboard",
         icon: "chart-bar",
-        activeWhen: ["/digital-agency/manage"]
+        activeWhen: ["/manage"]
       },
       {
-        path: "/digital-agency/manage/home",
+        path: "/manage/home",
         label: "Home Page",
         icon: "home",
-        activeWhen: ["/digital-agency/manage/home"]
+        activeWhen: ["/manage/home"]
       },
       {
-        path: "/digital-agency/manage/about",
+        path: "/manage/about",
         label: "About Page",
         icon: "information-circle",
-        activeWhen: ["/digital-agency/manage/about"]
+        activeWhen: ["/manage/about"]
       },
       {
-        path: "/digital-agency/manage/services-content",
+        path: "/manage/services-content",
         label: "Services Content",
         icon: "briefcase",
-        activeWhen: ["/digital-agency/manage/services-content"]
+        activeWhen: ["/manage/services-content"]
       },
       {
-        path: "/digital-agency/manage/services",
+        path: "/manage/services",
         label: "Manage Services",
         icon: "cog-6-tooth",
-        activeWhen: ["/digital-agency/manage/services"]
+        activeWhen: ["/manage/services"]
       },
       {
-        path: "/digital-agency/manage/team-content",
+        path: "/manage/team-content",
         label: "Team Content",
         icon: "users",
-        activeWhen: ["/digital-agency/manage/team-content"]
+        activeWhen: ["/manage/team-content"]
       },
       {
-        path: "/digital-agency/manage/team",
+        path: "/manage/team",
         label: "Manage Team",
         icon: "user-group",
-        activeWhen: ["/digital-agency/manage/team"]
+        activeWhen: ["/manage/team"]
       },
       {
-        path: "/digital-agency/manage/contact",
+        path: "/manage/contact",
         label: "Contact Page",
         icon: "envelope",
-        activeWhen: ["/digital-agency/manage/contact"]
+        activeWhen: ["/manage/contact"]
       },
       {
-        path: "/digital-agency/manage/faqs",
+        path: "/manage/faqs",
         label: "FAQs",
         icon: "question-mark-circle",
-        activeWhen: ["/digital-agency/manage/faqs"]
+        activeWhen: ["/manage/faqs"]
       },
       {
-        path: "/digital-agency/manage/settings",
+        path: "/manage/settings",
         label: "Site Settings",
         icon: "adjustments-horizontal",
-        activeWhen: ["/digital-agency/manage/settings"]
+        activeWhen: ["/manage/settings"]
       }
     ]
   },
@@ -393,7 +393,7 @@ const menuSections = ref([
     icon: "cog-6-tooth",
     items: [
       {
-        path: "/digital-agency/admin/user_management",
+        path: "/admin/user_management",
         label: "จัดการผู้ใช้",
         icon: "user",
         badge: {
@@ -408,12 +408,12 @@ const menuSections = ref([
     icon: "beaker",
     items: [
       {
-        path: "/digital-agency/admin/demo",
+        path: "/admin/demo",
         label: "Demo",
         icon: "server",
       },
       {
-        path: "/digital-agency/admin/components",
+        path: "/admin/components",
         label: "Components",
         icon: "puzzle-piece",
         badge: {
@@ -422,7 +422,7 @@ const menuSections = ref([
         }
       },
       {
-        path: "/digital-agency/admin/i18n-test",
+        path: "/admin/i18n-test",
         label: "i18n Test",
         icon: "language",
         badge: {
