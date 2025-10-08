@@ -18,7 +18,7 @@
 
           <div class="nav-wrapper">
             <nav class="main-nav" :class="{ 'mobile-open': mobileMenuOpen }">
-              <a href="#services" @click="closeMobileMenu">{{ t('index.ourService') }}</a>
+              <a href="#about" @click="closeMobileMenu">{{ t('index.about') }}</a>
               <a href="#projects" @click="closeMobileMenu">{{ t('index.projects') }}</a>
               <a href="#why-us" @click="closeMobileMenu">{{ t('index.whyUs') }}</a>
               <a href="#insights" @click="closeMobileMenu">{{ t('index.insights') }}</a>
@@ -70,7 +70,7 @@
     </section>
 
     <!-- What Makes Us Different -->
-    <section class="what-makes-different">
+    <section id="about" class="what-makes-different">
       <div class="container">
         <div class="content-wrapper">
           <div class="text-content">
@@ -673,7 +673,7 @@ useSeoMeta({
 
 /* Gradient Mode (default) */
 .hero-mode-gradient {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(to bottom right, var(--primary-color), var(--secondary-color));
 }
 
 .hero-mode-gradient::before {
@@ -683,7 +683,6 @@ useSeoMeta({
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.85);
   z-index: 0;
 }
 
@@ -777,17 +776,18 @@ useSeoMeta({
 }
 
 .hero-content {
+  display: inline-grid;
   text-align: center;
   max-width: 900px;
   margin: 0 auto;
 }
 
 .hero-headline {
-  font-size: clamp(40px, 5vw, 72px);
+  font-size: clamp(80px, 5vw, 72px);
   font-weight: 800;
   line-height: 1.2;
   margin-bottom: 24px;
-  color: #1a1a1a;
+  color: #ffffff;
 }
 
 .gradient-text {
@@ -798,8 +798,8 @@ useSeoMeta({
 }
 
 .hero-tagline {
-  font-size: clamp(24px, 2vw, 28px);
-  color: #4a5568;
+  font-size: clamp(32px, 2vw, 28px);
+  color: #e3e3e3;
   margin-top: 20px;
 }
 

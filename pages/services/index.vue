@@ -4,9 +4,9 @@
     <CmsNavbar>
       <template #nav-links>
         <NuxtLink :to="$localePath('/')">{{ t('nav.home') }}</NuxtLink>
-        <NuxtLink :to="$localePath('/services')">{{ t('index.ourService') }}</NuxtLink>
-        <NuxtLink :to="$localePath('/team')">{{ t('nav.team') }}</NuxtLink>
         <NuxtLink :to="$localePath('/about')">{{ t('nav.about') }}</NuxtLink>
+        <NuxtLink :to="$localePath('/services')">{{ t('index.projects') }}</NuxtLink>
+        <NuxtLink :to="$localePath('/team')">{{ t('nav.team') }}</NuxtLink>
         <NuxtLink :to="$localePath('/contact')">{{ t('common.contactUs') }}</NuxtLink>
       </template>
     </CmsNavbar>
@@ -260,7 +260,7 @@ const dynamicColors = computed(() => {
 })
 
 useSeoMeta({
-  title: () => `${servicesContent.value.heroTitle || 'Our Services'} | ${siteSettings.value.siteName || 'Digital Marketing Agency'}`,
+  title: () => `${servicesContent.value.heroTitle || 'What We Do'} | ${siteSettings.value.siteName || 'Digital Marketing Agency'}`,
   description: () => servicesContent.value.heroSubtitle || 'Comprehensive digital marketing services including video production, poster design, social media content, branding, and digital marketing to grow your business.',
   ogImage: () => cmsStore.siteSettings?.logo,
   ogImageAlt: () => siteSettings.value.siteName || 'Site Logo',

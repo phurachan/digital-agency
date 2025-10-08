@@ -115,7 +115,7 @@ i18n: {
 ```typescript
 // Example multi-language content structure
 {
-  "title": "{\"th\": \"บริการของเรา\", \"en\": \"Our Services\"}",
+  "title": "{\"th\": \"ผลงาน\", \"en\": \"What We Do\"}",
   "description": "{\"th\": \"บริการครบวงจร\", \"en\": \"Complete Services\"}"
 }
 ```

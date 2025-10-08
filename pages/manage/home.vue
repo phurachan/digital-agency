@@ -185,23 +185,23 @@
           </div>
         </div>
 
-        <!-- People Section -->
+        <!-- Insights Section -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">People Section</h2>
+          <h2 class="text-xl font-bold text-gray-900 mb-6">Insights Section</h2>
           
           <div class="space-y-6">
             <BaseInput
               v-model="formData.peopleTitle[currentLanguage]"
               type="text"
-              :label="`People Section Title (${currentLanguage.toUpperCase()})`"
-              placeholder="Enter people section title..."
+              :label="`Insights Section Title (${currentLanguage.toUpperCase()})`"
+              placeholder="Enter insights section title..."
               required
             />
 
             <BaseTextarea
               v-model="formData.peopleDescription[currentLanguage]"
-              :label="`People Section Description (${currentLanguage.toUpperCase()})`"
-              placeholder="Enter people section description..."
+              :label="`Insights Section Description (${currentLanguage.toUpperCase()})`"
+              placeholder="Enter insights section description..."
               :rows=3
               required
             />

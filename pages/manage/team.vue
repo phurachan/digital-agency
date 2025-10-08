@@ -3,14 +3,14 @@
 
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Page Header -->
-      <BasePageHeader title="Manage People" code="TEAM-001"
-        description="Add and manage team members displayed on your website" :breadcrumbs="[
+      <BasePageHeader title="Manage Insights" code="INSIGHTS-001"
+        description="Add and manage insights members displayed on your website" :breadcrumbs="[
           { label: 'Dashboard', to: '/manage', icon: 'home' },
-          { label: 'Team Members', icon: 'user-group' }
+          { label: 'Insights Members', icon: 'user-group' }
         ]">
         <template v-slot:actions>
           <BaseButton @click="openAddModal" variant="primary" class="mt-4">
-            Add Person
+            Add Insights
           </BaseButton>
         </template>
       </BasePageHeader>
@@ -20,7 +20,7 @@
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
 
-      <!-- People List -->
+      <!-- Insights List -->
       <div v-else class="space-y-6">
         <div v-for="member in localizedTeamMembers" :key="member.id" class="card p-6">
           <div class="flex items-start justify-between">
@@ -127,22 +127,22 @@
               d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
             </path>
           </svg>
-          <h3 class="mt-2 text-sm font-medium text-gray-900">No people added</h3>
-          <p class="mt-1 text-sm text-gray-500">Get started by adding your first person.</p>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">No insights added</h3>
+          <p class="mt-1 text-sm text-gray-500">Get started by adding your first insights.</p>
           <BaseButton @click="openAddModal" variant="primary" class="mt-4">
-            Add Person
+            Add Insights
           </BaseButton>
         </div>
       </div>
     </div>
 
-    <!-- Person Modal -->
+    <!-- Insights Modal -->
     <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div class="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div class="p-6">
           <div class="flex justify-between items-center mb-6">
             <h2 class="text-xl font-bold text-gray-900">
-              {{ editingMember ? 'Edit Person' : 'Add New Person' }}
+              {{ editingMember ? 'Edit Insights' : 'Add New Insights' }}
             </h2>
             <button @click="closeModal" class="text-gray-400 hover:text-gray-600">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -152,11 +152,11 @@
           </div>
 
           <form @submit.prevent="saveMember" class="space-y-6">
-            <BaseInput v-model="memberForm.name" type="text" label="Full Name" required />
+            <BaseInput v-model="memberForm.name" type="text" label="Title" required />
 
-            <BaseInput v-model="memberForm.position" type="text" label="Position/Title" required />
+            <BaseInput v-model="memberForm.position" type="text" label="Category" required />
 
-            <BaseTextarea v-model="memberForm.description" label="Bio/Description" :rows=3 required />
+            <BaseTextarea v-model="memberForm.description" label="Description" :rows=3 required />
 
             <BaseFileUpload v-model="memberForm.image" label="Profile Image" accept="image/*"
               :max-size="5 * 1024 * 1024" help-text="Upload a profile image (max 5MB)"
@@ -184,7 +184,7 @@
                 Cancel
               </BaseButton>
               <BaseButton type="submit" :disabled="saving" variant="primary">
-                {{ saving ? 'Saving...' : 'Save Person' }}
+                {{ saving ? 'Saving...' : 'Save Insights' }}
               </BaseButton>
             </div>
           </form>
@@ -279,8 +279,8 @@ const loadTeamMembers = async () => {
   try {
     await cmsStore.fetchTeamMembers()
   } catch (error) {
-    console.error('Failed to load team members:', error)
-    errorMessage.value = 'Failed to load team members'
+    console.error('Failed to load insights items:', error)
+    errorMessage.value = 'Failed to load insights items'
   }
 }
 
@@ -339,7 +339,7 @@ const saveMember = async () => {
     const memberData = {
       name: memberForm.name,
       position: memberForm.position,
-      description: memberForm.description,
+      bio: memberForm.description,
       image: memberForm.image,
       link: memberForm.link,
       email: memberForm.email,
@@ -357,16 +357,16 @@ const saveMember = async () => {
           id: editingMember.value.id
         }
       })
-      successMessage.value = 'Person updated successfully!'
+      successMessage.value = 'Insights updated successfully!'
     } else {
       await cmsStore.createTeamMember({ body: memberData })
-      successMessage.value = 'Person created successfully!'
+      successMessage.value = 'Insights created successfully!'
     }
 
     closeModal()
     await loadTeamMembers()
   } catch (error) {
-    errorMessage.value = 'Failed to save team member'
+    errorMessage.value = 'Failed to save insights item'
   } finally {
     saving.value = false
   }
@@ -377,12 +377,13 @@ const toggleHomeDisplay = async (member) => {
     await cmsStore.updateTeamMember({
       body: {
         ...member,
+        socialLinks: "",
         id: member.id,
         isDisplayInHome: !member.isDisplayInHome
       }
     })
 
-    successMessage.value = `Person ${member.isDisplayInHome ? 'removed from' : 'added to'} home page successfully!`
+    successMessage.value = `Insights ${member.isDisplayInHome ? 'removed from' : 'added to'} home page successfully!`
     await loadTeamMembers()
   } catch (error) {
     errorMessage.value = 'Failed to update home display status'
@@ -394,10 +395,10 @@ const deleteMember = async (member) => {
     try {
       await cmsStore.deleteTeamMember({ body: { id: member.id } })
 
-      successMessage.value = 'Person deleted successfully!'
+      successMessage.value = 'Insights deleted successfully!'
       await loadTeamMembers()
     } catch (error) {
-      errorMessage.value = 'Failed to delete team member'
+      errorMessage.value = 'Failed to delete insights item'
     }
   }
 }
@@ -419,7 +420,7 @@ watch([successMessage, errorMessage], () => {
 
 // SEO
 useSeoMeta({
-  title: `Manage People | ${siteSettings.siteName} CMS`,
+  title: `Manage Insights | ${siteSettings.siteName} CMS`,
   robots: 'noindex, nofollow'
 })
 </script>

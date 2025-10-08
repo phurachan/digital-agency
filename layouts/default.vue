@@ -341,13 +341,13 @@ const menuSections = ref([
       },
       {
         path: "/manage/team-content",
-        label: "Team Content",
+        label: "Insights Content",
         icon: "users",
         activeWhen: ["/manage/team-content"]
       },
       {
         path: "/manage/team",
-        label: "Manage Team",
+        label: "Manage Insights",
         icon: "user-group",
         activeWhen: ["/manage/team"]
       },

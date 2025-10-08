@@ -45,7 +45,7 @@
     <section id="services" class="py-20 bg-gray-50">
       <div class="max-w-6xl mx-auto px-6">
         <div class="text-center mb-16">
-          <h2 class="text-4xl font-bold text-gray-800 mb-4">บริการของเรา</h2>
+          <h2 class="text-4xl font-bold text-gray-800 mb-4">ผลงาน</h2>
           <p class="text-xl text-gray-600">บริการดิจิทัลมาร์เก็ตติ้งครบครัน</p>
         </div>
 

@@ -55,7 +55,7 @@
               </svg>
             </div>
             <div class="ml-4">
-              <p class="text-sm text-gray-600">People</p>
+              <p class="text-sm text-gray-600">Insights</p>
               <p class="text-2xl font-bold text-gray-900">{{ stats.teamMembers }}</p>
             </div>
           </div>
@@ -138,7 +138,7 @@
             </div>
             <h3 class="text-lg font-semibold text-gray-900">About Page</h3>
           </div>
-          <p class="text-gray-600 mb-4">Update company mission, values, and team information</p>
+          <p class="text-gray-600 mb-4">Update company mission, values, and insights information</p>
           <NuxtLink to="/manage/about">
             <BaseButton variant="primary">
               Edit Content
@@ -146,7 +146,7 @@
           </NuxtLink>
         </div>
 
-        <!-- People -->
+        <!-- Insights -->
         <div class="card p-6 hover:shadow-lg transition-shadow">
           <div class="flex items-center mb-4">
             <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
@@ -156,9 +156,9 @@
                 </path>
               </svg>
             </div>
-            <h3 class="text-lg font-semibold text-gray-900">People</h3>
+            <h3 class="text-lg font-semibold text-gray-900">Insights</h3>
           </div>
-          <p class="text-gray-600 mb-4">Manage people profiles, photos, and descriptions - perfect for team members,
+          <p class="text-gray-600 mb-4">Manage insights profiles, photos, and descriptions - perfect for insights members,
             customers, or partners</p>
           <div class="flex gap-2">
             <NuxtLink to="/manage/team-content">
@@ -168,7 +168,7 @@
             </NuxtLink>
             <NuxtLink to="/manage/team">
               <BaseButton variant="primary">
-                Manage People
+                Manage Insights
               </BaseButton>
             </NuxtLink>
           </div>

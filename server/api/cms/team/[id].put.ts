@@ -67,6 +67,7 @@ export default defineEventHandler(async (event) => {
     return createSuccessResponse(transformedResult)
   } catch (error: any) {
     // If it's already a createError, throw it as is
+    console.error('Update team member error:', error)
     if (error.statusCode) {
       throw error
     }
@@ -91,8 +92,6 @@ export default defineEventHandler(async (event) => {
     }
 
     // Log unexpected errors
-    console.error('Update team member error:', error)
-
     throw createPredefinedError(API_RESPONSE_CODES.INTERNAL_ERROR)
   }
 })

@@ -44,7 +44,7 @@
     "language": "Language",
     "current_language": "Current Language",
     "getStarted": "Get Started",
-    "viewServices": "View Our Services",
+    "viewServices": "View What We Do",
     "viewAllServices": "View All Services",
     "readMore": "Read More",
     "learnMore": "Learn More",
@@ -160,7 +160,7 @@
   },
   "titles": {
     "home": "Home",
-    "services": "Our Services",
+    "services": "What We Do",
     "about": "About Us",
     "team": "Insights",
     "contact": "Contact Us",
@@ -196,7 +196,9 @@
     "servicesWillAppear": "Services will appear here once added in the CMS."
   },
   "index": {
-    "ourService": "Our Services",
+    "ourService": "What We Do",
+    "about": "About Us",
+    "scroll": "Scroll",
     "projects": "What We Do",
     "whyUs": "Why Us",
     "insights": "Insights",
@@ -245,7 +247,7 @@
     "theBeginning": "The Beginning",
     "foundedMission": "{siteName} was founded with a mission to make professional digital marketing accessible to businesses of all sizes.",
     "majorGrowth": "Major Growth",
-    "expandedServices": "We expanded our services and welcomed 500+ businesses into our family.",
+    "expandedServices": "We expanded What We Do and welcomed 500+ businesses into our family.",
     "industryLeader": "Industry Leader",
     "recognizedLeader": "Recognized as a leading digital marketing agency with innovative solutions.",
     "joinBusinesses": "Join hundreds of businesses that trust {siteName} to drive their digital growth",

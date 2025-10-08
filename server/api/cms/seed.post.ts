@@ -477,8 +477,8 @@ export default defineEventHandler(async (event) => {
     // Create Services Content
     await ServicesContent.create({
       heroTitle: JSON.stringify({
-        "th": "บริการของเรา",
-        "en": "Our Services"
+        "th": "ผลงาน",
+        "en": "What We Do"
       }),
       heroSubtitle: JSON.stringify({
         "th": "บริการครบวงจรด้านการสร้างสรรค์เนื้อหาดิจิทัล",

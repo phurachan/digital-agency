@@ -3,7 +3,7 @@ import { MODEL_VALIDATION_MESSAGES } from './constants/validation'
 
 export interface IServicesContent extends Document {
   _id: mongoose.Types.ObjectId
-  heroTitle: string // JSON string: {"th": "บริการของเรา", "en": "Our Services"}
+  heroTitle: string // JSON string: {"th": "ผลงาน", "en": "What We Do"}
   heroSubtitle: string // JSON string
   heroImage?: string
   createdAt: Date

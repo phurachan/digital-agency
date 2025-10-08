@@ -4,12 +4,12 @@
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Page Header -->
       <BasePageHeader
-        title="Team Page Content"
-        code="TEAM-CONTENT-001"
-        description="Manage team page hero section and introductory content"
+        title="Insights Page Content"
+        code="INSIGHTS-CONTENT-001"
+        description="Manage insights page hero section and introductory content"
         :breadcrumbs="[
           { label: 'Dashboard', to: '/manage', icon: 'home' },
-          { label: 'Team Content', icon: 'user-group' }
+          { label: 'Insights Content', icon: 'user-group' }
         ]"
       />
 
@@ -167,7 +167,7 @@ const loadContent = async () => {
   try {
     await cmsStore.fetchTeamContent()
     const response = cmsStore.teamContent
-    console.log('Loaded team content:', response)
+    console.log('Loaded insights content:', response)
 
     if (response) {
       // The API already transforms JSON strings to objects, so use them directly
@@ -202,7 +202,7 @@ const handleSubmit = async () => {
 
     await cmsStore.updateTeamContent({ body: submitData })
 
-    successMessage.value = 'Team page content updated successfully!'
+    successMessage.value = 'Insights page content updated successfully!'
   } catch (error) {
     errorMessage.value = 'Failed to update content. Please try again.'
     console.error('Failed to update content:', error)
@@ -224,7 +224,7 @@ watch([successMessage, errorMessage], () => {
 
 // SEO
 useSeoMeta({
-  title: `Edit Team Content | ${siteSettings.siteName} CMS`,
+  title: `Edit Insights Content | ${siteSettings.siteName} CMS`,
   robots: 'noindex, nofollow'
 })
 </script>

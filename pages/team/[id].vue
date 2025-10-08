@@ -4,9 +4,9 @@
     <CmsNavbar>
       <template #nav-links>
         <NuxtLink :to="$localePath('/')">{{ t('nav.home') }}</NuxtLink>
-        <NuxtLink :to="$localePath('/services')">{{ t('index.ourService') }}</NuxtLink>
-        <NuxtLink :to="$localePath('/team')">{{ t('nav.team') }}</NuxtLink>
         <NuxtLink :to="$localePath('/about')">{{ t('nav.about') }}</NuxtLink>
+        <NuxtLink :to="$localePath('/services')">{{ t('index.projects') }}</NuxtLink>
+        <NuxtLink :to="$localePath('/team')">{{ t('nav.team') }}</NuxtLink>
         <NuxtLink :to="$localePath('/contact')">{{ t('common.contactUs') }}</NuxtLink>
       </template>
     </CmsNavbar>
