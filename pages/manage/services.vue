@@ -3,15 +3,17 @@
 
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Page Header -->
-      <BasePageHeader
-        title="Manage Services"
-        code="SRV-001"
-        description="Create, edit, and manage your digital marketing services"
-        :breadcrumbs="[
+      <BasePageHeader title="Manage Services" code="SRV-001"
+        description="Create, edit, and manage your digital marketing services" :breadcrumbs="[
           { label: 'Dashboard', to: '/manage', icon: 'home' },
           { label: 'Services', icon: 'document' }
-        ]"
-      />
+        ]">
+        <template v-slot:actions>
+          <BaseButton variant="primary" class="mt-4" @click="openAddModal">
+            Add Service
+          </BaseButton>
+        </template>
+      </BasePageHeader>
 
       <!-- Loading State -->
       <div v-if="loading" class="flex justify-center items-center h-64">
@@ -24,27 +26,25 @@
           <div class="flex items-start justify-between">
             <div class="flex-1">
               <div class="flex items-center space-x-3 mb-3">
-                <div 
-                  class="w-4 h-4 rounded-full border-2 border-white shadow"
-                  :style="{ backgroundColor: service.color || '#6495ed' }"
-                ></div>
+                <div class="w-4 h-4 rounded-full border-2 border-white shadow"
+                  :style="{ backgroundColor: service.color || '#6495ed' }"></div>
                 <h3 class="text-xl font-bold text-gray-900">{{ service.title }}</h3>
-                <span v-if="!service.isActive" class="px-2 py-1 bg-gray-200 text-gray-600 text-xs rounded-full">Inactive</span>
-                <span v-if="service.isDisplayInHome" class="px-2 py-1 bg-green-100 text-green-600 text-xs rounded-full">🏠 Home</span>
+                <span v-if="!service.isActive"
+                  class="px-2 py-1 bg-gray-200 text-gray-600 text-xs rounded-full">Inactive</span>
+                <span v-if="service.isDisplayInHome"
+                  class="px-2 py-1 bg-green-100 text-green-600 text-xs rounded-full">🏠
+                  Home</span>
                 <span v-else class="px-2 py-1 bg-yellow-100 text-yellow-600 text-xs rounded-full">📋 List Only</span>
               </div>
-              
+
               <p class="text-gray-600 mb-4">{{ service.description }}</p>
-              
+
               <div v-if="service.features?.length" class="mb-4">
                 <p class="text-sm font-medium text-gray-700 mb-2">Features:</p>
                 <div class="flex flex-wrap gap-2">
-                  <span 
-                    v-for="feature in service.features" 
-                    :key="feature"
+                  <span v-for="feature in service.features" :key="feature"
                     class="px-3 py-1 text-sm rounded-full text-white"
-                    :style="{ backgroundColor: service.color || '#6495ed', opacity: 0.9 }"
-                  >
+                    :style="{ backgroundColor: service.color || '#6495ed', opacity: 0.9 }">
                     {{ feature }}
                   </span>
                 </div>
@@ -58,35 +58,34 @@
             </div>
 
             <div class="flex items-center space-x-2 ml-4">
-              <button 
-                @click="editService(service)"
-                class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
-              >
+              <button @click="editService(service)" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                  </path>
                 </svg>
               </button>
-              
-              <button
-                @click="toggleHomeDisplay(service)"
+
+              <button @click="toggleHomeDisplay(service)"
                 :class="service.isDisplayInHome ? 'text-green-600 hover:bg-green-50' : 'text-gray-600 hover:bg-gray-50'"
-                class="p-2 rounded-lg"
-                :title="service.isDisplayInHome ? 'Remove from Home Page' : 'Add to Home Page'"
-              >
-                <svg v-if="service.isDisplayInHome" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                class="p-2 rounded-lg" :title="service.isDisplayInHome ? 'Remove from Home Page' : 'Add to Home Page'">
+                <svg v-if="service.isDisplayInHome" class="w-5 h-5" fill="none" stroke="currentColor"
+                  viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                  </path>
                 </svg>
                 <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
               </button>
-              
-              <button 
-                @click="deleteService(service)"
-                class="p-2 text-red-600 hover:bg-red-50 rounded-lg"
-              >
+
+              <button @click="deleteService(service)" class="p-2 text-red-600 hover:bg-red-50 rounded-lg">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                  </path>
                 </svg>
               </button>
             </div>
@@ -96,15 +95,13 @@
         <!-- Empty State -->
         <div v-if="localizedServices.length === 0" class="text-center py-12">
           <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+            </path>
           </svg>
           <h3 class="mt-2 text-sm font-medium text-gray-900">No services</h3>
           <p class="mt-1 text-sm text-gray-500">Get started by creating your first service.</p>
-          <BaseButton
-            variant="primary"
-            class="mt-4"
-            @click="openAddModal"
-          >
+          <BaseButton variant="primary" class="mt-4" @click="openAddModal">
             Add Service
           </BaseButton>
         </div>
@@ -131,20 +128,14 @@
             <div class="flex items-center justify-between">
               <h3 class="text-sm font-medium text-gray-900">Content Language</h3>
               <div class="flex items-center bg-white rounded-lg p-1 border">
-                <button 
-                  @click="currentLanguage = 'en'"
-                  type="button"
+                <button @click="currentLanguage = 'en'" type="button"
                   :class="currentLanguage === 'en' ? 'bg-blue-100 text-blue-600' : 'text-gray-600 hover:text-gray-900'"
-                  class="px-3 py-1 rounded-md text-xs font-medium transition-colors"
-                >
+                  class="px-3 py-1 rounded-md text-xs font-medium transition-colors">
                   🇺🇸 EN
                 </button>
-                <button 
-                  @click="currentLanguage = 'th'"
-                  type="button"
+                <button @click="currentLanguage = 'th'" type="button"
                   :class="currentLanguage === 'th' ? 'bg-blue-100 text-blue-600' : 'text-gray-600 hover:text-gray-900'"
-                  class="px-3 py-1 rounded-md text-xs font-medium transition-colors"
-                >
+                  class="px-3 py-1 rounded-md text-xs font-medium transition-colors">
                   🇹🇭 TH
                 </button>
               </div>
@@ -152,137 +143,82 @@
           </div>
 
           <form @submit.prevent="saveService" class="space-y-6">
-            <BaseInput
-              v-model="serviceFormData.title[currentLanguage]"
-              :label="`Service Title (${currentLanguage.toUpperCase()})`"
-              required
-            />
+            <BaseInput v-model="serviceFormData.title[currentLanguage]"
+              :label="`Service Title (${currentLanguage.toUpperCase()})`" required />
 
-            <BaseTextarea
-              v-model="serviceFormData.description[currentLanguage]"
-              :label="`Description (${currentLanguage.toUpperCase()})`"
-              :rows=3
-              required
-            />
+            <BaseTextarea v-model="serviceFormData.description[currentLanguage]"
+              :label="`Description (${currentLanguage.toUpperCase()})`" :rows=3 required />
 
-            <BaseInput
-              v-model="serviceFormData.icon"
-              type="text"
-              label="Icon Name (e.g., search, social, code)"
-            />
+            <BaseInput v-model="serviceFormData.icon" type="text" label="Icon Name (e.g., search, social, code)" />
 
             <div>
               <label class="form-label">Service Image</label>
-              <CmsImageUpload
-                v-model="serviceFormData.image"
-                label="Service Image (optional)"
-                help-text="Optional image for the service. Will be displayed in service cards and details."
-              />
+              <CmsImageUpload v-model="serviceFormData.image" label="Service Image (optional)"
+                help-text="Optional image for the service. Will be displayed in service cards and details." />
             </div>
 
             <div>
               <label class="form-label">Service Video</label>
-              <CmsVideoUpload
-                v-model="serviceFormData.video"
-                label="Service Video (optional)"
-                help-text="Optional video for the service. Will be displayed in service details or promotional content."
-              />
+              <CmsVideoUpload v-model="serviceFormData.video" label="Service Video (optional)"
+                help-text="Optional video for the service. Will be displayed in service details or promotional content." />
             </div>
 
-            <BaseInput
-              v-model="serviceFormData.externalURL"
-              type="url"
-              label="External URL (optional)"
+            <BaseInput v-model="serviceFormData.externalURL" type="url" label="External URL (optional)"
               placeholder="https://example.com/service-details"
-              help="Optional link to external page with more service details"
-            />
+              help="Optional link to external page with more service details" />
 
             <!-- Color Picker -->
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Card Color</label>
               <div class="flex items-center space-x-4">
                 <div class="relative">
-                  <input 
-                    v-model="serviceFormData.color" 
-                    type="color" 
-                    class="w-16 h-16 border-2 border-gray-300 rounded-lg cursor-pointer"
-                  >
+                  <input v-model="serviceFormData.color" type="color"
+                    class="w-16 h-16 border-2 border-gray-300 rounded-lg cursor-pointer">
                 </div>
                 <div class="flex-1">
-                  <BaseInput
-                    v-model="serviceFormData.color"
-                    type="text"
-                    placeholder="#6495ed"
-                    pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
-                  />
+                  <BaseInput v-model="serviceFormData.color" type="text" placeholder="#6495ed"
+                    pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$" />
                   <p class="text-xs text-gray-500 mt-1">This color will be used for the service card's accent color</p>
                 </div>
               </div>
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Features ({{ currentLanguage.toUpperCase() }})</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Features ({{ currentLanguage.toUpperCase()
+                }})</label>
               <div class="space-y-2">
                 <div v-for="(feature, index) in serviceFormData.features" :key="index" class="flex space-x-2">
-                  <BaseInput
-                    v-model="serviceFormData.features[index][currentLanguage]"
-                    type="text"
-                    :placeholder="`Feature ${index + 1} (${currentLanguage.toUpperCase()})`"
-                    class="flex-1"
-                  />
-                  <button 
-                    @click="removeFeature(index)"
-                    type="button"
-                    class="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg"
-                  >
+                  <BaseInput v-model="serviceFormData.features[index][currentLanguage]" type="text"
+                    :placeholder="`Feature ${index + 1} (${currentLanguage.toUpperCase()})`" class="flex-1" />
+                  <button @click="removeFeature(index)" type="button"
+                    class="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                      </path>
                     </svg>
                   </button>
                 </div>
-                <button 
-                  @click="addFeature"
-                  type="button"
-                  class="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-gray-400 hover:text-gray-600"
-                >
+                <button @click="addFeature" type="button"
+                  class="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-gray-400 hover:text-gray-600">
                   + Add Feature
                 </button>
               </div>
             </div>
 
             <div class="grid grid-cols-3 gap-4">
-              <BaseInput
-                v-model.number="serviceFormData.order"
-                type="number"
-                label="Display Order"
-                min="0"
-              />
+              <BaseInput v-model.number="serviceFormData.order" type="number" label="Display Order" min="0" />
 
-              <BaseCheckbox
-                v-model="serviceFormData.isActive"
-                label="Active"
-              />
+              <BaseCheckbox v-model="serviceFormData.isActive" label="Active" />
 
-              <BaseCheckbox
-                v-model="serviceFormData.isDisplayInHome"
-                label="Display in Home"
-              />
+              <BaseCheckbox v-model="serviceFormData.isDisplayInHome" label="Display in Home" />
             </div>
 
             <div class="flex justify-end space-x-4 pt-4 border-t">
-              <BaseButton
-                variant="secondary"
-                type="button"
-                @click="closeModal"
-              >
+              <BaseButton variant="secondary" type="button" @click="closeModal">
                 Cancel
               </BaseButton>
-              <BaseButton
-                variant="primary"
-                type="submit"
-                :disabled="saving"
-                :loading="saving"
-              >
+              <BaseButton variant="primary" type="submit" :disabled="saving" :loading="saving">
                 Save Service
               </BaseButton>
             </div>
@@ -292,10 +228,12 @@
     </div>
 
     <!-- Success/Error Messages -->
-    <div v-if="successMessage" class="fixed top-20 right-4 p-4 bg-green-50 border border-green-200 rounded-lg shadow-xl z-50">
+    <div v-if="successMessage"
+      class="fixed top-20 right-4 p-4 bg-green-50 border border-green-200 rounded-lg shadow-xl z-50">
       <div class="flex items-center">
         <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
         <p class="text-green-700 font-medium">{{ successMessage }}</p>
       </div>
@@ -304,7 +242,8 @@
     <div v-if="errorMessage" class="fixed top-20 right-4 p-4 bg-red-50 border border-red-200 rounded-lg shadow-xl z-50">
       <div class="flex items-center">
         <svg class="w-5 h-5 text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
         <p class="text-red-700 font-medium">{{ errorMessage }}</p>
       </div>
@@ -412,13 +351,13 @@ const editService = (service) => {
     // Check if features are objects with th/en or simple strings
     serviceFormData.features = service.features.length > 0
       ? service.features.map(feature => {
-          if (typeof feature === 'object' && feature.th && feature.en) {
-            return feature
-          } else {
-            // If feature is a string, use it for current locale
-            return { en: feature || '', th: feature || '' }
-          }
-        })
+        if (typeof feature === 'object' && feature.th && feature.en) {
+          return feature
+        } else {
+          // If feature is a string, use it for current locale
+          return { en: feature || '', th: feature || '' }
+        }
+      })
       : [{ en: '', th: '' }]
   } else {
     serviceFormData.features = [{ en: '', th: '' }]
@@ -476,10 +415,10 @@ const saveService = async () => {
 
   try {
     // Filter out empty features and prepare multi-language data
-    const filteredFeatures = serviceFormData.features.filter(feature => 
+    const filteredFeatures = serviceFormData.features.filter(feature =>
       feature.en.trim() || feature.th.trim()
     )
-    
+
     const serviceData = {
       // Multi-language fields as JSON strings
       title: JSON.stringify(serviceFormData.title),
@@ -644,8 +583,8 @@ useSeoMeta({
   color: rgb(156 163 175);
 }
 
-[data-theme="dark"] .form-input:focus ~ .floating-label,
-[data-theme="dark"] .form-input:not(:placeholder-shown) ~ .floating-label {
+[data-theme="dark"] .form-input:focus~.floating-label,
+[data-theme="dark"] .form-input:not(:placeholder-shown)~.floating-label {
   color: rgb(96 165 250);
 }
 

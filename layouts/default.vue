@@ -1,12 +1,9 @@
 <template>
   <ClientOnly>
-    <div
-      class="drawer lg:drawer-open"
-      :style="{
-        '--primary-color': siteColors.primary,
-        '--secondary-color': siteColors.secondary
-      }"
-    >
+    <div class="drawer lg:drawer-open" :style="{
+      '--primary-color': siteColors.primary,
+      '--secondary-color': siteColors.secondary
+    }">
       <input id="admin-drawer" type="checkbox" class="drawer-toggle" />
 
       <!-- Main Content -->
@@ -89,34 +86,20 @@
             <BaseLanguageSwitcher />
 
             <!-- Theme Toggle -->
-            <BaseThemeToggle
-              shape="circle"
-              variant="ghost"
-              size="md"
-              @change="onThemeChange"
-            />
+            <BaseThemeToggle shape="circle" variant="ghost" size="md" @change="onThemeChange" />
 
             <!-- User profile dropdown -->
             <div class="dropdown dropdown-end">
               <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
-                <BaseAvatar
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                  :name="authStore.user?.name || 'User'"
-                  alt="Profile"
-                  ring
-                  ring-color="ring-primary"
-                  clickable
-                />
+                <BaseAvatar src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                  :name="authStore.user?.name || 'User'" alt="Profile" ring ring-color="ring-primary" clickable />
               </div>
               <ul tabindex="0"
                 class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow-xl border">
                 <li class="menu-title">
                   <div class="flex items-center gap-2">
-                    <BaseAvatar
-                      src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                      name="User"
-                      size="sm"
-                    />
+                    <BaseAvatar src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                      name="User" size="sm" />
                     <div>
                       <div class="font-semibold">{{ authStore.user?.name || '' }}</div>
                       <div class="text-xs text-base-content/70">{{ authStore.user?.email || '' }}</div>
@@ -129,7 +112,9 @@
                 <li>
                   <hr class="my-2">
                 </li>
-                <li><a @click="logout" class="text-error"><BaseIcon name="arrow-right-on-rectangle" size="sm" />Logout</a></li>
+                <li><a @click="logout" class="text-error">
+                    <BaseIcon name="arrow-right-on-rectangle" size="sm" />Logout
+                  </a></li>
               </ul>
             </div>
           </div>
@@ -151,7 +136,8 @@
             :class="{ 'p-6': !isSidebarCollapsed, 'p-4': isSidebarCollapsed }">
             <div class="flex items-center"
               :class="{ 'justify-center space-x-3': !isSidebarCollapsed, 'justify-center': isSidebarCollapsed }">
-              <BaseIcon name="shield-check" size="xl" />
+              <img v-if="siteLogo" :src="siteLogo" alt="Logo" :class="isSidebarCollapsed ? 'h-auto ' : 'h-20 '" class="rounded-full" />
+              <BaseIcon v-else name="shield-check" size="xl" />
               <div v-if="!isSidebarCollapsed" class="hidden lg:block">
                 <h1 class="text-xl font-bold">Admin Panel</h1>
                 <p class="text-sm opacity-80">Management System</p>
@@ -221,7 +207,7 @@
 
       <!-- Toast Container -->
       <BaseToastContainer />
-      
+
       <!-- Confirm Container -->
       <BaseConfirmContainer />
     </div>
@@ -289,6 +275,8 @@ const siteColors = computed(() => ({
   primary: cmsStore.siteSettings?.primaryColor || '#4949e9',
   secondary: cmsStore.siteSettings?.secondaryColor || '#dbf142'
 }))
+
+const siteLogo = computed(() => cmsStore.siteSettings.logo || '')
 
 // Initialize on mount
 onMounted(async () => {
@@ -389,7 +377,7 @@ const menuSections = ref([
     items: [
       {
         path: "/admin/user_management",
-        label: "จัดการผู้ใช้",
+        label: "User Management",
         icon: "user",
         badge: {
           text: "New",
@@ -398,35 +386,35 @@ const menuSections = ref([
       }
     ]
   },
-  {
-    title: "Examples",
-    icon: "beaker",
-    items: [
-      {
-        path: "/admin/demo",
-        label: "Demo",
-        icon: "server",
-      },
-      {
-        path: "/admin/components",
-        label: "Components",
-        icon: "puzzle-piece",
-        badge: {
-          text: "UI",
-          variant: "info"
-        }
-      },
-      {
-        path: "/admin/i18n-test",
-        label: "i18n Test",
-        icon: "language",
-        badge: {
-          text: "Test",
-          variant: "warning"
-        }
-      }
-    ]
-  }
+  // {
+  //   title: "Examples",
+  //   icon: "beaker",
+  //   items: [
+  //     {
+  //       path: "/admin/demo",
+  //       label: "Demo",
+  //       icon: "server",
+  //     },
+  //     {
+  //       path: "/admin/components",
+  //       label: "Components",
+  //       icon: "puzzle-piece",
+  //       badge: {
+  //         text: "UI",
+  //         variant: "info"
+  //       }
+  //     },
+  //     {
+  //       path: "/admin/i18n-test",
+  //       label: "i18n Test",
+  //       icon: "language",
+  //       badge: {
+  //         text: "Test",
+  //         variant: "warning"
+  //       }
+  //     }
+  //   ]
+  // }
 ])
 
 // Helper function to check if route is active
@@ -444,8 +432,8 @@ const logout = async () => {
 </script>
 
 <style scoped>
-.menu-lg > li > a,
-.menu-lg > li > a > span {
+.menu-lg>li>a,
+.menu-lg>li>a>span {
   font-size: 1rem !important;
 }
 

@@ -3,15 +3,17 @@
 
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Page Header -->
-      <BasePageHeader
-        title="Manage FAQs"
-        code="FAQ-001"
-        description="Create and manage frequently asked questions for your website"
-        :breadcrumbs="[
+      <BasePageHeader title="Manage FAQs" code="FAQ-001"
+        description="Create and manage frequently asked questions for your website" :breadcrumbs="[
           { label: 'Dashboard', to: '/manage', icon: 'home' },
           { label: 'FAQs', icon: 'question-mark-circle' }
-        ]"
-      />
+        ]">
+        <template v-slot:actions>
+          <BaseButton @click="openAddModal" variant="primary" class="mt-4">
+            Add FAQ
+          </BaseButton>
+        </template>
+      </BasePageHeader>
 
       <!-- Loading State -->
       <div v-if="loading" class="flex justify-center items-center h-64">
@@ -25,11 +27,12 @@
             <div class="flex-1">
               <div class="flex items-center space-x-3 mb-3">
                 <h3 class="text-xl font-bold text-gray-900">{{ faq.question }}</h3>
-                <span v-if="!faq.isActive" class="px-2 py-1 bg-gray-200 text-gray-600 text-xs rounded-full">Inactive</span>
+                <span v-if="!faq.isActive"
+                  class="px-2 py-1 bg-gray-200 text-gray-600 text-xs rounded-full">Inactive</span>
               </div>
-              
+
               <p class="text-gray-600 mb-4">{{ faq.answer }}</p>
-              
+
               <div class="flex items-center space-x-4 text-sm text-gray-500">
                 <span>Order: {{ faq.order || '-' }}</span>
                 <span>•</span>
@@ -38,34 +41,31 @@
             </div>
 
             <div class="flex items-center space-x-2 ml-4">
-              <button 
-                @click="editFaq(faq)"
-                class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
-              >
+              <button @click="editFaq(faq)" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                  </path>
                 </svg>
               </button>
-              
-              <button 
-                @click="toggleFaqStatus(faq)"
+
+              <button @click="toggleFaqStatus(faq)"
                 :class="faq.isActive ? 'text-yellow-600 hover:bg-yellow-50' : 'text-green-600 hover:bg-green-50'"
-                class="p-2 rounded-lg"
-              >
+                class="p-2 rounded-lg">
                 <svg v-if="faq.isActive" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L5.636 5.636"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L5.636 5.636"></path>
                 </svg>
                 <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                 </svg>
               </button>
-              
-              <button 
-                @click="deleteFaq(faq)"
-                class="p-2 text-red-600 hover:bg-red-50 rounded-lg"
-              >
+
+              <button @click="deleteFaq(faq)" class="p-2 text-red-600 hover:bg-red-50 rounded-lg">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                  </path>
                 </svg>
               </button>
             </div>
@@ -75,7 +75,9 @@
         <!-- Empty State -->
         <div v-if="localizedFaqs.length === 0" class="text-center py-12">
           <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+            </path>
           </svg>
           <h3 class="mt-2 text-sm font-medium text-gray-900">No FAQs</h3>
           <p class="mt-1 text-sm text-gray-500">Get started by creating your first FAQ.</p>
@@ -102,32 +104,14 @@
           </div>
 
           <form @submit.prevent="saveFaq" class="space-y-6">
-            <BaseInput
-              v-model="faqForm.question"
-              type="text"
-              label="Question"
-              required
-            />
+            <BaseInput v-model="faqForm.question" type="text" label="Question" required />
 
-            <BaseTextarea
-              v-model="faqForm.answer"
-              label="Answer"
-              :rows=4
-              required
-            />
+            <BaseTextarea v-model="faqForm.answer" label="Answer" :rows=4 required />
 
             <div class="grid grid-cols-2 gap-4">
-              <BaseInput
-                v-model.number="faqForm.order"
-                type="number"
-                label="Display Order"
-                min="0"
-              />
+              <BaseInput v-model.number="faqForm.order" type="number" label="Display Order" min="0" />
 
-              <BaseCheckbox
-                v-model="faqForm.isActive"
-                label="Active"
-              />
+              <BaseCheckbox v-model="faqForm.isActive" label="Active" />
             </div>
 
             <div class="flex justify-end space-x-4 pt-4 border-t">
@@ -144,10 +128,12 @@
     </div>
 
     <!-- Success/Error Messages -->
-    <div v-if="successMessage" class="fixed top-20 right-4 p-4 bg-green-50 border border-green-200 rounded-lg shadow-xl z-50">
+    <div v-if="successMessage"
+      class="fixed top-20 right-4 p-4 bg-green-50 border border-green-200 rounded-lg shadow-xl z-50">
       <div class="flex items-center">
         <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
         <p class="text-green-700 font-medium">{{ successMessage }}</p>
       </div>
@@ -156,7 +142,8 @@
     <div v-if="errorMessage" class="fixed top-20 right-4 p-4 bg-red-50 border border-red-200 rounded-lg shadow-xl z-50">
       <div class="flex items-center">
         <svg class="w-5 h-5 text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
         <p class="text-red-700 font-medium">{{ errorMessage }}</p>
       </div>
@@ -413,8 +400,8 @@ useSeoMeta({
     color: rgb(156 163 175);
   }
 
-  .form-input:focus ~ .floating-label,
-  .form-input:not(:placeholder-shown) ~ .floating-label {
+  .form-input:focus~.floating-label,
+  .form-input:not(:placeholder-shown)~.floating-label {
     color: rgb(96 165 250);
   }
 }
