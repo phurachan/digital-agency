@@ -184,7 +184,8 @@
 
 <script setup lang="ts">
 definePageMeta({
-  layout: 'default'
+  layout: 'default',
+  middleware: 'auth'
 })
 
 const { $i18n } = useNuxtApp()

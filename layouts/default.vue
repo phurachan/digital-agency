@@ -32,19 +32,14 @@
           </div>
 
           <!-- Center title for mobile -->
-          <div class="navbar-center lg:hidden">
+          <!-- <div class="navbar-center lg:hidden">
             <h1 class="text-xl font-bold text-primary flex items-center gap-2">
               Admin Panel
             </h1>
-          </div>
+          </div> -->
 
           <!-- Right side actions -->
           <div class="navbar-end gap-2">
-            <!-- Search -->
-            <div class="form-control hidden md:flex">
-              <input type="text" placeholder="Search..." class="input input-bordered input-sm w-24 md:w-auto" />
-            </div>
-
             <!-- Notifications dropdown -->
             <div class="dropdown dropdown-end">
               <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
@@ -106,8 +101,8 @@
               <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
                 <BaseAvatar
                   src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                  name="Admin User"
-                  alt="Admin Profile"
+                  :name="authStore.user?.name || 'User'"
+                  alt="Profile"
                   ring
                   ring-color="ring-primary"
                   clickable
@@ -119,18 +114,18 @@
                   <div class="flex items-center gap-2">
                     <BaseAvatar
                       src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                      name="Admin User"
+                      name="User"
                       size="sm"
                     />
                     <div>
-                      <div class="font-semibold">Admin User</div>
-                      <div class="text-xs text-base-content/70">admin@example.com</div>
+                      <div class="font-semibold">{{ authStore.user?.name || '' }}</div>
+                      <div class="text-xs text-base-content/70">{{ authStore.user?.email || '' }}</div>
                     </div>
                   </div>
                 </li>
-                <li><a><BaseIcon name="user" size="sm" />Profile</a></li>
+                <!-- <li><a><BaseIcon name="user" size="sm" />Profile</a></li>
                 <li><a><BaseIcon name="cog-6-tooth" size="sm" />Settings</a></li>
-                <li><a><BaseIcon name="document-text" size="sm" />Help & Support</a></li>
+                <li><a><BaseIcon name="document-text" size="sm" />Help & Support</a></li> -->
                 <li>
                   <hr class="my-2">
                 </li>

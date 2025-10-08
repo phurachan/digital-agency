@@ -3,6 +3,10 @@
 </template>
 
 <script setup>
+definePageMeta({
+  layout: 'default',
+  middleware: 'auth'
+})
 // Initialize
 onMounted(() => {
   // Demo page initialization

@@ -118,11 +118,11 @@ export const useAuthStore = defineStore('auth', {
           default: () => null,
           watch: false
         })
-        userCookie.value = response?.data?.user
+        userCookie.value = response?.data
 
-        this.user = response?.data?.user
+        this.user = response?.data
         this.isAuthenticated = true
-
+        
         this.responseData = { ...(response || {}) };
         return response
       } catch (error: any) {

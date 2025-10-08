@@ -4,8 +4,8 @@
       <div class="card w-full max-w-md bg-base-100 shadow-2xl">
         <div class="card-body">
           <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-primary">Web Base</h1>
-            <p class="text-base-content/70 mt-2">Web Base Admin Portal</p>
+            <h1 class="text-3xl font-bold text-primary">Login</h1>
+            <p class="text-base-content/70 mt-2">Content Management System</p>
           </div>
 
           <slot />
