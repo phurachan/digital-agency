@@ -1,4 +1,9 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
+    // Only run on client side
+    if (process.server) {
+      return
+    }
+    
   const isAdminPath = to.path.startsWith('/admin')
   const isManagePath = to.path.startsWith('/manage')
   const isLoginPath = to.path === '/login'

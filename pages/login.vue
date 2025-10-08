@@ -28,7 +28,7 @@ import { useAuthStore } from '~/stores/auth'
 
 definePageMeta({
   layout: 'auth',
-  middleware: 'guest'
+  // middleware: 'guest'
 })
 
 const router = useRouter()
