@@ -4,12 +4,12 @@
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Page Header -->
       <BasePageHeader
-        title="About Page Content"
+        :title="t('manage.about.title')"
         code="ABOUT-001"
-        description="Manage about page mission, vision, values, and history content"
+        :description="t('manage.about.description')"
         :breadcrumbs="[
-          { label: 'Dashboard', to: '/manage', icon: 'home' },
-          { label: 'About Content', icon: 'information-circle' }
+          { label: t('manage.common.dashboard'), to: '/manage', icon: 'home' },
+          { label: t('manage.about.breadcrumb'), icon: 'information-circle' }
         ]"
       />
 
@@ -21,28 +21,28 @@
       <!-- Language Switcher -->
       <div v-else class="card p-4 mb-8">
         <div class="flex items-center justify-between">
-          <h3 class="text-lg font-medium text-gray-900">Content Language</h3>
+          <h3 class="text-lg font-medium text-gray-900">{{ t('manage.common.contentLanguage') }}</h3>
           <div class="flex items-center bg-gray-100 rounded-lg p-1">
-            <button 
+            <button
               @click="currentLanguage = 'en'"
               type="button"
               :class="currentLanguage === 'en' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'"
               class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
             >
-              🇺🇸 English
+              {{ t('manage.common.english') }}
             </button>
-            <button 
+            <button
               @click="currentLanguage = 'th'"
               type="button"
               :class="currentLanguage === 'th' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'"
               class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
             >
-              🇹🇭 ไทย
+              {{ t('manage.common.thai') }}
             </button>
           </div>
         </div>
         <p class="text-sm text-gray-500 mt-2">
-          Switch between languages to edit content. {{ currentLanguage === 'en' ? 'Editing English content' : 'กำลังแก้ไขเนื้อหาภาษาไทย' }}
+          {{ t('manage.common.switchLanguageHint') }} {{ currentLanguage === 'en' ? t('manage.common.editingEnglish') : t('manage.common.editingThai') }}
         </p>
       </div>
 
@@ -51,31 +51,31 @@
 
         <!-- Hero Background Image -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Hero Background Image</h2>
-          <CmsImageUpload 
-            v-model="formData.heroImage" 
-            label="Hero Section Background (optional)"
-            help-text="Recommended: High-quality image, 1920x1080px or larger. Will be used as background for the hero section."
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.about.heroBackgroundImage') }}</h2>
+          <CmsImageUpload
+            v-model="formData.heroImage"
+            :label="t('manage.about.heroSectionBackground')"
+            :help-text="t('manage.about.heroImageHelp')"
           />
         </div>
 
         <!-- Mission Section -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Mission Section</h2>
-          
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.about.missionSection') }}</h2>
+
           <div class="space-y-6">
             <BaseInput
               v-model="formData.missionTitle[currentLanguage]"
               type="text"
-              :label="`Mission Title (${currentLanguage.toUpperCase()})`"
-              placeholder="Enter mission title..."
+              :label="`${t('manage.about.missionTitle')} (${currentLanguage.toUpperCase()})`"
+              :placeholder="t('manage.about.enterMissionTitle')"
               required
             />
 
             <BaseTextarea
               v-model="formData.missionText[currentLanguage]"
-              :label="`Mission Description (${currentLanguage.toUpperCase()})`"
-              placeholder="Enter mission description..."
+              :label="`${t('manage.about.missionDescription')} (${currentLanguage.toUpperCase()})`"
+              :placeholder="t('manage.about.enterMissionDescription')"
               :rows=4
               required
             />
@@ -84,32 +84,32 @@
 
         <!-- Vision Section -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Vision Section</h2>
-          
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.about.visionSection') }}</h2>
+
           <div class="space-y-6">
             <BaseInput
               v-model="formData.visionTitle[currentLanguage]"
               type="text"
-              :label="`Vision Title (${currentLanguage.toUpperCase()})`"
-              placeholder="Enter vision title..."
+              :label="`${t('manage.about.visionTitle')} (${currentLanguage.toUpperCase()})`"
+              :placeholder="t('manage.about.enterVisionTitle')"
               required
             />
 
             <BaseTextarea
               v-model="formData.visionText[currentLanguage]"
-              :label="`Vision Description (${currentLanguage.toUpperCase()})`"
-              placeholder="Enter vision description..."
+              :label="`${t('manage.about.visionDescription')} (${currentLanguage.toUpperCase()})`"
+              :placeholder="t('manage.about.enterVisionDescription')"
               :rows=4
               required
             />
-            
+
             <!-- Vision Background Image -->
             <div>
-              <label class="form-label">Vision Box Background Image</label>
-              <CmsImageUpload 
-                v-model="formData.missionImage" 
-                label="Vision Section Background (optional)"
-                help-text="Background image for the vision box only. Will overlay with dark background for text readability."
+              <label class="form-label">{{ t('manage.about.visionBoxBackground') }}</label>
+              <CmsImageUpload
+                v-model="formData.missionImage"
+                :label="t('manage.about.visionSectionBackground')"
+                :help-text="t('manage.about.visionImageHelp')"
               />
             </div>
           </div>
@@ -117,21 +117,21 @@
 
         <!-- Values Section -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Values Section</h2>
-          
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.about.valuesSection') }}</h2>
+
           <div class="space-y-6">
             <BaseInput
               v-model="formData.valuesTitle[currentLanguage]"
               type="text"
-              :label="`Values Title (${currentLanguage.toUpperCase()})`"
-              placeholder="Enter values title..."
+              :label="`${t('manage.about.valuesTitle')} (${currentLanguage.toUpperCase()})`"
+              :placeholder="t('manage.about.enterValuesTitle')"
               required
             />
 
             <BaseTextarea
               v-model="formData.valuesText[currentLanguage]"
-              :label="`Values Description (${currentLanguage.toUpperCase()})`"
-              placeholder="Enter values description..."
+              :label="`${t('manage.about.valuesDescription')} (${currentLanguage.toUpperCase()})`"
+              :placeholder="t('manage.about.enterValuesDescription')"
               :rows=4
               required
             />
@@ -140,21 +140,21 @@
 
         <!-- History Section -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">History Section</h2>
-          
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.about.historySection') }}</h2>
+
           <div class="space-y-6">
             <BaseInput
               v-model="formData.historyTitle[currentLanguage]"
               type="text"
-              :label="`History Title (${currentLanguage.toUpperCase()})`"
-              placeholder="Enter history title..."
+              :label="`${t('manage.about.historyTitle')} (${currentLanguage.toUpperCase()})`"
+              :placeholder="t('manage.about.enterHistoryTitle')"
               required
             />
 
             <BaseTextarea
               v-model="formData.historyText[currentLanguage]"
-              :label="`History Description (${currentLanguage.toUpperCase()})`"
-              placeholder="Enter history description..."
+              :label="`${t('manage.about.historyDescription')} (${currentLanguage.toUpperCase()})`"
+              :placeholder="t('manage.about.enterHistoryDescription')"
               :rows=4
               required
             />
@@ -163,41 +163,41 @@
 
         <!-- Statistics Section -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Statistics</h2>
-          
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.about.statistics') }}</h2>
+
           <div class="grid md:grid-cols-2 gap-6">
             <div class="space-y-4">
-              <h3 class="font-medium text-gray-700">Happy Clients</h3>
+              <h3 class="font-medium text-gray-700">{{ t('manage.about.happyClients') }}</h3>
               <BaseInput
                 v-model="formData.happyClientsCount[currentLanguage]"
                 type="text"
-                :label="`Count (${currentLanguage.toUpperCase()})`"
-                placeholder="Enter count..."
+                :label="`${t('manage.about.count')} (${currentLanguage.toUpperCase()})`"
+                :placeholder="t('manage.about.enterCount')"
                 required
               />
               <BaseInput
                 v-model="formData.happyClientsLabel[currentLanguage]"
                 type="text"
-                :label="`Label (${currentLanguage.toUpperCase()})`"
-                placeholder="Enter label..."
+                :label="`${t('manage.about.label')} (${currentLanguage.toUpperCase()})`"
+                :placeholder="t('manage.about.enterLabel')"
                 required
               />
             </div>
-            
+
             <div class="space-y-4">
-              <h3 class="font-medium text-gray-700">Experience</h3>
+              <h3 class="font-medium text-gray-700">{{ t('manage.about.experience') }}</h3>
               <BaseInput
                 v-model="formData.experienceCount[currentLanguage]"
                 type="text"
-                :label="`Count (${currentLanguage.toUpperCase()})`"
-                placeholder="Enter count..."
+                :label="`${t('manage.about.count')} (${currentLanguage.toUpperCase()})`"
+                :placeholder="t('manage.about.enterCount')"
                 required
               />
               <BaseInput
                 v-model="formData.experienceLabel[currentLanguage]"
                 type="text"
-                :label="`Label (${currentLanguage.toUpperCase()})`"
-                placeholder="Enter label..."
+                :label="`${t('manage.about.label')} (${currentLanguage.toUpperCase()})`"
+                :placeholder="t('manage.about.enterLabel')"
                 required
               />
             </div>
@@ -206,18 +206,18 @@
 
         <!-- Vision Items Section -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Vision Items</h2>
-          <p class="text-sm text-gray-600 mb-4">Bullet points displayed in the vision box</p>
-          
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.about.visionItems') }}</h2>
+          <p class="text-sm text-gray-600 mb-4">{{ t('manage.about.visionItemsDesc') }}</p>
+
           <div class="space-y-3">
             <div v-for="(_, index) in formData.visionItems" :key="index" class="flex gap-3">
               <BaseInput
                 v-model="formData.visionItems[index][currentLanguage]"
                 type="text"
-                :placeholder="`Vision item ${index + 1} (${currentLanguage.toUpperCase()})`"
+                :placeholder="`${t('manage.about.visionItem')} ${index + 1} (${currentLanguage.toUpperCase()})`"
                 class="flex-1"
               />
-              <button 
+              <button
                 @click="removeVisionItem(index)"
                 type="button"
                 class="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg"
@@ -228,26 +228,26 @@
                 </svg>
               </button>
             </div>
-            <button 
+            <button
               @click="addVisionItem"
               type="button"
               class="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-gray-400 hover:text-gray-600"
             >
-              + Add Vision Item
+              {{ t('manage.about.addVisionItem') }}
             </button>
           </div>
         </div>
 
         <!-- Values Section -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Values Items</h2>
-          <p class="text-sm text-gray-600 mb-4">Value cards with title, description, and icon</p>
-          
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.about.valuesItems') }}</h2>
+          <p class="text-sm text-gray-600 mb-4">{{ t('manage.about.valuesItemsDesc') }}</p>
+
           <div class="space-y-6">
             <div v-for="(_, index) in formData.valuesItems" :key="index" class="border border-gray-200 rounded-lg p-4">
               <div class="flex justify-between items-center mb-4">
-                <h3 class="font-medium text-gray-700">Value {{ index + 1 }} ({{ currentLanguage.toUpperCase() }})</h3>
-                <button 
+                <h3 class="font-medium text-gray-700">{{ t('manage.about.value') }} {{ index + 1 }} ({{ currentLanguage.toUpperCase() }})</h3>
+                <button
                   @click="removeValueItem(index)"
                   type="button"
                   class="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg"
@@ -258,56 +258,56 @@
                   </svg>
                 </button>
               </div>
-              
+
               <div class="space-y-4">
                 <BaseInput
                   v-model="formData.valuesItems[index].title[currentLanguage]"
                   type="text"
-                  :label="`Value Title (${currentLanguage.toUpperCase()})`"
-                  placeholder="Enter value title..."
+                  :label="`${t('manage.about.valueTitle')} (${currentLanguage.toUpperCase()})`"
+                  :placeholder="t('manage.about.enterValueTitle')"
                   required
                 />
 
                 <BaseTextarea
                   v-model="formData.valuesItems[index].description[currentLanguage]"
-                  :label="`Description (${currentLanguage.toUpperCase()})`"
-                  placeholder="Enter description..."
+                  :label="`${t('manage.about.description')} (${currentLanguage.toUpperCase()})`"
+                  :placeholder="t('manage.about.enterDescription')"
                   :rows=3
                   required
                 />
-                
+
                 <div>
-                  <label class="form-label">Icon Type</label>
+                  <label class="form-label">{{ t('manage.about.iconType') }}</label>
                   <select v-model="formData.valuesItems[index].icon" class="form-input">
-                    <option value="excellence">Excellence (checkmark)</option>
-                    <option value="transparency">Transparency (eye)</option>
-                    <option value="innovation">Innovation (lightning)</option>
-                    <option value="default">Default (checkmark)</option>
+                    <option value="excellence">{{ t('manage.about.excellenceIcon') }}</option>
+                    <option value="transparency">{{ t('manage.about.transparencyIcon') }}</option>
+                    <option value="innovation">{{ t('manage.about.innovationIcon') }}</option>
+                    <option value="default">{{ t('manage.about.defaultIcon') }}</option>
                   </select>
                 </div>
               </div>
             </div>
-            
-            <button 
+
+            <button
               @click="addValueItem"
               type="button"
               class="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-gray-400 hover:text-gray-600"
             >
-              + Add Value Item
+              {{ t('manage.about.addValueItem') }}
             </button>
           </div>
         </div>
 
         <!-- Journey Timeline Section -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Journey Timeline</h2>
-          <p class="text-sm text-gray-600 mb-4">Timeline items showing company history</p>
-          
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.about.journeyTimeline') }}</h2>
+          <p class="text-sm text-gray-600 mb-4">{{ t('manage.about.journeyTimelineDesc') }}</p>
+
           <div class="space-y-6">
             <div v-for="(_, index) in formData.journeyItems" :key="index" class="border border-gray-200 rounded-lg p-4">
               <div class="flex justify-between items-center mb-4">
-                <h3 class="font-medium text-gray-700">Timeline Item {{ index + 1 }} ({{ currentLanguage.toUpperCase() }})</h3>
-                <button 
+                <h3 class="font-medium text-gray-700">{{ t('manage.about.timelineItem') }} {{ index + 1 }} ({{ currentLanguage.toUpperCase() }})</h3>
+                <button
                   @click="removeJourneyItem(index)"
                   type="button"
                   class="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg"
@@ -318,13 +318,13 @@
                   </svg>
                 </button>
               </div>
-              
+
               <div class="grid md:grid-cols-3 gap-4">
                 <BaseInput
                   v-model="formData.journeyItems[index].year"
                   type="text"
-                  label="Year"
-                  placeholder="Enter year..."
+                  :label="t('manage.about.year')"
+                  :placeholder="t('manage.about.enterYear')"
                   required
                 />
 
@@ -332,8 +332,8 @@
                   <BaseInput
                     v-model="formData.journeyItems[index].title[currentLanguage]"
                     type="text"
-                    :label="`Title (${currentLanguage.toUpperCase()})`"
-                    placeholder="Enter title..."
+                    :label="`${t('manage.about.title')} (${currentLanguage.toUpperCase()})`"
+                    :placeholder="t('manage.about.enterTitle')"
                     required
                   />
                 </div>
@@ -342,20 +342,20 @@
               <div class="mt-4">
                 <BaseTextarea
                   v-model="formData.journeyItems[index].description[currentLanguage]"
-                  :label="`Description (${currentLanguage.toUpperCase()})`"
-                  placeholder="Enter description..."
+                  :label="`${t('manage.about.description')} (${currentLanguage.toUpperCase()})`"
+                  :placeholder="t('manage.about.enterDescription')"
                   :rows=3
                   required
                 />
               </div>
             </div>
-            
-            <button 
+
+            <button
               @click="addJourneyItem"
               type="button"
               class="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-gray-400 hover:text-gray-600"
             >
-              + Add Timeline Item
+              {{ t('manage.about.addTimelineItem') }}
             </button>
           </div>
         </div>
@@ -363,14 +363,14 @@
         <!-- Save Button -->
         <div class="flex justify-end space-x-4">
           <NuxtLink to="/manage">
-            <BaseButton variant="secondary">Cancel</BaseButton>
+            <BaseButton variant="secondary">{{ t('manage.common.cancel') }}</BaseButton>
           </NuxtLink>
           <BaseButton
             type="submit"
             variant="primary"
             :disabled="saving"
           >
-            {{ saving ? 'Saving...' : 'Save Changes' }}
+            {{ saving ? t('manage.common.saving') : t('manage.common.saveChanges') }}
           </BaseButton>
         </div>
       </form>
@@ -398,6 +398,7 @@
 </template>
 
 <script setup>
+const { t } = useI18n()
 
 definePageMeta({
   middleware: 'auth',
@@ -488,7 +489,7 @@ const loadContent = async () => {
   try {
     await cmsStore.fetchAboutContent()
     const response = cmsStore.aboutContent
-    console.log('Loaded about content:', response)
+    // console.log('Loaded about content:', response)
 
     if (response) {
       // The API already transforms JSON strings to objects, so use them directly
@@ -548,7 +549,7 @@ const loadContent = async () => {
       ]
     }
   } catch (error) {
-    errorMessage.value = 'Failed to load content'
+    errorMessage.value = t('manage.about.failedToLoad')
     console.error('Failed to load content:', error)
   } finally {
     loading.value = false
@@ -588,9 +589,9 @@ const handleSubmit = async () => {
 
     await cmsStore.updateAboutContent({ body: submitData })
 
-    successMessage.value = 'About page content updated successfully!'
+    successMessage.value = t('manage.about.updateSuccess')
   } catch (error) {
-    errorMessage.value = 'Failed to update content. Please try again.'
+    errorMessage.value = t('manage.about.updateError')
     console.error('Failed to update content:', error)
   } finally {
     saving.value = false

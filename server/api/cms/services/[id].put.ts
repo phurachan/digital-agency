@@ -61,6 +61,7 @@ export default defineEventHandler(async (event) => {
       id: result._id.toString(),
       title: result.title,
       description: result.description,
+      category: result.category,
       features: result.features,
       price: result.price,
       isActive: result.isActive,

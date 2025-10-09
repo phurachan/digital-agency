@@ -98,16 +98,18 @@
         <h2 class="section-title-center">{{ t('index.whatWeDo') }}</h2>
 
         <div class="service-tags">
-          <div class="service-tag">{{ t('index.branding') }}</div>
-          <div class="service-tag">{{ t('index.campaign') }}</div>
-          <div class="service-tag">{{ t('index.socialContent') }}</div>
-          <div class="service-tag">{{ t('index.website') }}</div>
-          <div class="service-tag">{{ t('index.kolMedia') }}</div>
-          <div class="service-tag">{{ t('index.event') }}</div>
+          <NuxtLink
+            v-for="(category, index) in serviceCategories"
+            :key="index"
+            :to="$localePath(`/services?category=${encodeURIComponent(category.value)}`)"
+            class="service-tag"
+          >
+            {{ category.label }}
+          </NuxtLink>
         </div>
 
         <div class="cta-center">
-          <a href="/services" class="btn-primary">{{ t('index.seeOurServices') }}</a>
+          <NuxtLink :to="$localePath('/services')" class="btn-primary">{{ t('index.seeOurServices') }}</NuxtLink>
         </div>
       </div>
     </section>
@@ -378,6 +380,40 @@ const whatWeDoItems = computed(() => {
         link: member.link
       }
     })
+})
+
+// Get distinct categories for services section
+const serviceCategories = computed(() => {
+  const allServices = cmsStore.services || []
+  const categoriesMap = new Map() // Use Map to store unique categories with their localized values
+
+  allServices
+    .filter(service => service.isActive && service.category)
+    .forEach(service => {
+      try {
+        const categoryObj = typeof service.category === 'string'
+          ? JSON.parse(service.category)
+          : service.category
+
+        const categoryId = (categoryObj.en || categoryObj.th || '').toLowerCase()
+        if (categoryId && !categoriesMap.has(categoryId)) {
+          categoriesMap.set(categoryId, categoryObj)
+        }
+      } catch (e) {
+        // If parsing fails, treat as plain string
+        const categoryId = service.category.toLowerCase()
+        if (!categoriesMap.has(categoryId)) {
+          categoriesMap.set(categoryId, { en: service.category, th: service.category })
+        }
+      }
+    })
+
+  return Array.from(categoriesMap.values()).map(cat => {
+    return {
+      label: cat[locale.value] || cat.en || cat.th || '', // แสดงตามภาษาปัจจุบัน
+      value: cat.en || cat.th || '' // ใช้ EN เสมอใน URL
+    }
+  }).filter(item => item.label && item.value)
 })
 
 // Site colors
@@ -938,6 +974,8 @@ section {
   color: #2d3748;
   cursor: pointer;
   transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
 }
 
 .service-tag:hover {

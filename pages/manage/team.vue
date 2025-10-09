@@ -3,14 +3,14 @@
 
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Page Header -->
-      <BasePageHeader title="Manage Insights" code="INSIGHTS-001"
-        description="Add and manage insights members displayed on your website" :breadcrumbs="[
-          { label: 'Dashboard', to: '/manage', icon: 'home' },
-          { label: 'Insights Members', icon: 'user-group' }
+      <BasePageHeader :title="t('manage.team.title')" code="INSIGHTS-001"
+        :description="t('manage.team.description')" :breadcrumbs="[
+          { label: t('manage.common.dashboard'), to: '/manage', icon: 'home' },
+          { label: t('manage.team.title'), icon: 'user-group' }
         ]">
         <template v-slot:actions>
           <BaseButton @click="openAddModal" variant="primary" class="mt-4">
-            Add Insights
+            {{ t('manage.team.addInsights') }}
           </BaseButton>
         </template>
       </BasePageHeader>
@@ -42,11 +42,11 @@
                 <div class="flex items-center space-x-3 mb-2">
                   <h3 class="text-xl font-bold text-gray-900">{{ member.name }}</h3>
                   <span v-if="!member.isActive"
-                    class="px-2 py-1 bg-gray-200 text-gray-600 text-xs rounded-full">Inactive</span>
+                    class="px-2 py-1 bg-gray-200 text-gray-600 text-xs rounded-full">{{ t('manage.team.inactive') }}</span>
                   <span v-if="member.isDisplayInHome"
                     class="px-2 py-1 bg-green-100 text-green-600 text-xs rounded-full">🏠
-                    Home</span>
-                  <span v-else class="px-2 py-1 bg-yellow-100 text-yellow-600 text-xs rounded-full">📋 List Only</span>
+                    {{ t('manage.team.home') }}</span>
+                  <span v-else class="px-2 py-1 bg-yellow-100 text-yellow-600 text-xs rounded-full">📋 {{ t('manage.team.listOnly') }}</span>
                 </div>
 
                 <p class="text-blue-600 font-medium mb-2">{{ member.position }}</p>
@@ -78,9 +78,9 @@
                 </div>
 
                 <div class="flex items-center space-x-4 text-sm text-gray-500">
-                  <span>Order: {{ member.order || '-' }}</span>
+                  <span>{{ t('manage.team.order') }}: {{ member.order || '-' }}</span>
                   <span>•</span>
-                  <span>Updated: {{ formatDate(member.updatedAt) }}</span>
+                  <span>{{ t('manage.team.updated') }}: {{ formatDate(member.updatedAt) }}</span>
                 </div>
               </div>
             </div>
@@ -96,7 +96,7 @@
 
               <button @click="toggleHomeDisplay(member)"
                 :class="member.isDisplayInHome ? 'text-green-600 hover:bg-green-50' : 'text-gray-600 hover:bg-gray-50'"
-                class="p-2 rounded-lg" :title="member.isDisplayInHome ? 'Remove from Home Page' : 'Add to Home Page'">
+                class="p-2 rounded-lg" :title="member.isDisplayInHome ? t('manage.team.removeFromHome') : t('manage.team.addToHome')">
                 <svg v-if="member.isDisplayInHome" class="w-5 h-5" fill="none" stroke="currentColor"
                   viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -127,10 +127,10 @@
               d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
             </path>
           </svg>
-          <h3 class="mt-2 text-sm font-medium text-gray-900">No insights added</h3>
-          <p class="mt-1 text-sm text-gray-500">Get started by adding your first insights.</p>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">{{ t('manage.team.noInsights') }}</h3>
+          <p class="mt-1 text-sm text-gray-500">{{ t('manage.team.getStarted') }}</p>
           <BaseButton @click="openAddModal" variant="primary" class="mt-4">
-            Add Insights
+            {{ t('manage.team.addInsights') }}
           </BaseButton>
         </div>
       </div>
@@ -142,7 +142,7 @@
         <div class="p-6">
           <div class="flex justify-between items-center mb-6">
             <h2 class="text-xl font-bold text-gray-900">
-              {{ editingMember ? 'Edit Insights' : 'Add New Insights' }}
+              {{ editingMember ? t('manage.team.editInsights') : t('manage.team.addNewInsights') }}
             </h2>
             <button @click="closeModal" class="text-gray-400 hover:text-gray-600">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -152,39 +152,39 @@
           </div>
 
           <form @submit.prevent="saveMember" class="space-y-6">
-            <BaseInput v-model="memberForm.name" type="text" label="Title" required />
+            <BaseInput v-model="memberForm.name" type="text" :label="t('manage.team.title')" required />
 
-            <BaseInput v-model="memberForm.position" type="text" label="Category" required />
+            <BaseInput v-model="memberForm.position" type="text" :label="t('manage.team.category')" required />
 
-            <BaseTextarea v-model="memberForm.description" label="Description" :rows=3 required />
+            <BaseTextarea v-model="memberForm.description" :label="t('manage.team.description')" :rows=3 required />
 
-            <BaseFileUpload v-model="memberForm.image" label="Profile Image" accept="image/*"
-              :max-size="5 * 1024 * 1024" help-text="Upload a profile image (max 5MB)"
+            <BaseFileUpload v-model="memberForm.image" :label="t('manage.team.profileImage')" accept="image/*"
+              :max-size="5 * 1024 * 1024" :help-text="t('manage.team.profileImageHelp')"
               upload-endpoint="/api/upload/image" />
 
-            <BaseInput v-model="memberForm.link" type="url" label="Click Link URL"
-              help-text="URL to redirect when this item is clicked (optional)" />
+            <BaseInput v-model="memberForm.link" type="url" :label="t('manage.team.clickLinkURL')"
+              :help-text="t('manage.team.clickLinkHelp')" />
 
-            <BaseInput v-model="memberForm.email" type="email" label="Email Address" />
+            <BaseInput v-model="memberForm.email" type="email" :label="t('manage.team.emailAddress')" />
 
-            <BaseInput v-model="memberForm.linkedin" type="url" label="LinkedIn URL" />
+            <BaseInput v-model="memberForm.linkedin" type="url" :label="t('manage.team.linkedInURL')" />
 
-            <BaseInput v-model="memberForm.twitter" type="url" label="Twitter URL" />
+            <BaseInput v-model="memberForm.twitter" type="url" :label="t('manage.team.twitterURL')" />
 
             <div class="grid grid-cols-3 gap-4">
-              <BaseInput v-model.number="memberForm.order" type="number" label="Display Order" min="0" />
+              <BaseInput v-model.number="memberForm.order" type="number" :label="t('manage.team.displayOrder')" min="0" />
 
-              <BaseCheckbox v-model="memberForm.isActive" label="Active" />
+              <BaseCheckbox v-model="memberForm.isActive" :label="t('manage.team.active')" />
 
-              <BaseCheckbox v-model="memberForm.isDisplayInHome" label="Display in Home" />
+              <BaseCheckbox v-model="memberForm.isDisplayInHome" :label="t('manage.team.displayInHome')" />
             </div>
 
             <div class="flex justify-end space-x-4 pt-4 border-t">
               <BaseButton @click="closeModal" type="button" variant="secondary">
-                Cancel
+                {{ t('manage.common.cancel') }}
               </BaseButton>
               <BaseButton type="submit" :disabled="saving" variant="primary">
-                {{ saving ? 'Saving...' : 'Save Insights' }}
+                {{ saving ? t('manage.team.saving') : t('manage.team.saveInsights') }}
               </BaseButton>
             </div>
           </form>
@@ -218,7 +218,7 @@
 
 <script setup>
 const { createLocalizedContent, parseJsonField } = useMultiLanguage()
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 
 definePageMeta({
   middleware: 'auth',
@@ -280,7 +280,7 @@ const loadTeamMembers = async () => {
     await cmsStore.fetchTeamMembers()
   } catch (error) {
     console.error('Failed to load insights items:', error)
-    errorMessage.value = 'Failed to load insights items'
+    errorMessage.value = t('manage.team.failedToLoad')
   }
 }
 
@@ -357,16 +357,16 @@ const saveMember = async () => {
           id: editingMember.value.id
         }
       })
-      successMessage.value = 'Insights updated successfully!'
+      successMessage.value = t('manage.team.insightsUpdated')
     } else {
       await cmsStore.createTeamMember({ body: memberData })
-      successMessage.value = 'Insights created successfully!'
+      successMessage.value = t('manage.team.insightsCreated')
     }
 
     closeModal()
     await loadTeamMembers()
   } catch (error) {
-    errorMessage.value = 'Failed to save insights item'
+    errorMessage.value = t('manage.team.failedToSave')
   } finally {
     saving.value = false
   }
@@ -383,22 +383,22 @@ const toggleHomeDisplay = async (member) => {
       }
     })
 
-    successMessage.value = `Insights ${member.isDisplayInHome ? 'removed from' : 'added to'} home page successfully!`
+    successMessage.value = member.isDisplayInHome ? t('manage.team.removedFromHome') : t('manage.team.addedToHome')
     await loadTeamMembers()
   } catch (error) {
-    errorMessage.value = 'Failed to update home display status'
+    errorMessage.value = t('manage.team.failedToUpdate')
   }
 }
 
 const deleteMember = async (member) => {
-  if (confirm(`Are you sure you want to delete "${member.name}"?`)) {
+  if (confirm(t('manage.team.confirmDelete', { name: member.name }))) {
     try {
       await cmsStore.deleteTeamMember({ body: { id: member.id } })
 
-      successMessage.value = 'Insights deleted successfully!'
+      successMessage.value = t('manage.team.insightsDeleted')
       await loadTeamMembers()
     } catch (error) {
-      errorMessage.value = 'Failed to delete insights item'
+      errorMessage.value = t('manage.team.failedToDelete')
     }
   }
 }

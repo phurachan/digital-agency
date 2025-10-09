@@ -27,6 +27,14 @@ export default defineEventHandler(async (event) => {
         description = { th: service.description || '', en: service.description || '' }
       }
 
+      // Safely parse category
+      let category
+      try {
+        category = service.category ? (typeof service.category === 'string' ? JSON.parse(service.category) : service.category) : { th: '', en: '' }
+      } catch (e) {
+        category = { th: service.category || '', en: service.category || '' }
+      }
+
       // Safely parse features
       let features
       try {
@@ -39,6 +47,7 @@ export default defineEventHandler(async (event) => {
         id: service._id.toString(),
         title: title || { th: '', en: '' },
         description: description || { th: '', en: '' },
+        category: category || { th: '', en: '' },
         features: features || [],
         price: service.price,
         isActive: service.isActive,

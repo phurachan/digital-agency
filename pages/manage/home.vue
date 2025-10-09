@@ -4,12 +4,12 @@
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Page Header -->
       <BasePageHeader
-        title="Home Page Content"
+        :title="t('manage.home.title')"
         code="HOME-001"
-        description="Manage homepage hero section, features, and about preview content"
+        :description="t('manage.home.description')"
         :breadcrumbs="[
-          { label: 'Dashboard', to: '/manage', icon: 'home' },
-          { label: 'Home Content', icon: 'home' }
+          { label: t('manage.common.dashboard'), to: '/manage', icon: 'home' },
+          { label: t('nav.home'), icon: 'home' }
         ]"
       />
 
@@ -21,28 +21,28 @@
       <!-- Language Switcher -->
       <div v-else class="card p-4 mb-8">
         <div class="flex items-center justify-between">
-          <h3 class="text-lg font-medium text-gray-900">Content Language</h3>
+          <h3 class="text-lg font-medium text-gray-900">{{ t('manage.common.contentLanguage') }}</h3>
           <div class="flex items-center bg-gray-100 rounded-lg p-1">
-            <button 
+            <button
               @click="currentLanguage = 'en'"
               type="button"
               :class="currentLanguage === 'en' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'"
               class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
             >
-              🇺🇸 English
+              🇺🇸 {{ t('manage.common.english') }}
             </button>
-            <button 
+            <button
               @click="currentLanguage = 'th'"
               type="button"
               :class="currentLanguage === 'th' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'"
               class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
             >
-              🇹🇭 ไทย
+              🇹🇭 {{ t('manage.common.thai') }}
             </button>
           </div>
         </div>
         <p class="text-sm text-gray-500 mt-2">
-          Switch between languages to edit content. {{ currentLanguage === 'en' ? 'Editing English content' : 'กำลังแก้ไขเนื้อหาภาษาไทย' }}
+          {{ t('manage.home.switchLanguages') }} {{ currentLanguage === 'en' ? t('manage.home.editingEnglish') : t('manage.home.editingThai') }}
         </p>
       </div>
 
@@ -50,20 +50,20 @@
       <form v-if="!loading" @submit.prevent="handleSubmit" class="space-y-8">
         <!-- Hero Section -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Hero Section</h2>
-          
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.home.heroSection') }}</h2>
+
           <div class="space-y-6">
             <BaseInput
               v-model="formData.heroTitle[currentLanguage]"
               type="text"
-              :label="`Hero Title (${currentLanguage.toUpperCase()})`"
+              :label="`${t('manage.home.heroTitle')} (${currentLanguage.toUpperCase()})`"
               placeholder="Enter hero title..."
               required
             />
 
             <BaseTextarea
               v-model="formData.heroSubtitle[currentLanguage]"
-              :label="`Hero Subtitle (${currentLanguage.toUpperCase()})`"
+              :label="`${t('manage.home.heroSubtitle')} (${currentLanguage.toUpperCase()})`"
               placeholder="Enter hero subtitle..."
               :rows=3
               required
@@ -71,73 +71,66 @@
 
             <BaseSelect
               v-model="formData.heroDisplayMode"
-              label="Hero Display Mode"
+              :label="t('manage.home.heroDisplayMode')"
               :options="[
-                { value: 'gradient', label: 'Gradient Background' },
-                { value: 'image', label: 'Image Background (with text overlay)' },
-                { value: 'cover', label: 'Cover Image Only (no text)' },
-                { value: 'video', label: 'Video Background (Coming Soon)', disabled: true },
-                { value: 'minimal', label: 'Minimal (White Background)' }
+                { value: 'gradient', label: t('manage.home.gradientBackground') },
+                { value: 'image', label: t('manage.home.imageBackground') },
+                { value: 'cover', label: t('manage.home.coverImageOnly') },
+                { value: 'video', label: t('manage.home.videoBackground'), disabled: true },
+                { value: 'minimal', label: t('manage.home.minimalWhite') }
               ]"
-              help-text="Choose how the hero section should be displayed"
+              :help-text="t('manage.home.heroDisplayModeHelp')"
             />
 
             <CmsImageUpload
               v-if="formData.heroDisplayMode === 'image' || formData.heroDisplayMode === 'cover'"
               v-model="formData.heroImage"
-              label="Hero Background Image"
+              :label="t('manage.home.heroBackgroundImage')"
             />
-            <p class="text-sm text-gray-500 mt-2">
-              <strong>📐 Recommended:</strong> 1920×1080px (16:9 ratio) or larger<br>
-              <strong>📏 Min size:</strong> 1200×800px for best quality<br>
-              <strong>💾 Max file size:</strong> 5MB | <strong>📁 Formats:</strong> JPG, PNG, WebP<br>
-              <strong>💡 Tip:</strong> Use landscape images for best results. A dark overlay will be applied for text readability.
+            <p class="text-sm text-gray-500 mt-2" v-html="t('manage.home.imageSizeRecommendation') + '<br>' + t('manage.home.imageMinSize') + '<br>' + t('manage.home.imageMaxSize') + '<br>' + t('manage.home.imageTip')">
             </p>
           </div>
         </div>
 
         <!-- Feature Highlight Section -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Feature Highlight</h2>
-          
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.home.featureHighlight') }}</h2>
+
           <div class="space-y-6">
             <BaseInput
               v-model="formData.featureTitle[currentLanguage]"
               type="text"
-              :label="`Feature Title (${currentLanguage.toUpperCase()})`"
+              :label="`${t('manage.home.featureTitle')} (${currentLanguage.toUpperCase()})`"
               placeholder="Enter feature title..."
               required
             />
 
             <BaseTextarea
               v-model="formData.featureDescription[currentLanguage]"
-              :label="`Feature Description (${currentLanguage.toUpperCase()})`"
+              :label="`${t('manage.home.featureDescription')} (${currentLanguage.toUpperCase()})`"
               placeholder="Enter feature description..."
               :rows=3
               required
             />
 
-            <CmsImageUpload 
-              v-model="formData.featureImage" 
-              label="Feature Image (optional)"
+            <CmsImageUpload
+              v-model="formData.featureImage"
+              :label="t('manage.home.featureImage')"
             />
-            <p class="text-sm text-gray-500 mt-2">
-              <strong>📐 Recommended:</strong> 512×512px (1:1 square ratio)<br>
-              <strong>📏 Min size:</strong> 256×256px | <strong>💾 Max:</strong> 5MB<br>
-              <strong>💡 Tip:</strong> Square images work best for the feature highlight box.
+            <p class="text-sm text-gray-500 mt-2" v-html="t('manage.home.squareImageRecommendation') + '<br>' + t('manage.home.squareImageMinSize') + '<br>' + t('manage.home.squareImageTip')">
             </p>
           </div>
         </div>
 
         <!-- Call to Action Section -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Call to Action</h2>
-          
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.home.callToAction') }}</h2>
+
           <div class="space-y-6">
             <BaseInput
               v-model="formData.ctaText[currentLanguage]"
               type="text"
-              :label="`CTA Title (${currentLanguage.toUpperCase()})`"
+              :label="`${t('manage.home.ctaTitle')} (${currentLanguage.toUpperCase()})`"
               placeholder="Enter CTA title..."
               required
             />
@@ -145,7 +138,7 @@
             <BaseInput
               v-model="formData.ctaButtonText[currentLanguage]"
               type="text"
-              :label="`CTA Button Text (${currentLanguage.toUpperCase()})`"
+              :label="`${t('manage.home.ctaButtonText')} (${currentLanguage.toUpperCase()})`"
               placeholder="Enter button text..."
               required
             />
@@ -154,53 +147,50 @@
 
         <!-- About Preview Section -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">About Preview</h2>
-          
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.home.aboutPreview') }}</h2>
+
           <div class="space-y-6">
             <BaseInput
               v-model="formData.aboutTitle[currentLanguage]"
               type="text"
-              :label="`About Section Title (${currentLanguage.toUpperCase()})`"
+              :label="`${t('manage.home.aboutSectionTitle')} (${currentLanguage.toUpperCase()})`"
               placeholder="Enter about title..."
               required
             />
 
             <BaseTextarea
               v-model="formData.aboutDescription[currentLanguage]"
-              :label="`About Description (${currentLanguage.toUpperCase()})`"
+              :label="`${t('manage.home.aboutDescription')} (${currentLanguage.toUpperCase()})`"
               placeholder="Enter about description..."
               :rows=4
               required
             />
 
-            <CmsImageUpload 
-              v-model="formData.aboutImage" 
-              label="About Section Image (optional)"
+            <CmsImageUpload
+              v-model="formData.aboutImage"
+              :label="t('manage.home.aboutSectionImage')"
             />
-            <p class="text-sm text-gray-500 mt-2">
-              <strong>📐 Recommended:</strong> 800×600px (4:3 ratio)<br>
-              <strong>📏 Min size:</strong> 400×300px | <strong>💾 Max:</strong> 5MB<br>
-              <strong>💡 Note:</strong> Currently not displayed on site - available for future use.
+            <p class="text-sm text-gray-500 mt-2" v-html="t('manage.home.aboutImageRecommendation') + '<br>' + t('manage.home.aboutImageMinSize') + '<br>' + t('manage.home.aboutImageNote')">
             </p>
           </div>
         </div>
 
         <!-- Insights Section -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Insights Section</h2>
-          
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.home.insightsSection') }}</h2>
+
           <div class="space-y-6">
             <BaseInput
               v-model="formData.peopleTitle[currentLanguage]"
               type="text"
-              :label="`Insights Section Title (${currentLanguage.toUpperCase()})`"
+              :label="`${t('manage.home.insightsSectionTitle')} (${currentLanguage.toUpperCase()})`"
               placeholder="Enter insights section title..."
               required
             />
 
             <BaseTextarea
               v-model="formData.peopleDescription[currentLanguage]"
-              :label="`Insights Section Description (${currentLanguage.toUpperCase()})`"
+              :label="`${t('manage.home.insightsSectionDescription')} (${currentLanguage.toUpperCase()})`"
               placeholder="Enter insights section description..."
               :rows=3
               required
@@ -211,14 +201,14 @@
         <!-- Save Button -->
         <div class="flex justify-end space-x-4">
           <NuxtLink to="/manage">
-            <BaseButton variant="secondary">Cancel</BaseButton>
+            <BaseButton variant="secondary">{{ t('manage.common.cancel') }}</BaseButton>
           </NuxtLink>
           <BaseButton
             type="submit"
             variant="primary"
             :disabled="saving"
           >
-            {{ saving ? 'Saving...' : 'Save Changes' }}
+            {{ saving ? t('manage.common.saving') : t('manage.common.saveChanges') }}
           </BaseButton>
         </div>
       </form>
@@ -251,6 +241,8 @@ definePageMeta({
   middleware: 'auth',
   layout: 'default'
 })
+
+const { t } = useI18n()
 
 const cmsStore = useCMSStore()
 await cmsStore.fetchSiteSettings()
@@ -325,7 +317,7 @@ const loadContent = async () => {
       formData.aboutImage = response.aboutImage || ''
     }
   } catch (error) {
-    errorMessage.value = 'Failed to load content'
+    errorMessage.value = t('manage.home.failedToLoad')
     console.error('Failed to load content:', error)
   } finally {
     loading.value = false
@@ -360,9 +352,9 @@ const handleSubmit = async () => {
 
     await cmsStore.updateHomeContent({ body: submitData })
 
-    successMessage.value = 'Home page content updated successfully!'
+    successMessage.value = t('manage.home.updated')
   } catch (error) {
-    errorMessage.value = 'Failed to update content. Please try again.'
+    errorMessage.value = t('manage.home.failedToUpdate')
     console.error('Failed to update content:', error)
   } finally {
     saving.value = false

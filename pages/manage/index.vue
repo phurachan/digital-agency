@@ -4,11 +4,11 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Page Header -->
       <BasePageHeader
-        title="Content Management System"
+        :title="t('manage.dashboard.title')"
         code="CMS-001"
-        description="Manage your website content, images, and settings"
+        :description="t('manage.dashboard.description')"
         :breadcrumbs="[
-          { label: 'Dashboard', icon: 'home' }
+          { label: t('manage.common.dashboard'), icon: 'home' }
         ]"
       />
 
@@ -23,7 +23,7 @@
               </svg>
             </div>
             <div class="ml-4">
-              <p class="text-sm text-gray-600">Total Pages</p>
+              <p class="text-sm text-gray-600">{{ t('manage.dashboard.totalPages') }}</p>
               <p class="text-2xl font-bold text-gray-900">4</p>
             </div>
           </div>
@@ -39,7 +39,7 @@
               </svg>
             </div>
             <div class="ml-4">
-              <p class="text-sm text-gray-600">Services</p>
+              <p class="text-sm text-gray-600">{{ t('nav.services') }}</p>
               <p class="text-2xl font-bold text-gray-900">{{ stats.services }}</p>
             </div>
           </div>
@@ -55,7 +55,7 @@
               </svg>
             </div>
             <div class="ml-4">
-              <p class="text-sm text-gray-600">Insights</p>
+              <p class="text-sm text-gray-600">{{ t('nav.team') }}</p>
               <p class="text-2xl font-bold text-gray-900">{{ stats.teamMembers }}</p>
             </div>
           </div>
@@ -71,7 +71,7 @@
               </svg>
             </div>
             <div class="ml-4">
-              <p class="text-sm text-gray-600">FAQs</p>
+              <p class="text-sm text-gray-600">{{ t('manage.index.faqs') }}</p>
               <p class="text-2xl font-bold text-gray-900">{{ stats.faqs }}</p>
             </div>
           </div>
@@ -90,12 +90,12 @@
                 </path>
               </svg>
             </div>
-            <h3 class="text-lg font-semibold text-gray-900">Home Page</h3>
+            <h3 class="text-lg font-semibold text-gray-900">{{ t('manage.index.homePage') }}</h3>
           </div>
-          <p class="text-gray-600 mb-4">Manage hero section, about preview, and call-to-action content</p>
+          <p class="text-gray-600 mb-4">{{ t('manage.index.homePageDescription') }}</p>
           <NuxtLink to="/manage/home">
             <BaseButton variant="primary">
-              Edit Content
+              {{ t('manage.index.editContent') }}
             </BaseButton>
           </NuxtLink>
         </div>
@@ -110,18 +110,18 @@
                 </path>
               </svg>
             </div>
-            <h3 class="text-lg font-semibold text-gray-900">Services</h3>
+            <h3 class="text-lg font-semibold text-gray-900">{{ t('manage.index.services') }}</h3>
           </div>
-          <p class="text-gray-600 mb-4">Add, edit, and organize your service offerings and descriptions</p>
+          <p class="text-gray-600 mb-4">{{ t('manage.index.servicesDescription') }}</p>
           <div class="flex gap-2">
             <NuxtLink to="/manage/services-content">
               <BaseButton variant="primary">
-                Edit Content
+                {{ t('manage.index.editContent') }}
               </BaseButton>
             </NuxtLink>
             <NuxtLink to="/manage/services">
               <BaseButton variant="primary">
-                Manage Services
+                {{ t('manage.index.manageServices') }}
               </BaseButton>
             </NuxtLink>
           </div>
@@ -136,12 +136,12 @@
                   d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
             </div>
-            <h3 class="text-lg font-semibold text-gray-900">About Page</h3>
+            <h3 class="text-lg font-semibold text-gray-900">{{ t('manage.index.aboutPage') }}</h3>
           </div>
-          <p class="text-gray-600 mb-4">Update company mission, values, and insights information</p>
+          <p class="text-gray-600 mb-4">{{ t('manage.index.aboutPageDescription') }}</p>
           <NuxtLink to="/manage/about">
             <BaseButton variant="primary">
-              Edit Content
+              {{ t('manage.index.editContent') }}
             </BaseButton>
           </NuxtLink>
         </div>
@@ -156,19 +156,18 @@
                 </path>
               </svg>
             </div>
-            <h3 class="text-lg font-semibold text-gray-900">Insights</h3>
+            <h3 class="text-lg font-semibold text-gray-900">{{ t('manage.index.insights') }}</h3>
           </div>
-          <p class="text-gray-600 mb-4">Manage insights profiles, photos, and descriptions - perfect for insights members,
-            customers, or partners</p>
+          <p class="text-gray-600 mb-4">{{ t('manage.index.insightsDescription') }}</p>
           <div class="flex gap-2">
             <NuxtLink to="/manage/team-content">
               <BaseButton variant="primary">
-                Edit Content
+                {{ t('manage.index.editContent') }}
               </BaseButton>
             </NuxtLink>
             <NuxtLink to="/manage/team">
               <BaseButton variant="primary">
-                Manage Insights
+                {{ t('manage.index.manageInsights') }}
               </BaseButton>
             </NuxtLink>
           </div>
@@ -184,12 +183,12 @@
                 </path>
               </svg>
             </div>
-            <h3 class="text-lg font-semibold text-gray-900">Contact Page</h3>
+            <h3 class="text-lg font-semibold text-gray-900">{{ t('manage.index.contactPage') }}</h3>
           </div>
-          <p class="text-gray-600 mb-4">Update contact information, business hours, and location details</p>
+          <p class="text-gray-600 mb-4">{{ t('manage.index.contactPageDescription') }}</p>
           <NuxtLink to="/manage/contact">
             <BaseButton variant="primary">
-              Edit Contact
+              {{ t('manage.index.editContact') }}
             </BaseButton>
           </NuxtLink>
         </div>
@@ -204,12 +203,12 @@
                 </path>
               </svg>
             </div>
-            <h3 class="text-lg font-semibold text-gray-900">FAQs</h3>
+            <h3 class="text-lg font-semibold text-gray-900">{{ t('manage.index.faqs') }}</h3>
           </div>
-          <p class="text-gray-600 mb-4">Manage frequently asked questions displayed on contact page</p>
+          <p class="text-gray-600 mb-4">{{ t('manage.index.faqsDescription') }}</p>
           <NuxtLink to="/manage/faqs">
             <BaseButton variant="primary">
-              Manage FAQs
+              {{ t('manage.index.manageFAQs') }}
             </BaseButton>
           </NuxtLink>
         </div>
@@ -226,12 +225,12 @@
                   d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
               </svg>
             </div>
-            <h3 class="text-lg font-semibold text-gray-900">Site Settings</h3>
+            <h3 class="text-lg font-semibold text-gray-900">{{ t('manage.index.siteSettings') }}</h3>
           </div>
-          <p class="text-gray-600 mb-4">Configure site name, logo, colors, and social media links</p>
+          <p class="text-gray-600 mb-4">{{ t('manage.index.siteSettingsDescription') }}</p>
           <NuxtLink to="/manage/settings">
             <BaseButton variant="primary">
-              Site Settings
+              {{ t('manage.index.siteSettings') }}
             </BaseButton>
           </NuxtLink>
         </div>
@@ -241,7 +240,7 @@
       <div class="mt-8 grid md:grid-cols-2 gap-6">
         <!-- Direct Page Links -->
         <div class="card p-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">Visit Pages</h3>
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ t('manage.dashboard.visitPages') }}</h3>
           <div class="grid grid-cols-2 gap-3">
             <NuxtLink to="/" target="_blank">
               <BaseButton
@@ -249,7 +248,7 @@
                 class="flex items-center justify-center w-full"
                 icon-left="home"
               >
-                Home
+                {{ t('nav.home') }}
               </BaseButton>
             </NuxtLink>
 
@@ -259,7 +258,7 @@
                 class="flex items-center justify-center w-full"
                 icon-left="document"
               >
-                Services
+                {{ t('nav.services') }}
               </BaseButton>
             </NuxtLink>
 
@@ -269,7 +268,7 @@
                 class="flex items-center justify-center w-full"
                 icon-left="information-circle"
               >
-                About
+                {{ t('nav.about') }}
               </BaseButton>
             </NuxtLink>
 
@@ -279,7 +278,7 @@
                 class="flex items-center justify-center w-full"
                 icon-left="mail"
               >
-                Contact
+                {{ t('nav.contact') }}
               </BaseButton>
             </NuxtLink>
           </div>
@@ -295,6 +294,8 @@ definePageMeta({
   middleware: 'auth',
   layout: 'default'
 })
+
+const { t } = useI18n()
 
 const cmsStore = useCMSStore()
 await cmsStore.fetchSiteSettings()

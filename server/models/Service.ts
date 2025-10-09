@@ -5,6 +5,7 @@ export interface IService extends Document {
   _id: mongoose.Types.ObjectId
   title: string // JSON string: {"th": "ชื่อบริการไทย", "en": "Service Name"}
   description: string // JSON string
+  category: string // JSON string: {"th": "หมวดหมู่ไทย", "en": "Category Name"}
   features: string // JSON string array: [{"th": ["คุณสมบัติ1", "คุณสมบัติ2"], "en": ["Feature1", "Feature2"]}]
   price?: number
   isActive: boolean
@@ -31,6 +32,13 @@ const ServiceSchema = new Schema<IService>({
     required: [true, MODEL_VALIDATION_MESSAGES.FIELD_REQUIRED],
     trim: true,
     maxlength: [1000, MODEL_VALIDATION_MESSAGES.MAX_LENGTH_200]
+  },
+  category: {
+    type: String,
+    required: false,
+    trim: true,
+    maxlength: [200, MODEL_VALIDATION_MESSAGES.MAX_LENGTH_200],
+    default: '{"en":"Uncategorized","th":"ไม่มีหมวดหมู่"}'
   },
   features: {
     type: String,

@@ -3,14 +3,14 @@
 
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Page Header -->
-      <BasePageHeader title="Manage Services" code="SRV-001"
-        description="Create, edit, and manage your digital marketing services" :breadcrumbs="[
-          { label: 'Dashboard', to: '/manage', icon: 'home' },
-          { label: 'Services', icon: 'document' }
+      <BasePageHeader :title="t('manage.services.title')" code="SRV-001"
+        :description="t('manage.services.description')" :breadcrumbs="[
+          { label: t('manage.common.dashboard'), to: '/manage', icon: 'home' },
+          { label: t('nav.services'), icon: 'document' }
         ]">
         <template v-slot:actions>
           <BaseButton variant="primary" class="mt-4" @click="openAddModal">
-            Add Service
+            {{ t('manage.services.addService') }}
           </BaseButton>
         </template>
       </BasePageHeader>
@@ -30,17 +30,17 @@
                   :style="{ backgroundColor: service.color || '#6495ed' }"></div>
                 <h3 class="text-xl font-bold text-gray-900">{{ service.title }}</h3>
                 <span v-if="!service.isActive"
-                  class="px-2 py-1 bg-gray-200 text-gray-600 text-xs rounded-full">Inactive</span>
+                  class="px-2 py-1 bg-gray-200 text-gray-600 text-xs rounded-full">{{ t('manage.services.inactive') }}</span>
                 <span v-if="service.isDisplayInHome"
                   class="px-2 py-1 bg-green-100 text-green-600 text-xs rounded-full">🏠
-                  Home</span>
-                <span v-else class="px-2 py-1 bg-yellow-100 text-yellow-600 text-xs rounded-full">📋 List Only</span>
+                  {{ t('manage.services.home') }}</span>
+                <span v-else class="px-2 py-1 bg-yellow-100 text-yellow-600 text-xs rounded-full">📋 {{ t('manage.services.listOnly') }}</span>
               </div>
 
               <p class="text-gray-600 mb-4">{{ service.description }}</p>
 
               <div v-if="service.features?.length" class="mb-4">
-                <p class="text-sm font-medium text-gray-700 mb-2">Features:</p>
+                <p class="text-sm font-medium text-gray-700 mb-2">{{ t('manage.services.features') }}:</p>
                 <div class="flex flex-wrap gap-2">
                   <span v-for="feature in service.features" :key="feature"
                     class="px-3 py-1 text-sm rounded-full text-white"
@@ -51,9 +51,9 @@
               </div>
 
               <div class="flex items-center space-x-4 text-sm text-gray-500">
-                <span>Order: {{ service.order || '-' }}</span>
+                <span>{{ t('manage.services.order') }}: {{ service.order || '-' }}</span>
                 <span>•</span>
-                <span>Updated: {{ formatDate(service.updatedAt) }}</span>
+                <span>{{ t('manage.services.updated') }}: {{ formatDate(service.updatedAt) }}</span>
               </div>
             </div>
 
@@ -68,7 +68,7 @@
 
               <button @click="toggleHomeDisplay(service)"
                 :class="service.isDisplayInHome ? 'text-green-600 hover:bg-green-50' : 'text-gray-600 hover:bg-gray-50'"
-                class="p-2 rounded-lg" :title="service.isDisplayInHome ? 'Remove from Home Page' : 'Add to Home Page'">
+                class="p-2 rounded-lg" :title="service.isDisplayInHome ? t('manage.services.removeFromHome') : t('manage.services.addToHome')">
                 <svg v-if="service.isDisplayInHome" class="w-5 h-5" fill="none" stroke="currentColor"
                   viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -99,10 +99,10 @@
               d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
             </path>
           </svg>
-          <h3 class="mt-2 text-sm font-medium text-gray-900">No services</h3>
-          <p class="mt-1 text-sm text-gray-500">Get started by creating your first service.</p>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">{{ t('manage.services.noServices') }}</h3>
+          <p class="mt-1 text-sm text-gray-500">{{ t('manage.services.getStarted') }}</p>
           <BaseButton variant="primary" class="mt-4" @click="openAddModal">
-            Add Service
+            {{ t('manage.services.addService') }}
           </BaseButton>
         </div>
       </div>
@@ -114,7 +114,7 @@
         <div class="p-6">
           <div class="flex justify-between items-center mb-6">
             <h2 class="text-xl font-bold text-gray-900">
-              {{ editingService ? 'Edit Service' : 'Add New Service' }}
+              {{ editingService ? t('manage.services.editService') : t('manage.services.addNewService') }}
             </h2>
             <button @click="closeModal" class="text-gray-400 hover:text-gray-600">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -126,7 +126,7 @@
           <!-- Language Switcher -->
           <div class="bg-gray-50 p-4 rounded-lg mb-6">
             <div class="flex items-center justify-between">
-              <h3 class="text-sm font-medium text-gray-900">Content Language</h3>
+              <h3 class="text-sm font-medium text-gray-900">{{ t('manage.services.contentLanguage') }}</h3>
               <div class="flex items-center bg-white rounded-lg p-1 border">
                 <button @click="currentLanguage = 'en'" type="button"
                   :class="currentLanguage === 'en' ? 'bg-blue-100 text-blue-600' : 'text-gray-600 hover:text-gray-900'"
@@ -144,32 +144,54 @@
 
           <form @submit.prevent="saveService" class="space-y-6">
             <BaseInput v-model="serviceFormData.title[currentLanguage]"
-              :label="`Service Title (${currentLanguage.toUpperCase()})`" required />
+              :label="`${t('manage.services.serviceTitle')} (${currentLanguage.toUpperCase()})`" required />
 
             <BaseTextarea v-model="serviceFormData.description[currentLanguage]"
-              :label="`Description (${currentLanguage.toUpperCase()})`" :rows=3 required />
-
-            <BaseInput v-model="serviceFormData.icon" type="text" label="Icon Name (e.g., search, social, code)" />
+              :label="`${t('manage.services.description')} (${currentLanguage.toUpperCase()})`" :rows=3 required />
 
             <div>
-              <label class="form-label">Service Image</label>
-              <CmsImageUpload v-model="serviceFormData.image" label="Service Image (optional)"
-                help-text="Optional image for the service. Will be displayed in service cards and details." />
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                {{ t('manage.services.category') }} ({{ currentLanguage.toUpperCase() }})
+              </label>
+              <div class="space-y-2">
+                <select
+                  v-model="serviceFormData.category[currentLanguage]"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                >
+                  <option value="">{{ t('manage.services.selectExisting') }}</option>
+                  <option v-for="cat in existingCategories" :key="cat" :value="cat">{{ cat }}</option>
+                </select>
+                <input
+                  v-model="serviceFormData.category[currentLanguage]"
+                  type="text"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  :placeholder="`${t('manage.services.typeNewCategory')} (${currentLanguage.toUpperCase()})`"
+                />
+              </div>
+              <p class="text-xs text-gray-500 mt-1">{{ t('manage.services.selectFromDropdown') }}</p>
+            </div>
+
+            <BaseInput v-model="serviceFormData.icon" type="text" :label="t('manage.services.iconName')" />
+
+            <div>
+              <label class="form-label">{{ t('manage.services.serviceImage') }}</label>
+              <CmsImageUpload v-model="serviceFormData.image" :label="t('manage.services.serviceImage')"
+                :help-text="t('manage.services.serviceImageHelp')" />
             </div>
 
             <div>
-              <label class="form-label">Service Video</label>
-              <CmsVideoUpload v-model="serviceFormData.video" label="Service Video (optional)"
-                help-text="Optional video for the service. Will be displayed in service details or promotional content." />
+              <label class="form-label">{{ t('manage.services.serviceVideo') }}</label>
+              <CmsVideoUpload v-model="serviceFormData.video" :label="t('manage.services.serviceVideo')"
+                :help-text="t('manage.services.serviceVideoHelp')" />
             </div>
 
-            <BaseInput v-model="serviceFormData.externalURL" type="url" label="External URL (optional)"
-              placeholder="https://example.com/service-details"
-              help="Optional link to external page with more service details" />
+            <BaseInput v-model="serviceFormData.externalURL" type="url" :label="t('manage.services.externalURL')"
+              :placeholder="t('manage.services.externalURLPlaceholder')"
+              :help="t('manage.services.externalURLHelp')" />
 
             <!-- Color Picker -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Card Color</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('manage.services.cardColor') }}</label>
               <div class="flex items-center space-x-4">
                 <div class="relative">
                   <input v-model="serviceFormData.color" type="color"
@@ -178,18 +200,18 @@
                 <div class="flex-1">
                   <BaseInput v-model="serviceFormData.color" type="text" placeholder="#6495ed"
                     pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$" />
-                  <p class="text-xs text-gray-500 mt-1">This color will be used for the service card's accent color</p>
+                  <p class="text-xs text-gray-500 mt-1">{{ t('manage.services.cardColorHelp') }}</p>
                 </div>
               </div>
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Features ({{ currentLanguage.toUpperCase()
+              <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('manage.services.features') }} ({{ currentLanguage.toUpperCase()
                 }})</label>
               <div class="space-y-2">
                 <div v-for="(feature, index) in serviceFormData.features" :key="index" class="flex space-x-2">
                   <BaseInput v-model="serviceFormData.features[index][currentLanguage]" type="text"
-                    :placeholder="`Feature ${index + 1} (${currentLanguage.toUpperCase()})`" class="flex-1" />
+                    :placeholder="`${t('manage.services.feature')} ${index + 1} (${currentLanguage.toUpperCase()})`" class="flex-1" />
                   <button @click="removeFeature(index)" type="button"
                     class="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -201,25 +223,25 @@
                 </div>
                 <button @click="addFeature" type="button"
                   class="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-gray-400 hover:text-gray-600">
-                  + Add Feature
+                  {{ t('manage.services.addFeature') }}
                 </button>
               </div>
             </div>
 
             <div class="grid grid-cols-3 gap-4">
-              <BaseInput v-model.number="serviceFormData.order" type="number" label="Display Order" min="0" />
+              <BaseInput v-model.number="serviceFormData.order" type="number" :label="t('manage.services.displayOrder')" min="0" />
 
-              <BaseCheckbox v-model="serviceFormData.isActive" label="Active" />
+              <BaseCheckbox v-model="serviceFormData.isActive" :label="t('manage.services.active')" />
 
-              <BaseCheckbox v-model="serviceFormData.isDisplayInHome" label="Display in Home" />
+              <BaseCheckbox v-model="serviceFormData.isDisplayInHome" :label="t('manage.services.displayInHome')" />
             </div>
 
             <div class="flex justify-end space-x-4 pt-4 border-t">
               <BaseButton variant="secondary" type="button" @click="closeModal">
-                Cancel
+                {{ t('manage.common.cancel') }}
               </BaseButton>
               <BaseButton variant="primary" type="submit" :disabled="saving" :loading="saving">
-                Save Service
+                {{ t('manage.services.saveService') }}
               </BaseButton>
             </div>
           </form>
@@ -258,14 +280,13 @@ definePageMeta({
   middleware: 'auth'
 })
 
-const authStore = useAuthStore()
 const cmsStore = useCMSStore()
 await cmsStore.fetchSiteSettings()
 const siteSettings = cmsStore.siteSettings
 
 // Import multi-language composable
-const { createLocalizedContent, parseJsonField, getLocalizedFeatures } = useMultiLanguage()
-const { locale } = useI18n()
+const { createLocalizedContent, getLocalizedFeatures } = useMultiLanguage()
+const { locale, t } = useI18n()
 
 // Use computed properties from store like in UsersTab.vue
 const loading = computed(() => cmsStore.isLoading)
@@ -283,6 +304,7 @@ const serviceFormData = reactive({
   // Text fields as JSON {en: "English", th: "Thai"}
   title: { en: '', th: '' },
   description: { en: '', th: '' },
+  category: { en: '', th: '' },
   // Features array with multi-language support
   features: [{ en: '', th: '' }],
   // Language-neutral fields
@@ -304,13 +326,53 @@ const localizedServices = computed(() => {
   }
   return services.map(service => {
     const localized = createLocalizedContent(service)
+
+    // Parse category separately if needed
+    let categoryDisplay = localized.category || service.category
+    if (typeof categoryDisplay === 'string' && categoryDisplay.trim()) {
+      try {
+        const parsed = JSON.parse(categoryDisplay)
+        categoryDisplay = parsed[locale.value] || parsed.en || parsed.th || categoryDisplay
+      } catch (e) {
+        // Keep as is if parsing fails
+      }
+    }
+
     return {
       ...service,
       title: localized.title || service.title,
       description: localized.description || service.description,
+      category: categoryDisplay,
       features: getLocalizedFeatures(service.features) || []
     }
   })
+})
+
+// Get distinct categories for autocomplete - filtered by current language
+const existingCategories = computed(() => {
+  const services = cmsStore.services || []
+  const categoriesSet = new Set()
+
+  services.forEach(service => {
+    if (service.category) {
+      try {
+        const categoryObj = typeof service.category === 'string'
+          ? JSON.parse(service.category)
+          : service.category
+
+        // แสดงเฉพาะภาษาที่กำลังเลือกอยู่
+        const categoryValue = categoryObj[currentLanguage.value]
+        if (categoryValue) {
+          categoriesSet.add(categoryValue)
+        }
+      } catch (e) {
+        // If parsing fails, treat as plain string
+        categoriesSet.add(service.category)
+      }
+    }
+  })
+
+  return Array.from(categoriesSet).sort()
 })
 
 // Methods
@@ -323,7 +385,7 @@ const loadServices = async () => {
     await cmsStore.fetchServices()
   } catch (error) {
     console.error('Failed to load services:', error)
-    errorMessage.value = 'Failed to load services: ' + (error.message || 'Unknown error')
+    errorMessage.value = t('manage.services.failedToLoad') + ': ' + (error.message || 'Unknown error')
   }
 }
 
@@ -337,14 +399,29 @@ const editService = (service) => {
   console.log('Editing service:', service)
   editingService.value = service
 
-  // Handle multi-language fields - check if they're objects or strings
-  serviceFormData.title = typeof service.title === 'object'
-    ? service.title
-    : { en: service.title || '', th: service.title || '' }
+  // Helper function to parse JSON fields
+  const parseField = (field) => {
+    if (typeof field === 'object' && field !== null) {
+      return field
+    }
+    if (typeof field === 'string' && field.trim()) {
+      try {
+        const parsed = JSON.parse(field)
+        if (typeof parsed === 'object' && parsed !== null) {
+          return parsed
+        }
+      } catch (e) {
+        // If parsing fails, treat as plain string
+      }
+      return { en: field, th: field }
+    }
+    return { en: '', th: '' }
+  }
 
-  serviceFormData.description = typeof service.description === 'object'
-    ? service.description
-    : { en: service.description || '', th: service.description || '' }
+  // Handle multi-language fields
+  serviceFormData.title = parseField(service.title)
+  serviceFormData.description = parseField(service.description)
+  serviceFormData.category = parseField(service.category)
 
   // Handle features array
   if (service.features && Array.isArray(service.features)) {
@@ -386,6 +463,7 @@ const closeModal = () => {
 const resetForm = () => {
   serviceFormData.title = { en: '', th: '' }
   serviceFormData.description = { en: '', th: '' }
+  serviceFormData.category = { en: '', th: '' }
   serviceFormData.features = [{ en: '', th: '' }]
   serviceFormData.icon = ''
   serviceFormData.image = ''
@@ -423,6 +501,7 @@ const saveService = async () => {
       // Multi-language fields as JSON strings
       title: JSON.stringify(serviceFormData.title),
       description: JSON.stringify(serviceFormData.description),
+      category: JSON.stringify(serviceFormData.category),
       features: JSON.stringify(filteredFeatures),
       // Language-neutral fields
       icon: serviceFormData.icon,
@@ -442,16 +521,16 @@ const saveService = async () => {
           id: editingService.value.id
         }
       })
-      successMessage.value = 'Service updated successfully!'
+      successMessage.value = t('manage.services.serviceUpdated')
     } else {
       await cmsStore.createService({ body: serviceData })
-      successMessage.value = 'Service created successfully!'
+      successMessage.value = t('manage.services.serviceCreated')
     }
 
     closeModal()
     await loadServices()
   } catch (error) {
-    errorMessage.value = 'Failed to save service'
+    errorMessage.value = t('manage.services.failedToSave')
   } finally {
     saving.value = false
   }
@@ -468,22 +547,22 @@ const toggleHomeDisplay = async (service) => {
       }
     })
 
-    successMessage.value = `Service ${service.isDisplayInHome ? 'removed from' : 'added to'} home page successfully!`
+    successMessage.value = service.isDisplayInHome ? t('manage.services.removedFromHome') : t('manage.services.addedToHome')
     await loadServices()
   } catch (error) {
-    errorMessage.value = 'Failed to update home display status'
+    errorMessage.value = t('manage.services.failedToUpdate')
   }
 }
 
 const deleteService = async (service) => {
-  if (confirm(`Are you sure you want to delete "${service.title}"?`)) {
+  if (confirm(t('manage.services.confirmDelete', { title: service.title }))) {
     try {
       await cmsStore.deleteService({ body: { id: service.id } })
 
-      successMessage.value = 'Service deleted successfully!'
+      successMessage.value = t('manage.services.serviceDeleted')
       await loadServices()
     } catch (error) {
-      errorMessage.value = 'Failed to delete service'
+      errorMessage.value = t('manage.services.failedToDelete')
     }
   }
 }

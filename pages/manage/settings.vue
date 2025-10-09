@@ -4,12 +4,12 @@
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Page Header -->
       <BasePageHeader
-        title="Site Settings"
+        :title="t('manage.settings.title')"
         code="SET-001"
-        description="Configure site identity, colors, social media, and global settings"
+        :description="t('manage.settings.description')"
         :breadcrumbs="[
-          { label: 'Dashboard', to: '/manage', icon: 'home' },
-          { label: 'Settings', icon: 'cog' }
+          { label: t('manage.common.dashboard'), to: '/manage', icon: 'home' },
+          { label: t('manage.settings.title'), icon: 'cog' }
         ]"
       />
 
@@ -22,13 +22,13 @@
       <form v-else @submit.prevent="handleSubmit" class="space-y-8">
         <!-- Site Identity -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Site Identity</h2>
-          
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.settings.siteIdentity') }}</h2>
+
           <div class="space-y-6">
             <BaseInput
               v-model="form.siteName"
               type="text"
-              label="Site Name"
+              :label="t('manage.settings.siteName')"
               placeholder="Enter site name..."
               required
             />
@@ -36,38 +36,38 @@
             <BaseInput
               v-model="form.siteTagline"
               type="text"
-              label="Site Tagline"
+              :label="t('manage.settings.siteTagline')"
               placeholder="Enter site tagline..."
               required
             />
 
             <CmsImageUpload
               v-model="form.logo"
-              label="Site Logo (optional)"
+              :label="t('manage.settings.siteLogo')"
             />
 
             <CmsImageUpload
               v-model="form.favicon"
-              label="Site Favicon (optional)"
+              :label="t('manage.settings.siteFavicon')"
             />
           </div>
         </div>
 
         <!-- Brand Colors -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Brand Colors</h2>
-          
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.settings.brandColors') }}</h2>
+
           <div class="space-y-4">
             <div class="flex items-center space-x-4">
               <div class="relative">
-                <input 
-                  v-model="form.primaryColor" 
-                  type="color" 
+                <input
+                  v-model="form.primaryColor"
+                  type="color"
                   class="w-16 h-16 border-2 border-gray-300 rounded-lg cursor-pointer"
                 >
               </div>
               <div class="flex-1">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Primary Color</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('manage.settings.primaryColor') }}</label>
                 <BaseInput
                   v-model="form.primaryColor"
                   type="text"
@@ -76,17 +76,17 @@
                 />
               </div>
             </div>
-            
+
             <div class="flex items-center space-x-4">
               <div class="relative">
-                <input 
-                  v-model="form.secondaryColor" 
-                  type="color" 
+                <input
+                  v-model="form.secondaryColor"
+                  type="color"
                   class="w-16 h-16 border-2 border-gray-300 rounded-lg cursor-pointer"
                 >
               </div>
               <div class="flex-1">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Secondary Color</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('manage.settings.secondaryColor') }}</label>
                 <BaseInput
                   v-model="form.secondaryColor"
                   type="text"
@@ -95,21 +95,21 @@
                 />
               </div>
             </div>
-            
+
             <p class="text-sm text-gray-600">
-              <strong>Primary:</strong> Used for buttons, links, and main brand elements.<br>
-              <strong>Secondary:</strong> Used for gradients and accent elements to create visual variety.
+              <strong>{{ t('manage.settings.primaryColorDescription') }}</strong><br>
+              <strong>{{ t('manage.settings.secondaryColorDescription') }}</strong>
             </p>
           </div>
         </div>
 
         <!-- Navbar Settings -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Navbar Settings</h2>
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.settings.navbarSettings') }}</h2>
 
           <div class="space-y-6">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Navbar Display Mode</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('manage.settings.navbarDisplayMode') }}</label>
               <div class="space-y-2">
                 <label
                   class="flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors navbar-mode-option"
@@ -117,8 +117,8 @@
                 >
                   <input type="radio" v-model="form.navbarDisplayMode" value="logo" class="text-blue-600 focus:ring-blue-500">
                   <div>
-                    <div class="font-medium text-gray-900 dark:text-gray-100">Logo Only</div>
-                    <div class="text-sm text-gray-500 dark:text-gray-400">Display only the logo image</div>
+                    <div class="font-medium text-gray-900 dark:text-gray-100">{{ t('manage.settings.logoOnly') }}</div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">{{ t('manage.settings.logoOnlyDescription') }}</div>
                   </div>
                 </label>
                 <label
@@ -127,8 +127,8 @@
                 >
                   <input type="radio" v-model="form.navbarDisplayMode" value="text" class="text-blue-600 focus:ring-blue-500">
                   <div>
-                    <div class="font-medium text-gray-900 dark:text-gray-100">Text Only</div>
-                    <div class="text-sm text-gray-500 dark:text-gray-400">Display only the site name text</div>
+                    <div class="font-medium text-gray-900 dark:text-gray-100">{{ t('manage.settings.textOnly') }}</div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">{{ t('manage.settings.textOnlyDescription') }}</div>
                   </div>
                 </label>
                 <label
@@ -137,15 +137,15 @@
                 >
                   <input type="radio" v-model="form.navbarDisplayMode" value="both" class="text-blue-600 focus:ring-blue-500">
                   <div>
-                    <div class="font-medium text-gray-900 dark:text-gray-100">Logo and Text</div>
-                    <div class="text-sm text-gray-500 dark:text-gray-400">Display both logo and site name</div>
+                    <div class="font-medium text-gray-900 dark:text-gray-100">{{ t('manage.settings.logoAndText') }}</div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">{{ t('manage.settings.logoAndTextDescription') }}</div>
                   </div>
                 </label>
               </div>
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Navbar Text Color</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('manage.settings.navbarTextColor') }}</label>
               <div class="flex items-center space-x-4">
                 <input
                   v-model="form.navbarTextColor"
@@ -161,7 +161,7 @@
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Navbar Background Color</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('manage.settings.navbarBackgroundColor') }}</label>
               <div class="flex items-center space-x-4">
                 <input
                   v-model="form.navbarBgColor"
@@ -180,62 +180,62 @@
 
         <!-- Social Media Links -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Social Media Links</h2>
-          
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.settings.socialMediaLinks') }}</h2>
+
           <div class="space-y-4">
             <div v-for="(_, platform) in socialLinks" :key="platform" class="space-y-1">
               <BaseInput
                 v-model="socialLinks[platform]"
                 type="url"
-                :label="`${platform.charAt(0).toUpperCase() + platform.slice(1)} URL`"
+                :label="t(`manage.settings.${platform}URL`)"
                 :placeholder="`Enter ${platform} URL...`"
               />
-              <p class="text-xs text-gray-500 mt-1">e.g., https://{{ platform }}.com/yourcompany</p>
+              <p class="text-xs text-gray-500 mt-1">{{ t('manage.settings.socialMediaExample', { platform }) }}</p>
             </div>
           </div>
         </div>
 
         <!-- SEO Settings -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">SEO Settings</h2>
-          
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.settings.seoSettings') }}</h2>
+
           <div class="space-y-6">
             <div>
               <BaseTextarea
                 v-model="form.metaDescription"
-                label="Meta Description (160 chars max)"
+                :label="t('manage.settings.metaDescription')"
                 placeholder="Enter meta description..."
                 :rows=3
                 :maxlength=160
               />
-              <p class="text-sm text-gray-500 mt-1">{{ (form.metaDescription || '').length }}/160 characters</p>
+              <p class="text-sm text-gray-500 mt-1">{{ t('manage.settings.charactersCount', { count: (form.metaDescription || '').length }) }}</p>
             </div>
 
             <BaseInput
               v-model="form.keywords"
               type="text"
-              label="Keywords (comma separated)"
-              placeholder="Enter keywords, separated by commas..."
+              :label="t('manage.settings.keywords')"
+              :placeholder="t('manage.settings.keywordsPlaceholder')"
             />
           </div>
         </div>
 
         <!-- Contact Settings -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Global Contact Settings</h2>
-          
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.settings.globalContactSettings') }}</h2>
+
           <div class="space-y-6">
             <BaseInput
               v-model="form.contactEmail"
               type="email"
-              label="Main Contact Email"
+              :label="t('manage.settings.mainContactEmail')"
               placeholder="Enter contact email..."
             />
 
             <BaseInput
               v-model="form.contactPhone"
               type="tel"
-              label="Main Contact Phone"
+              :label="t('manage.settings.mainContactPhone')"
               placeholder="Enter contact phone..."
             />
           </div>
@@ -244,14 +244,14 @@
         <!-- Save Button -->
         <div class="flex justify-end space-x-4">
           <NuxtLink to="/manage">
-            <BaseButton variant="secondary">Cancel</BaseButton>
+            <BaseButton variant="secondary">{{ t('manage.common.cancel') }}</BaseButton>
           </NuxtLink>
           <BaseButton
             type="submit"
             variant="primary"
             :disabled="saving"
           >
-            {{ saving ? 'Saving...' : 'Save Settings' }}
+            {{ saving ? t('manage.settings.saving') : t('manage.settings.saveSettings') }}
           </BaseButton>
         </div>
       </form>
@@ -279,6 +279,7 @@
 </template>
 
 <script setup>
+const { t } = useI18n()
 
 definePageMeta({
   middleware: 'auth',
@@ -332,12 +333,12 @@ const loadContent = async () => {
     // Force fresh fetch using store
     await cmsStore.fetchSiteSettings()
     const settings = cmsStore.siteSettings
-    console.log('Store settings:', settings)
+    // console.log('Store settings:', settings)
 
     if (settings) {
       // Handle potentially nested object fields - extract values safely
       const extractValue = (field) => {
-        console.log('Extracting field:', field, 'Type:', typeof field)
+        // console.log('Extracting field:', field, 'Type:', typeof field)
         if (!field) return ''
         if (typeof field === 'string') return field
         if (typeof field === 'object') {
@@ -376,7 +377,7 @@ const loadContent = async () => {
       }
     }
   } catch (error) {
-    errorMessage.value = 'Failed to load settings'
+    errorMessage.value = t('manage.settings.failedToLoad')
     console.error('Failed to load settings:', error)
   }
 }
@@ -394,9 +395,9 @@ const handleSubmit = async () => {
 
     await cmsStore.updateSiteSettings({ body: payload })
 
-    successMessage.value = 'Site settings updated successfully!'
+    successMessage.value = t('manage.settings.updated')
   } catch (error) {
-    errorMessage.value = 'Failed to update settings. Please try again.'
+    errorMessage.value = t('manage.settings.failedToUpdate')
     console.error('Failed to update settings:', error)
   } finally {
     saving.value = false

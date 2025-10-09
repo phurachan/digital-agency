@@ -4,12 +4,12 @@
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Page Header -->
       <BasePageHeader
-        title="Contact Page Content"
+        :title="t('manage.contact.title')"
         code="CONTACT-001"
-        description="Manage contact page content, contact information, and business details"
+        :description="t('manage.contact.description')"
         :breadcrumbs="[
-          { label: 'Dashboard', to: '/manage', icon: 'home' },
-          { label: 'Contact Content', icon: 'mail' }
+          { label: t('manage.common.dashboard'), to: '/manage', icon: 'home' },
+          { label: t('manage.contact.breadcrumb'), icon: 'mail' }
         ]"
       />
 
@@ -21,28 +21,28 @@
       <!-- Language Switcher -->
       <div v-else class="card p-4 mb-8">
         <div class="flex items-center justify-between">
-          <h3 class="text-lg font-medium text-gray-900">Content Language</h3>
+          <h3 class="text-lg font-medium text-gray-900">{{ t('manage.common.contentLanguage') }}</h3>
           <div class="flex items-center bg-gray-100 rounded-lg p-1">
-            <button 
+            <button
               @click="currentLanguage = 'en'"
               type="button"
               :class="currentLanguage === 'en' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'"
               class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
             >
-              🇺🇸 English
+              {{ t('manage.common.english') }}
             </button>
-            <button 
+            <button
               @click="currentLanguage = 'th'"
               type="button"
               :class="currentLanguage === 'th' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'"
               class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
             >
-              🇹🇭 ไทย
+              {{ t('manage.common.thai') }}
             </button>
           </div>
         </div>
         <p class="text-sm text-gray-500 mt-2">
-          Switch between languages to edit content. {{ currentLanguage === 'en' ? 'Editing English content' : 'กำลังแก้ไขเนื้อหาภาษาไทย' }}
+          {{ t('manage.common.switchLanguageHint') }} {{ currentLanguage === 'en' ? t('manage.common.editingEnglish') : t('manage.common.editingThai') }}
         </p>
       </div>
 
@@ -50,40 +50,40 @@
       <form v-if="!loading" @submit.prevent="handleSubmit" class="space-y-8">
         <!-- Banner Image -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Banner Image</h2>
-          <CmsImageUpload 
-            v-model="formData.bannerImage" 
-            label="Contact Page Banner (optional)"
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.contact.bannerImage') }}</h2>
+          <CmsImageUpload
+            v-model="formData.bannerImage"
+            :label="t('manage.contact.bannerImageLabel')"
           />
         </div>
 
         <!-- Hero Background Image -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Hero Background Image</h2>
-          <CmsImageUpload 
-            v-model="formData.heroImage" 
-            label="Hero Section Background (optional)"
-            help-text="Recommended: High-quality image, 1920x1080px or larger. Will be used as background for the hero section."
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.contact.heroBackgroundImage') }}</h2>
+          <CmsImageUpload
+            v-model="formData.heroImage"
+            :label="t('manage.contact.heroSectionBackground')"
+            :help-text="t('manage.contact.heroImageHelp')"
           />
         </div>
 
         <!-- Page Content -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Page Content</h2>
-          
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.contact.pageContent') }}</h2>
+
           <div class="space-y-6">
             <BaseInput
               v-model="formData.title[currentLanguage]"
               type="text"
-              :label="`Page Title (${currentLanguage.toUpperCase()})`"
-              placeholder="Enter page title..."
+              :label="`${t('manage.contact.pageTitle')} (${currentLanguage.toUpperCase()})`"
+              :placeholder="t('manage.contact.enterPageTitle')"
               required
             />
 
             <BaseTextarea
               v-model="formData.subtitle[currentLanguage]"
-              :label="`Page Subtitle (${currentLanguage.toUpperCase()})`"
-              placeholder="Enter page subtitle..."
+              :label="`${t('manage.contact.pageSubtitle')} (${currentLanguage.toUpperCase()})`"
+              :placeholder="t('manage.contact.enterPageSubtitle')"
               :rows=3
               required
             />
@@ -92,29 +92,29 @@
 
         <!-- Contact Information -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Contact Information</h2>
-          
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.contact.contactInformation') }}</h2>
+
           <div class="space-y-6">
             <BaseInput
               v-model="formData.phone"
               type="tel"
-              label="Phone Number"
-              placeholder="Enter phone number..."
+              :label="t('manage.contact.phoneNumber')"
+              :placeholder="t('manage.contact.enterPhoneNumber')"
               required
             />
 
             <BaseInput
               v-model="formData.email"
               type="email"
-              label="Email Address"
-              placeholder="Enter email address..."
+              :label="t('manage.contact.emailAddress')"
+              :placeholder="t('manage.contact.enterEmailAddress')"
               required
             />
 
             <BaseTextarea
               v-model="formData.address[currentLanguage]"
-              :label="`Physical Address (${currentLanguage.toUpperCase()})`"
-              placeholder="Enter physical address..."
+              :label="`${t('manage.contact.physicalAddress')} (${currentLanguage.toUpperCase()})`"
+              :placeholder="t('manage.contact.enterPhysicalAddress')"
               :rows=3
               required
             />
@@ -123,18 +123,18 @@
 
         <!-- Business Hours -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Business Hours</h2>
-          
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.contact.businessHours') }}</h2>
+
           <div class="space-y-4">
             <div v-for="(hours, day) in businessHours" :key="day" class="flex items-center space-x-4">
               <div class="w-24">
                 <label class="text-sm font-medium text-gray-700">{{ day }}</label>
               </div>
               <div class="flex-1">
-                <input 
-                  v-model="businessHours[day]" 
-                  type="text" 
-                  placeholder="e.g., 9:00 AM - 5:00 PM or Closed"
+                <input
+                  v-model="businessHours[day]"
+                  type="text"
+                  :placeholder="t('manage.contact.hoursPlaceholder')"
                   class="form-input"
                 >
               </div>
@@ -144,17 +144,17 @@
 
         <!-- Map Embed -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Map Integration</h2>
-          
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.contact.mapIntegration') }}</h2>
+
           <div class="space-y-4">
             <BaseInput
               v-model="formData.mapEmbedUrl"
               type="url"
-              label="Google Maps Embed URL (optional)"
-              placeholder="Enter Google Maps embed URL..."
+              :label="t('manage.contact.googleMapsEmbedUrl')"
+              :placeholder="t('manage.contact.enterGoogleMapsUrl')"
             />
             <p class="text-sm text-gray-600">
-              Go to Google Maps, search for your location, click "Share" → "Embed a map" and paste the src URL here.
+              {{ t('manage.contact.mapInstructions') }}
             </p>
           </div>
         </div>
@@ -162,14 +162,14 @@
         <!-- Save Button -->
         <div class="flex justify-end space-x-4">
           <NuxtLink to="/manage">
-            <BaseButton variant="secondary">Cancel</BaseButton>
+            <BaseButton variant="secondary">{{ t('manage.common.cancel') }}</BaseButton>
           </NuxtLink>
           <BaseButton
             type="submit"
             variant="primary"
             :disabled="saving"
           >
-            {{ saving ? 'Saving...' : 'Save Changes' }}
+            {{ saving ? t('manage.common.saving') : t('manage.common.saveChanges') }}
           </BaseButton>
         </div>
       </form>
@@ -197,6 +197,7 @@
 </template>
 
 <script setup>
+const { t } = useI18n()
 
 definePageMeta({
   middleware: 'auth',
@@ -261,7 +262,7 @@ const loadContent = async () => {
   try {
     await cmsStore.fetchContactContent()
     const response = cmsStore.contactContent
-    console.log('Loaded contact content:', response)
+    // console.log('Loaded contact content:', response)
 
     if (response) {
       // The API already transforms JSON strings to objects, so use them directly
@@ -289,7 +290,7 @@ const loadContent = async () => {
       }
     }
   } catch (error) {
-    errorMessage.value = 'Failed to load content'
+    errorMessage.value = t('manage.contact.failedToLoad')
     console.error('Failed to load content:', error)
   } finally {
     loading.value = false
@@ -319,9 +320,9 @@ const handleSubmit = async () => {
 
     await cmsStore.updateContactContent({ body: payload })
 
-    successMessage.value = 'Contact page content updated successfully!'
+    successMessage.value = t('manage.contact.updateSuccess')
   } catch (error) {
-    errorMessage.value = 'Failed to update content. Please try again.'
+    errorMessage.value = t('manage.contact.updateError')
     console.error('Failed to update content:', error)
   } finally {
     saving.value = false

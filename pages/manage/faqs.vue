@@ -3,14 +3,14 @@
 
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Page Header -->
-      <BasePageHeader title="Manage FAQs" code="FAQ-001"
-        description="Create and manage frequently asked questions for your website" :breadcrumbs="[
-          { label: 'Dashboard', to: '/manage', icon: 'home' },
-          { label: 'FAQs', icon: 'question-mark-circle' }
+      <BasePageHeader :title="t('manage.faqs.title')" code="FAQ-001"
+        :description="t('manage.faqs.description')" :breadcrumbs="[
+          { label: t('manage.common.dashboard'), to: '/manage', icon: 'home' },
+          { label: t('manage.faqs.title'), icon: 'question-mark-circle' }
         ]">
         <template v-slot:actions>
           <BaseButton @click="openAddModal" variant="primary" class="mt-4">
-            Add FAQ
+            {{ t('manage.faqs.addFAQ') }}
           </BaseButton>
         </template>
       </BasePageHeader>
@@ -28,15 +28,15 @@
               <div class="flex items-center space-x-3 mb-3">
                 <h3 class="text-xl font-bold text-gray-900">{{ faq.question }}</h3>
                 <span v-if="!faq.isActive"
-                  class="px-2 py-1 bg-gray-200 text-gray-600 text-xs rounded-full">Inactive</span>
+                  class="px-2 py-1 bg-gray-200 text-gray-600 text-xs rounded-full">{{ t('manage.faqs.inactive') }}</span>
               </div>
 
               <p class="text-gray-600 mb-4">{{ faq.answer }}</p>
 
               <div class="flex items-center space-x-4 text-sm text-gray-500">
-                <span>Order: {{ faq.order || '-' }}</span>
+                <span>{{ t('manage.faqs.order') }}: {{ faq.order || '-' }}</span>
                 <span>•</span>
-                <span>Updated: {{ formatDate(faq.updatedAt) }}</span>
+                <span>{{ t('manage.faqs.updated') }}: {{ formatDate(faq.updatedAt) }}</span>
               </div>
             </div>
 
@@ -79,10 +79,10 @@
               d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
             </path>
           </svg>
-          <h3 class="mt-2 text-sm font-medium text-gray-900">No FAQs</h3>
-          <p class="mt-1 text-sm text-gray-500">Get started by creating your first FAQ.</p>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">{{ t('manage.faqs.noFAQs') }}</h3>
+          <p class="mt-1 text-sm text-gray-500">{{ t('manage.faqs.getStarted') }}</p>
           <BaseButton @click="openAddModal" variant="primary" class="mt-4">
-            Add FAQ
+            {{ t('manage.faqs.addFAQ') }}
           </BaseButton>
         </div>
       </div>
@@ -94,7 +94,7 @@
         <div class="p-6">
           <div class="flex justify-between items-center mb-6">
             <h2 class="text-xl font-bold text-gray-900">
-              {{ editingFaq ? 'Edit FAQ' : 'Add New FAQ' }}
+              {{ editingFaq ? t('manage.faqs.editFAQ') : t('manage.faqs.addNewFAQ') }}
             </h2>
             <button @click="closeModal" class="text-gray-400 hover:text-gray-600">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -104,22 +104,22 @@
           </div>
 
           <form @submit.prevent="saveFaq" class="space-y-6">
-            <BaseInput v-model="faqForm.question" type="text" label="Question" required />
+            <BaseInput v-model="faqForm.question" type="text" :label="t('manage.faqs.question')" required />
 
-            <BaseTextarea v-model="faqForm.answer" label="Answer" :rows=4 required />
+            <BaseTextarea v-model="faqForm.answer" :label="t('manage.faqs.answer')" :rows=4 required />
 
             <div class="grid grid-cols-2 gap-4">
-              <BaseInput v-model.number="faqForm.order" type="number" label="Display Order" min="0" />
+              <BaseInput v-model.number="faqForm.order" type="number" :label="t('manage.faqs.displayOrder')" min="0" />
 
-              <BaseCheckbox v-model="faqForm.isActive" label="Active" />
+              <BaseCheckbox v-model="faqForm.isActive" :label="t('manage.faqs.active')" />
             </div>
 
             <div class="flex justify-end space-x-4 pt-4 border-t">
               <BaseButton @click="closeModal" type="button" variant="secondary">
-                Cancel
+                {{ t('manage.common.cancel') }}
               </BaseButton>
               <BaseButton type="submit" :disabled="saving" variant="primary">
-                {{ saving ? 'Saving...' : 'Save FAQ' }}
+                {{ saving ? t('manage.faqs.saving') : t('manage.faqs.saveFAQ') }}
               </BaseButton>
             </div>
           </form>
@@ -153,7 +153,7 @@
 
 <script setup>
 const { createLocalizedContent, parseJsonField } = useMultiLanguage()
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 
 definePageMeta({
   middleware: 'auth',
@@ -207,7 +207,7 @@ const loadFaqs = async () => {
     await cmsStore.fetchFAQs()
   } catch (error) {
     console.error('Failed to load FAQs:', error)
-    errorMessage.value = 'Failed to load FAQs'
+    errorMessage.value = t('manage.faqs.failedToLoad')
   }
 }
 
@@ -263,16 +263,16 @@ const saveFaq = async () => {
           id: editingFaq.value.id
         }
       })
-      successMessage.value = 'FAQ updated successfully!'
+      successMessage.value = t('manage.faqs.faqUpdated')
     } else {
       await cmsStore.createFAQ({ body: faqData })
-      successMessage.value = 'FAQ created successfully!'
+      successMessage.value = t('manage.faqs.faqCreated')
     }
 
     closeModal()
     await loadFaqs()
   } catch (error) {
-    errorMessage.value = 'Failed to save FAQ'
+    errorMessage.value = t('manage.faqs.failedToSave')
   } finally {
     saving.value = false
   }
@@ -288,22 +288,22 @@ const toggleFaqStatus = async (faq) => {
       }
     })
 
-    successMessage.value = `FAQ ${faq.isActive ? 'deactivated' : 'activated'} successfully!`
+    successMessage.value = faq.isActive ? t('manage.faqs.faqDeactivated') : t('manage.faqs.faqActivated')
     await loadFaqs()
   } catch (error) {
-    errorMessage.value = 'Failed to update FAQ status'
+    errorMessage.value = t('manage.faqs.failedToUpdate')
   }
 }
 
 const deleteFaq = async (faq) => {
-  if (confirm(`Are you sure you want to delete this FAQ: "${faq.question}"?`)) {
+  if (confirm(t('manage.faqs.confirmDelete', { question: faq.question }))) {
     try {
       await cmsStore.deleteFAQ({ body: { id: faq.id } })
 
-      successMessage.value = 'FAQ deleted successfully!'
+      successMessage.value = t('manage.faqs.faqDeleted')
       await loadFaqs()
     } catch (error) {
-      errorMessage.value = 'Failed to delete FAQ'
+      errorMessage.value = t('manage.faqs.failedToDelete')
     }
   }
 }

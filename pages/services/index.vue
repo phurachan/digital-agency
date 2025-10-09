@@ -32,6 +32,38 @@
     <!-- Services Grid -->
     <section class="section-padding">
       <div class="container">
+        <!-- Category Filter Buttons -->
+        <div v-if="serviceCategories.length > 0" class="mb-8">
+          <div class="flex flex-wrap gap-3 justify-center items-center">
+            <button
+              @click="navigateTo($localePath('/services'))"
+              :class="!selectedCategory ? 'category-filter-active' : 'category-filter'"
+              class="transition-all duration-300"
+            >
+              All Services
+            </button>
+            <button
+              v-for="(category, index) in serviceCategories"
+              :key="index"
+              @click="navigateTo($localePath(`/services?category=${encodeURIComponent(category.value)}`))"
+              :class="selectedCategory === category.value ? 'category-filter-active' : 'category-filter'"
+              class="transition-all duration-300"
+            >
+              {{ category.label }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Category Filter Info (when filtered) -->
+        <div v-if="selectedCategory" class="mb-8 flex items-center justify-center bg-blue-50 p-3 rounded-lg">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+            </svg>
+            <span class="text-gray-700 text-sm">Showing <strong class="text-blue-600">{{ services.length }}</strong> {{ services.length === 1 ? 'service' : 'services' }} in <strong class="text-blue-600">{{ selectedCategoryLabel }}</strong></span>
+          </div>
+        </div>
+
         <div class="grid lg:grid-cols-2 xl:grid-cols-3 gap-8">
           <div
             v-for="service in services"
@@ -204,6 +236,7 @@ function adjustColorBrightness(hex, percent) {
 const cmsStore = useCMSStore()
 const { t, locale } = useI18n()
 const { createLocalizedContent, parseJsonField, getLocalizedFeatures } = useMultiLanguage()
+const route = useRoute()
 
 await cmsStore.fetchSiteSettings()
 await cmsStore.fetchServicesContent()
@@ -213,11 +246,80 @@ const siteSettingsRaw = cmsStore.siteSettings
 const servicesContentRaw = cmsStore.servicesContent
 const servicesRaw = cmsStore.getActiveServices
 
+// Get category from query parameter
+const selectedCategory = computed(() => route.query.category || '')
+
+// Get localized name for selected category
+const selectedCategoryLabel = computed(() => {
+  if (!selectedCategory.value) return ''
+
+  const category = serviceCategories.value.find(cat => cat.value === selectedCategory.value)
+  return category ? category.label : selectedCategory.value
+})
+
+// Get distinct categories for filter buttons
+const serviceCategories = computed(() => {
+  const categoriesMap = new Map()
+
+  servicesRaw.forEach(service => {
+    if (service.category) {
+      try {
+        const categoryObj = typeof service.category === 'string'
+          ? JSON.parse(service.category)
+          : service.category
+
+        const categoryId = (categoryObj.en || categoryObj.th || '').toLowerCase()
+        if (categoryId && !categoriesMap.has(categoryId)) {
+          categoriesMap.set(categoryId, categoryObj)
+        }
+      } catch (e) {
+        const categoryId = service.category.toLowerCase()
+        if (!categoriesMap.has(categoryId)) {
+          categoriesMap.set(categoryId, { en: service.category, th: service.category })
+        }
+      }
+    }
+  })
+
+  return Array.from(categoriesMap.values()).map(cat => {
+    return {
+      label: cat[locale.value] || cat.en || cat.th || '', // แสดงตามภาษาปัจจุบัน
+      value: cat.en || cat.th || '' // ใช้ EN เสมอใน URL
+    }
+  }).filter(item => item.label && item.value)
+})
+
 // Create reactive localized content
 const siteSettings = computed(() => createLocalizedContent(siteSettingsRaw))
 const servicesContent = computed(() => createLocalizedContent(servicesContentRaw))
 const services = computed(() => {
-  return servicesRaw.map(service => {
+  let filteredServices = servicesRaw
+
+  // Filter by category if specified
+  if (selectedCategory.value) {
+    filteredServices = servicesRaw.filter(service => {
+      if (!service.category) return false
+
+      try {
+        const categoryObj = typeof service.category === 'string'
+          ? JSON.parse(service.category)
+          : service.category
+
+        // เปรียบเทียบทั้ง EN และ TH
+        const categoryEN = categoryObj.en || ''
+        const categoryTH = categoryObj.th || ''
+        const searchTerm = selectedCategory.value.toLowerCase()
+
+        return categoryEN.toLowerCase() === searchTerm ||
+               categoryTH.toLowerCase() === searchTerm
+      } catch (e) {
+        // If parsing fails, compare as plain string
+        return service.category.toLowerCase() === selectedCategory.value.toLowerCase()
+      }
+    })
+  }
+
+  return filteredServices.map(service => {
     const localized = createLocalizedContent(service)
     return {
       ...service, // Keep all original service data including externalURL
@@ -554,6 +656,30 @@ useSeoMeta({
   display: none;
 }
 
+/* Category Filter Buttons */
+.category-filter {
+  @apply px-4 py-2 bg-white border-2 border-gray-200 rounded-full font-semibold text-sm text-gray-700 cursor-pointer;
+  transition: all 0.3s ease;
+}
+
+.category-filter:hover {
+  @apply border-blue-500 text-blue-600 transform -translate-y-0.5;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.category-filter-active {
+  @apply px-4 py-2 rounded-full font-semibold text-sm cursor-pointer;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  border: 2px solid var(--primary-color);
+  color: white;
+  box-shadow: 0 4px 12px var(--primary-rgba-30);
+}
+
+.category-filter-active:hover {
+  @apply transform -translate-y-0.5;
+  box-shadow: 0 6px 16px var(--primary-rgba-30);
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .process-step::after {
@@ -569,6 +695,11 @@ useSeoMeta({
   .btn-primary + .btn-secondary,
   .btn-secondary + .btn-primary {
     @apply ml-0 mt-3;
+  }
+
+  .category-filter,
+  .category-filter-active {
+    @apply text-xs px-3 py-1.5;
   }
 }
 </style>

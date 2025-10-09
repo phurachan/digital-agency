@@ -4,12 +4,12 @@
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Page Header -->
       <BasePageHeader
-        title="Insights Page Content"
+        :title="t('manage.teamContent.title')"
         code="INSIGHTS-CONTENT-001"
-        description="Manage insights page hero section and introductory content"
+        :description="t('manage.teamContent.description')"
         :breadcrumbs="[
-          { label: 'Dashboard', to: '/manage', icon: 'home' },
-          { label: 'Insights Content', icon: 'user-group' }
+          { label: t('manage.common.dashboard'), to: '/manage', icon: 'home' },
+          { label: t('manage.teamContent.breadcrumb'), icon: 'user-group' }
         ]"
       />
 
@@ -21,28 +21,28 @@
       <!-- Language Switcher -->
       <div v-else class="card p-4 mb-8">
         <div class="flex items-center justify-between">
-          <h3 class="text-lg font-medium text-gray-900">Content Language</h3>
+          <h3 class="text-lg font-medium text-gray-900">{{ t('manage.common.contentLanguage') }}</h3>
           <div class="flex items-center bg-gray-100 rounded-lg p-1">
-            <button 
+            <button
               @click="currentLanguage = 'en'"
               type="button"
               :class="currentLanguage === 'en' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'"
               class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
             >
-              🇺🇸 English
+              {{ t('manage.common.english') }}
             </button>
-            <button 
+            <button
               @click="currentLanguage = 'th'"
               type="button"
               :class="currentLanguage === 'th' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'"
               class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
             >
-              🇹🇭 ไทย
+              {{ t('manage.common.thai') }}
             </button>
           </div>
         </div>
         <p class="text-sm text-gray-500 mt-2">
-          Switch between languages to edit content. {{ currentLanguage === 'en' ? 'Editing English content' : 'กำลังแก้ไขเนื้อหาภาษาไทย' }}
+          {{ t('manage.common.switchLanguageHint') }} {{ currentLanguage === 'en' ? t('manage.common.editingEnglish') : t('manage.common.editingThai') }}
         </p>
       </div>
 
@@ -50,32 +50,32 @@
       <form v-if="!loading" @submit.prevent="handleSubmit" class="space-y-8">
         <!-- Hero Section -->
         <div class="card p-6">
-          <h2 class="text-xl font-bold text-gray-900 mb-6">Hero Section</h2>
-          
+          <h2 class="text-xl font-bold text-gray-900 mb-6">{{ t('manage.teamContent.heroSection') }}</h2>
+
           <div class="space-y-6">
             <BaseInput
               v-model="formData.heroTitle[currentLanguage]"
               type="text"
-              :label="`Hero Title (${currentLanguage.toUpperCase()})`"
-              placeholder="Enter hero title..."
+              :label="`${t('manage.teamContent.heroTitle')} (${currentLanguage.toUpperCase()})`"
+              :placeholder="t('manage.teamContent.enterHeroTitle')"
               required
             />
 
             <BaseTextarea
               v-model="formData.heroSubtitle[currentLanguage]"
-              :label="`Hero Subtitle (${currentLanguage.toUpperCase()})`"
-              placeholder="Enter hero subtitle..."
+              :label="`${t('manage.teamContent.heroSubtitle')} (${currentLanguage.toUpperCase()})`"
+              :placeholder="t('manage.teamContent.enterHeroSubtitle')"
               :rows=3
               required
             />
-            
+
             <!-- Hero Background Image -->
             <div>
-              <label class="form-label">Hero Background Image</label>
+              <label class="form-label">{{ t('manage.teamContent.heroBackgroundImage') }}</label>
               <CmsImageUpload
                 v-model="formData.heroImage"
-                label="Hero Section Background (optional)"
-                help-text="Recommended: High-quality image, 1920x1080px or larger. Will be used as background for the hero section."
+                :label="t('manage.teamContent.heroSectionBackground')"
+                :help-text="t('manage.teamContent.heroImageHelp')"
               />
             </div>
           </div>
@@ -84,14 +84,14 @@
         <!-- Save Button -->
         <div class="flex justify-end space-x-4">
           <NuxtLink to="/manage">
-            <BaseButton variant="secondary">Cancel</BaseButton>
+            <BaseButton variant="secondary">{{ t('manage.common.cancel') }}</BaseButton>
           </NuxtLink>
           <BaseButton
             type="submit"
             variant="primary"
             :disabled="saving"
           >
-            {{ saving ? 'Saving...' : 'Save Changes' }}
+            {{ saving ? t('manage.common.saving') : t('manage.common.saveChanges') }}
           </BaseButton>
         </div>
       </form>
@@ -119,6 +119,7 @@
 </template>
 
 <script setup>
+const { t } = useI18n()
 
 definePageMeta({
   middleware: 'auth',
@@ -167,7 +168,7 @@ const loadContent = async () => {
   try {
     await cmsStore.fetchTeamContent()
     const response = cmsStore.teamContent
-    console.log('Loaded insights content:', response)
+    // console.log('Loaded insights content:', response)
 
     if (response) {
       // The API already transforms JSON strings to objects, so use them directly
@@ -178,7 +179,7 @@ const loadContent = async () => {
       formData.heroImage = response.heroImage || ''
     }
   } catch (error) {
-    errorMessage.value = 'Failed to load content'
+    errorMessage.value = t('manage.teamContent.failedToLoad')
     console.error('Failed to load content:', error)
   } finally {
     loading.value = false
@@ -202,9 +203,9 @@ const handleSubmit = async () => {
 
     await cmsStore.updateTeamContent({ body: submitData })
 
-    successMessage.value = 'Insights page content updated successfully!'
+    successMessage.value = t('manage.teamContent.updateSuccess')
   } catch (error) {
-    errorMessage.value = 'Failed to update content. Please try again.'
+    errorMessage.value = t('manage.teamContent.updateError')
     console.error('Failed to update content:', error)
   } finally {
     saving.value = false

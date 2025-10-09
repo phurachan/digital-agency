@@ -5,11 +5,11 @@
         <div class="footer-col">
           <h4>{{ t('footer.quickLinks') }}</h4>
           <ul>
-            <li><a href="#services">{{ t('index.ourService') }}</a></li>
-            <li><a href="#projects">{{ t('index.projects') }}</a></li>
-            <li><a href="#why-us">{{ t('index.whyUs') }}</a></li>
-            <li><a href="#insights">{{ t('index.insights') }}</a></li>
-            <li><a href="#contact">{{ t('common.contactUs') }}</a></li>
+            <li><NuxtLink :to="$localePath('/')">{{ t('nav.home') }}</NuxtLink></li>
+            <li><NuxtLink :to="$localePath('/about')">{{ t('nav.about') }}</NuxtLink></li>
+            <li><NuxtLink :to="$localePath('/services')">{{ t('index.projects') }}</NuxtLink></li>
+            <li><NuxtLink :to="$localePath('/team')">{{ t('nav.team') }}</NuxtLink></li>
+            <li><NuxtLink :to="$localePath('/contact')">{{ t('common.contactUs') }}</NuxtLink></li>
           </ul>
         </div>
 
@@ -54,8 +54,14 @@
 
 <script setup>
 const { t } = useI18n()
+const { $localePath } = useNuxtApp()
 const cmsStore = useCMSStore()
 const { createLocalizedContent } = useMultiLanguage()
+
+// Fetch contact content if not already loaded
+if (!cmsStore.contactContent || Object.keys(cmsStore.contactContent).length === 0) {
+  await cmsStore.fetchContactContent()
+}
 
 // Computed properties for CMS content
 const siteSettings = computed(() => createLocalizedContent(cmsStore.siteSettings || {}))
