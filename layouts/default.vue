@@ -48,35 +48,35 @@
               <div class="dropdown-content mt-3 z-[1] card card-compact w-80 bg-base-100 shadow-xl">
                 <div class="card-body">
                   <div class="flex items-center justify-between">
-                    <h3 class="font-bold text-lg">Notifications</h3>
-                    <div class="badge badge-primary">3 New</div>
+                    <h3 class="font-bold text-lg">{{ t('layout.navbar.notifications') }}</h3>
+                    <div class="badge badge-primary">{{ t('layout.navbar.newCount', { count: 3 }) }}</div>
                   </div>
                   <div class="divider my-2"></div>
                   <div class="space-y-3">
                     <div class="alert alert-info py-2">
                       <BaseIcon name="information-circle" variant="solid" size="sm" />
                       <div>
-                        <div class="text-sm font-semibold">New user registered</div>
-                        <div class="text-xs opacity-70">5 minutes ago</div>
+                        <div class="text-sm font-semibold">{{ t('layout.navbar.newUserRegistered') }}</div>
+                        <div class="text-xs opacity-70">{{ t('layout.navbar.minutesAgo', { count: 5 }) }}</div>
                       </div>
                     </div>
                     <div class="alert alert-success py-2">
                       <BaseIcon name="check-circle" variant="solid" size="sm" />
                       <div>
-                        <div class="text-sm font-semibold">Order #1234 completed</div>
-                        <div class="text-xs opacity-70">10 minutes ago</div>
+                        <div class="text-sm font-semibold">{{ t('layout.navbar.orderCompleted', { orderId: '1234' }) }}</div>
+                        <div class="text-xs opacity-70">{{ t('layout.navbar.minutesAgo', { count: 10 }) }}</div>
                       </div>
                     </div>
                     <div class="alert alert-warning py-2">
                       <BaseIcon name="exclamation-triangle" variant="solid" size="sm" />
                       <div>
-                        <div class="text-sm font-semibold">System maintenance in 2h</div>
-                        <div class="text-xs opacity-70">15 minutes ago</div>
+                        <div class="text-sm font-semibold">{{ t('layout.navbar.systemMaintenance') }}</div>
+                        <div class="text-xs opacity-70">{{ t('layout.navbar.minutesAgo', { count: 15 }) }}</div>
                       </div>
                     </div>
                   </div>
                   <div class="card-actions justify-end mt-3">
-                    <button class="btn btn-primary btn-sm">View All</button>
+                    <button class="btn btn-primary btn-sm">{{ t('layout.navbar.viewAll') }}</button>
                   </div>
                 </div>
               </div>
@@ -113,7 +113,7 @@
                   <hr class="my-2">
                 </li>
                 <li><a @click="logout" class="text-error">
-                    <BaseIcon name="arrow-right-on-rectangle" size="sm" />Logout
+                    <BaseIcon name="arrow-right-on-rectangle" size="sm" />{{ t('layout.navbar.logout') }}
                   </a></li>
               </ul>
             </div>
@@ -139,13 +139,13 @@
               <img v-if="siteLogo" :src="siteLogo" alt="Logo" :class="isSidebarCollapsed ? 'h-auto ' : 'h-20 '" class="rounded-full" />
               <BaseIcon v-else name="shield-check" size="xl" />
               <div v-if="!isSidebarCollapsed" class="hidden lg:block">
-                <h1 class="text-xl font-bold">Admin Panel</h1>
-                <p class="text-sm opacity-80">Management System</p>
+                <h1 class="text-xl font-bold">{{ t('layout.sidebar.adminPanel') }}</h1>
+                <p class="text-sm opacity-80">{{ t('layout.sidebar.managementSystem') }}</p>
               </div>
               <!-- Mobile always shows text -->
               <div class="lg:hidden">
-                <h1 class="text-xl font-bold">Admin Panel</h1>
-                <p class="text-sm opacity-80">Management System</p>
+                <h1 class="text-xl font-bold">{{ t('layout.sidebar.adminPanel') }}</h1>
+                <p class="text-sm opacity-80">{{ t('layout.sidebar.managementSystem') }}</p>
               </div>
             </div>
           </div>
@@ -220,6 +220,7 @@ import { useRoute } from 'vue-router'
 import { useAuthStore } from '~/stores/auth'
 import { useCMSStore } from '~/stores/cms'
 
+const { t } = useI18n()
 const route = useRoute()
 const authStore = useAuthStore()
 const cmsStore = useCMSStore()
@@ -291,96 +292,96 @@ onMounted(async () => {
   }
 })
 
-// Menu configuration
-const menuSections = ref([
+// Menu configuration - use computed for i18n reactivity
+const menuSections = computed(() => [
   {
-    title: "Dashboard",
+    title: t('layout.sidebar.sections.dashboard'),
     icon: "chart-bar",
     items: [
       {
         path: "/admin",
-        label: "Overview",
+        label: t('layout.sidebar.menu.overview'),
         icon: "home",
         activeWhen: ["/admin"]
       }
     ]
   },
   {
-    title: "Content Management",
+    title: t('layout.sidebar.sections.contentManagement'),
     icon: "pencil-square",
     items: [
       {
         path: "/manage",
-        label: "Dashboard",
+        label: t('layout.sidebar.menu.dashboard'),
         icon: "chart-bar",
         activeWhen: ["/manage"]
       },
       {
         path: "/manage/home",
-        label: "Home Page",
+        label: t('layout.sidebar.menu.homePage'),
         icon: "home",
         activeWhen: ["/manage/home"]
       },
       {
         path: "/manage/about",
-        label: "About Page",
+        label: t('layout.sidebar.menu.aboutPage'),
         icon: "information-circle",
         activeWhen: ["/manage/about"]
       },
       {
         path: "/manage/services-content",
-        label: "Services Content",
+        label: t('layout.sidebar.menu.servicesContent'),
         icon: "briefcase",
         activeWhen: ["/manage/services-content"]
       },
       {
         path: "/manage/services",
-        label: "Manage Services",
+        label: t('layout.sidebar.menu.manageServices'),
         icon: "cog-6-tooth",
         activeWhen: ["/manage/services"]
       },
       {
         path: "/manage/team-content",
-        label: "Insights Content",
+        label: t('layout.sidebar.menu.insightsContent'),
         icon: "users",
         activeWhen: ["/manage/team-content"]
       },
       {
         path: "/manage/team",
-        label: "Manage Insights",
+        label: t('layout.sidebar.menu.manageInsights'),
         icon: "user-group",
         activeWhen: ["/manage/team"]
       },
       {
         path: "/manage/contact",
-        label: "Contact Page",
+        label: t('layout.sidebar.menu.contactPage'),
         icon: "envelope",
         activeWhen: ["/manage/contact"]
       },
       {
         path: "/manage/faqs",
-        label: "FAQs",
+        label: t('layout.sidebar.menu.faqs'),
         icon: "question-mark-circle",
         activeWhen: ["/manage/faqs"]
       },
       {
         path: "/manage/settings",
-        label: "Site Settings",
+        label: t('layout.sidebar.menu.siteSettings'),
         icon: "adjustments-horizontal",
         activeWhen: ["/manage/settings"]
       }
     ]
   },
   {
-    title: "Settings",
+    title: t('layout.sidebar.sections.settings'),
     icon: "cog-6-tooth",
     items: [
       {
         path: "/admin/user_management",
-        label: "User Management",
+        label: t('layout.sidebar.menu.userManagement'),
         icon: "user",
         badge: {
-          text: "New",
+          text: t('layout.sidebar.badges.new'),
           variant: "primary"
         }
       }

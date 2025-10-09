@@ -825,5 +825,43 @@
   "admin": {
     "title": "แผงผู้ดูแลระบบ",
     "description": "จัดการผู้ใช้ บทบาท และสิทธิ์"
+  },
+  "layout": {
+    "navbar": {
+      "notifications": "การแจ้งเตือน",
+      "newCount": "{count} รายการใหม่",
+      "newUserRegistered": "มีผู้ใช้ใหม่ลงทะเบียน",
+      "minutesAgo": "{count} นาทีที่แล้ว",
+      "orderCompleted": "คำสั่งซื้อ #{orderId} เสร็จสิ้น",
+      "systemMaintenance": "ปรับปรุงระบบในอีก 2 ชั่วโมง",
+      "viewAll": "ดูทั้งหมด",
+      "logout": "ออกจากระบบ"
+    },
+    "sidebar": {
+      "adminPanel": "แผงผู้ดูแล",
+      "managementSystem": "ระบบจัดการ",
+      "sections": {
+        "dashboard": "แดชบอร์ด",
+        "contentManagement": "จัดการเนื้อหา",
+        "settings": "การตั้งค่า"
+      },
+      "menu": {
+        "overview": "ภาพรวม",
+        "dashboard": "แดชบอร์ด",
+        "homePage": "หน้าหลัก",
+        "aboutPage": "หน้าเกี่ยวกับเรา",
+        "servicesContent": "เนื้อหาหน้าบริการ",
+        "manageServices": "จัดการบริการ",
+        "insightsContent": "เนื้อหาหน้า Insights",
+        "manageInsights": "จัดการ Insights",
+        "contactPage": "หน้าติดต่อ",
+        "faqs": "คำถามที่พบบ่อย",
+        "siteSettings": "ตั้งค่าเว็บไซต์",
+        "userManagement": "จัดการผู้ใช้"
+      },
+      "badges": {
+        "new": "ใหม่"
+      }
+    }
   }
 }

@@ -825,5 +825,43 @@
   "admin": {
     "title": "Admin Panel",
     "description": "Manage users, roles, and permissions"
+  },
+  "layout": {
+    "navbar": {
+      "notifications": "Notifications",
+      "newCount": "{count} New",
+      "newUserRegistered": "New user registered",
+      "minutesAgo": "{count} minutes ago",
+      "orderCompleted": "Order #{orderId} completed",
+      "systemMaintenance": "System maintenance in 2h",
+      "viewAll": "View All",
+      "logout": "Logout"
+    },
+    "sidebar": {
+      "adminPanel": "Admin Panel",
+      "managementSystem": "Management System",
+      "sections": {
+        "dashboard": "Dashboard",
+        "contentManagement": "Content Management",
+        "settings": "Settings"
+      },
+      "menu": {
+        "overview": "Overview",
+        "dashboard": "Dashboard",
+        "homePage": "Home Page",
+        "aboutPage": "About Page",
+        "servicesContent": "Services Content",
+        "manageServices": "Manage Services",
+        "insightsContent": "Insights Content",
+        "manageInsights": "Manage Insights",
+        "contactPage": "Contact Page",
+        "faqs": "FAQs",
+        "siteSettings": "Site Settings",
+        "userManagement": "User Management"
+      },
+      "badges": {
+        "new": "New"
+      }
+    }
   }
 }
