@@ -354,7 +354,7 @@ const contactContent = computed(() => createLocalizedContent(cmsStore.contactCon
 const services = computed(() => {
   const allServices = cmsStore.services || []
   return allServices
-    .filter(service => service.isActive)
+    .filter(service => service.isActive && service.isDisplayInHome)
     .slice(0, 6)
     .map(service => {
       const localized = createLocalizedContent(service)
