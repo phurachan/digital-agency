@@ -1,9 +1,15 @@
-import { writeFile, mkdir } from 'fs/promises'
-import { join } from 'path'
-import { existsSync } from 'fs'
+import { uploadToS3, generateUniqueFilename, isS3Enabled } from '~/server/utils/s3'
 
 export default defineEventHandler(async (event) => {
   try {
+    // Check if S3 is configured
+    if (!isS3Enabled()) {
+      throw createError({
+        statusCode: 500,
+        message: 'S3 is not configured. Please set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and AWS_S3_BUCKET environment variables.'
+      })
+    }
+
     const form = await readMultipartFormData(event)
 
     if (!form) {
@@ -23,43 +29,40 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    // Create upload directory if it doesn't exist
-    const uploadDir = join(process.cwd(), 'public', 'uploads', category)
-    if (!existsSync(uploadDir)) {
-      await mkdir(uploadDir, { recursive: true })
-    }
-
     const uploadedUrls: string[] = []
 
-    // Process each file
+    // Process each file and upload to S3
     for (const file of files) {
       if (!file.filename || !file.data) continue
 
       // Generate unique filename
-      const timestamp = Date.now()
-      const randomStr = Math.random().toString(36).substring(2, 8)
-      const ext = file.filename.split('.').pop()
-      const filename = `${timestamp}-${randomStr}.${ext}`
-      const filepath = join(uploadDir, filename)
+      const uniqueFilename = generateUniqueFilename(file.filename)
 
-      // Write file
-      await writeFile(filepath, file.data)
+      // Determine content type
+      const contentType = file.type || 'application/octet-stream'
 
-      // Generate URL
-      const url = `/uploads/${category}/${filename}`
-      uploadedUrls.push(url)
+      // Upload to S3
+      const result = await uploadToS3({
+        fileName: uniqueFilename,
+        fileData: file.data,
+        contentType,
+        folder: `uploads/${category}`
+      })
+
+      uploadedUrls.push(result.url)
     }
 
     return {
       success: true,
       urls: uploadedUrls,
-      count: uploadedUrls.length
+      count: uploadedUrls.length,
+      storage: 'S3'
     }
 
   } catch (error: any) {
     console.error('Upload error:', error)
     throw createError({
-      statusCode: 500,
+      statusCode: error.statusCode || 500,
       message: error.message || 'Failed to upload files'
     })
   }
