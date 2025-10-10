@@ -1,4 +1,5 @@
 import Service from '~/server/models/Service'
+import { createServiceFilterConfig } from '~/server/utils/filter_config/serviceManagement'
 import { connectMongoDB } from '~/server/utils/mongodb'
 import { createSuccessResponse, createPredefinedError, API_RESPONSE_CODES } from '~/server/utils/responseHandler'
 
@@ -6,8 +7,39 @@ export default defineEventHandler(async (event) => {
   await connectMongoDB()
 
   try {
+    const query = getQuery(event);
+    // Parse query and build MongoDB filter using global utilities
+    const { parsedQuery, mongoFilter } = parseQueryAndBuildFilter(
+      query,
+      createServiceFilterConfig()
+    )
+
+    const { page, limit } = parsedQuery.pagination
+    let filter = mongoFilter
+
+    // Handle ObjectId conversion for features field
+    if (filter.features && typeof filter.features === 'string') {
+      try {
+        filter.features = filter.features
+      } catch (error) {
+        console.warn('Invalid features filter:', filter.features)
+        delete filter.features
+      }
+    } else if (filter.features && filter.features.$in && Array.isArray(filter.features.$in)) {
+      try {
+        filter.features.$in = filter.features.$in.map((id: string) => id)
+      } catch (error) {
+        console.warn('Invalid features filter array:', filter.features.$in)
+        delete filter.features
+      }
+    }
+    
     // Get all services (both active and inactive for management), sorted by order
-    const services = await Service.find({}).sort({ order: 1 }).lean()
+    const services = await Service.find(filter)
+      .sort({ order: 1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .lean()
 
     // Transform the services
     const transformedServices = services.map(service => {
@@ -27,28 +59,12 @@ export default defineEventHandler(async (event) => {
         description = { th: service.description || '', en: service.description || '' }
       }
 
-      // Safely parse category
-      let category
-      try {
-        category = service.category ? (typeof service.category === 'string' ? JSON.parse(service.category) : service.category) : { th: '', en: '' }
-      } catch (e) {
-        category = { th: service.category || '', en: service.category || '' }
-      }
-
-      // Safely parse features
-      let features
-      try {
-        features = service.features ? (typeof service.features === 'string' ? JSON.parse(service.features) : service.features) : []
-      } catch (e) {
-        features = []
-      }
-
       return {
         id: service._id.toString(),
         title: title || { th: '', en: '' },
         description: description || { th: '', en: '' },
-        category: category || { th: '', en: '' },
-        features: features || [],
+        features: service.features || [],
+        album: service.album || [],
         price: service.price,
         isActive: service.isActive,
         isDisplayInHome: service.isDisplayInHome ?? true,

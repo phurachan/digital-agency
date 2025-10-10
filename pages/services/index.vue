@@ -12,15 +12,12 @@
     </CmsNavbar>
 
     <!-- Hero Section -->
-    <section
-      class="section-padding text-white relative overflow-hidden"
-      style="padding-top: 160px;"
+    <section class="section-padding text-white relative overflow-hidden" style="padding-top: 160px;"
       :class="servicesContent.heroImage ? 'bg-cover bg-center bg-no-repeat' : 'bg-gradient-primary-to-secondary'"
-      :style="servicesContent.heroImage ? { backgroundImage: `url(${servicesContent.heroImage})` } : {}"
-    >
+      :style="servicesContent.heroImage ? { backgroundImage: `url(${servicesContent.heroImage})` } : {}">
       <!-- Overlay for better text readability when using background image -->
       <div v-if="servicesContent.heroImage" class="absolute inset-0 bg-black/40"></div>
-      
+
       <div class="container text-center relative z-10">
         <h1 class="font-bold mb-6" style="font-size: clamp(40px, 5vw, 72px);">{{ servicesContent.heroTitle }}</h1>
         <p class="text-blue-100 max-w-3xl mx-auto" style="font-size: clamp(24px, 2vw, 28px);">
@@ -30,158 +27,146 @@
     </section>
 
     <!-- Services Grid -->
-    <section class="section-padding">
-      <div class="container">
-        <!-- Category Filter Buttons -->
-        <div v-if="serviceCategories.length > 0" class="mb-8">
-          <div class="flex flex-wrap gap-3 justify-center items-center">
-            <button
-              @click="navigateTo($localePath('/services'))"
-              :class="!selectedCategory ? 'category-filter-active' : 'category-filter'"
-              class="transition-all duration-300"
-            >
-              All Services
-            </button>
-            <button
-              v-for="(category, index) in serviceCategories"
-              :key="index"
-              @click="navigateTo($localePath(`/services?category=${encodeURIComponent(category.value)}`))"
-              :class="selectedCategory === category.value ? 'category-filter-active' : 'category-filter'"
-              class="transition-all duration-300"
-            >
-              {{ category.label }}
-            </button>
-          </div>
-        </div>
-
-        <!-- Category Filter Info (when filtered) -->
-        <div v-if="selectedCategory" class="mb-8 flex items-center justify-center bg-blue-50 p-3 rounded-lg">
-          <div class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
-            </svg>
-            <span class="text-gray-700 text-sm">Showing <strong class="text-blue-600">{{ services.length }}</strong> {{ services.length === 1 ? 'service' : 'services' }} in <strong class="text-blue-600">{{ selectedCategoryLabel }}</strong></span>
-          </div>
-        </div>
-
-        <div class="grid lg:grid-cols-2 xl:grid-cols-3 gap-8">
-          <div
-            v-for="service in services"
-            :key="service.id"
-            class="card p-8 cursor-pointer group transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
-            @click="handleServiceClick(service)"
-          >
-            <!-- Color accent bar -->
-            <div
-              class="absolute top-0 left-0 w-full h-1"
-              :style="{ backgroundColor: service.color || '#6495ed' }"
-            ></div>
-
-            <!-- Service Media (Priority: Image > Video > Icon) -->
-            <div class="w-full h-48 mb-6 rounded-2xl overflow-hidden relative">
-              <!-- Image Display (First Priority) -->
-              <img
-                v-if="service.image"
-                :src="service.image"
-                :alt="service.title"
-                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-              >
-
-              <!-- Video Display (Second Priority) -->
-              <video
-                v-else-if="service.video"
-                :src="service.video"
-                class="w-full h-full object-cover"
-                muted
-                loop
-                autoplay
-                playsinline
-                @mouseenter="$event.target.play()"
-                @mouseleave="$event.target.pause()"
-              ></video>
-
-              <!-- Icon Fallback (Third Priority) -->
-              <div
-                v-else
-                class="w-full h-full rounded-2xl flex items-center justify-center text-white"
-                :style="{ backgroundColor: service.color || '#6495ed' }"
-              >
-                <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path v-if="service.icon === 'search'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                  <path v-else-if="service.icon === 'social'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2M7 4h10M7 4L5.5 20h13L17 4M9 9v6M15 9v6"></path>
-                  <path v-else-if="service.icon === 'code'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                  <path v-else-if="service.icon === 'ads'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM4 19h9a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                  <path v-else-if="service.icon === 'email'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                  <path v-else-if="service.icon === 'analytics'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                  <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                </svg>
-              </div>
-            </div>
-
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300" style="font-size: 28px;">{{ service.title }}</h3>
-              <div v-if="service.price" class="font-semibold text-primary" style="font-size: 26px;">
-                ฿{{ service.price.toLocaleString() }}
-              </div>
-            </div>
-
-            <p class="text-gray-600 mb-6 line-clamp-3" style="font-size: 22px;">{{ service.description }}</p>
-
-            <!-- Features list -->
-            <ul v-if="service.features && service.features.length" class="space-y-2 mb-6">
-              <li v-for="feature in service.features.slice(0, 4)" :key="feature" class="flex items-center text-gray-700">
-                <svg class="w-4 h-4 text-green-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                <span class="text-sm">{{ feature }}</span>
-              </li>
-            </ul>
-
-            <button
-              class="btn-primary w-full group-hover:scale-105 transition-transform duration-300"
-              @click.stop="handleServiceClick(service)"
-            >
-              {{ t('services.viewMore') }}
-            </button>
-          </div>
-
-          <!-- Show message if no services -->
-          <div v-if="services.length === 0" class="col-span-full text-center py-12">
-            <p class="text-gray-500">{{ t('home.servicesWillAppear') }}</p>
-          </div>
-        </div>
+    <section class="pt-10">
+      <div class="service-tags">
+        <NuxtLink key="all_categories" :to="$localePath(`/services`)" class="service-tag"
+          :class="[{ 'active': !$route.query.category }]">
+          {{ t('common.all') }}
+        </NuxtLink>
+        <NuxtLink v-for="(category, index) in serviceCategories" :key="index"
+          :to="$localePath(`/services?category=${encodeURIComponent(category.value)}`)" class="service-tag"
+          :class="[{ 'active': $route.query.category == category.value }]">
+          {{ category.label }}
+        </NuxtLink>
       </div>
+
+      <ClientOnly>
+        <div class="container">
+          <div class="grid lg:grid-cols-2 xl:grid-cols-3 gap-8">
+            <div v-for="service in services" :key="service.id"
+              class="card p-8 cursor-pointer group transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
+              @click="handleServiceClick(service)">
+              <!-- Color accent bar -->
+              <div class="absolute top-0 left-0 w-full h-1" :style="{ backgroundColor: service.color || '#6495ed' }">
+              </div>
+
+              <!-- Service Media (Priority: Image > Video > Icon) -->
+              <div class="w-full h-48 mb-6 rounded-2xl overflow-hidden relative">
+                <!-- Image Display (First Priority) -->
+                <img v-if="service.image" :src="service.image" :alt="service.title"
+                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+
+                <!-- Video Display (Second Priority) -->
+                <video v-else-if="service.video" :src="service.video" class="w-full h-full object-cover" muted loop
+                  autoplay playsinline @mouseenter="($event.target as HTMLVideoElement)?.play()"
+                  @mouseleave="($event.target as HTMLVideoElement)?.pause()"></video>
+
+                <!-- Icon Fallback (Third Priority) -->
+                <div v-else class="w-full h-full rounded-2xl flex items-center justify-center text-white"
+                  :style="{ backgroundColor: service.color || '#6495ed' }">
+                  <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path v-if="service.icon === 'search'" stroke-linecap="round" stroke-linejoin="round"
+                      stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    <path v-else-if="service.icon === 'social'" stroke-linecap="round" stroke-linejoin="round"
+                      stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2M7 4h10M7 4L5.5 20h13L17 4M9 9v6M15 9v6">
+                    </path>
+                    <path v-else-if="service.icon === 'code'" stroke-linecap="round" stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                    </path>
+                    <path v-else-if="service.icon === 'ads'" stroke-linecap="round" stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 17h5l-5 5v-5zM4 19h9a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    <path v-else-if="service.icon === 'email'" stroke-linecap="round" stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                    </path>
+                    <path v-else-if="service.icon === 'analytics'" stroke-linecap="round" stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                    </path>
+                    <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                    </path>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300"
+                  style="font-size: 28px;">{{ service.title }}</h3>
+                <div v-if="service.price" class="font-semibold text-primary" style="font-size: 26px;">
+                  ฿{{ service.price.toLocaleString() }}
+                </div>
+              </div>
+
+              <p class="text-gray-600 mb-6 line-clamp-3" style="font-size: 22px;">{{ service.description }}</p>
+
+              <!-- Features badges -->
+              <div v-if="service.features && service.features.length" class="mb-6">
+                <div class="flex flex-wrap gap-2">
+                  <span v-for="feature in service.features" :key="feature"
+                    class="px-3 py-1.5 text-sm rounded-full text-white font-medium"
+                    :style="{ backgroundColor: service.color || '#6495ed', opacity: 0.9 }">
+                    {{ feature }}
+                  </span>
+                </div>
+              </div>
+
+              <button class="btn-primary w-full group-hover:scale-105 transition-transform duration-300"
+                @click.stop="handleServiceClick(service)">
+                {{ t('services.viewMore') }}
+              </button>
+            </div>
+
+            <!-- Show message if no services -->
+            <div v-if="services.length === 0" class="col-span-full text-center py-12">
+              <p class="text-gray-500">{{ t('home.servicesWillAppear') }}</p>
+            </div>
+          </div>
+        </div>
+      </ClientOnly>
     </section>
 
     <!-- Process Section -->
     <section class="section-padding bg-gray-50">
       <div class="container">
         <div class="text-center mb-16">
-          <h2 class="font-bold mb-4 text-gray-900" style="font-size: clamp(40px, 4vw, 56px);">{{ t('services.ourProcess') }}</h2>
+          <h2 class="font-bold mb-4 text-gray-900" style="font-size: clamp(40px, 4vw, 56px);">{{
+            t('services.ourProcess') }}
+          </h2>
           <p class="text-gray-600" style="font-size: 26px;">{{ t('services.provenMethodology') }}</p>
         </div>
 
         <div class="grid md:grid-cols-4 gap-8">
           <div class="text-center">
-            <div class="w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">1</div>
+            <div
+              class="w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+              1</div>
             <h3 class="font-bold mb-2 text-gray-900" style="font-size: 24px;">{{ t('services.discovery') }}</h3>
             <p class="text-gray-600" style="font-size: 22px;">{{ t('services.discoveryDesc') }}</p>
           </div>
 
           <div class="text-center">
-            <div class="w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">2</div>
+            <div
+              class="w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+              2</div>
             <h3 class="font-bold mb-2 text-gray-900" style="font-size: 24px;">{{ t('services.strategy') }}</h3>
             <p class="text-gray-600" style="font-size: 22px;">{{ t('services.strategyDesc') }}</p>
           </div>
 
           <div class="text-center">
-            <div class="w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">3</div>
+            <div
+              class="w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+              3</div>
             <h3 class="font-bold mb-2 text-gray-900" style="font-size: 24px;">{{ t('services.execute') }}</h3>
             <p class="text-gray-600" style="font-size: 22px;">{{ t('services.executeDesc') }}</p>
           </div>
 
           <div class="text-center">
-            <div class="w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">4</div>
+            <div
+              class="w-16 h-16 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+              4</div>
             <h3 class="font-bold mb-2 text-gray-900" style="font-size: 24px;">{{ t('services.optimize') }}</h3>
             <p class="text-gray-600" style="font-size: 22px;">{{ t('services.optimizeDesc') }}</p>
           </div>
@@ -197,8 +182,11 @@
           {{ t('services.discussServices') }}
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <NuxtLink :to="$localePath('/contact')" class="btn-primary hover:bg-gray-100">{{ t('common.getFreeConsultation') }}</NuxtLink>
-          <button class="btn-secondary !border-white !text-white hover:bg-white hover:text-blue-600">{{ t('common.viewCaseStudies') }}</button>
+          <NuxtLink :to="$localePath('/contact')" class="btn-primary hover:bg-gray-100">{{
+            t('common.getFreeConsultation')
+          }}</NuxtLink>
+          <button class="btn-secondary !border-white !text-white hover:bg-white hover:text-blue-600">{{
+            t('common.viewCaseStudies') }}</button>
         </div>
       </div>
     </section>
@@ -208,20 +196,20 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 definePageMeta({
   layout: false
 })
 
 // Dynamic color calculation functions
-function hexToRgba(hex, alpha = 1) {
+function hexToRgba(hex: string, alpha = 1) {
   const r = parseInt(hex.slice(1, 3), 16)
   const g = parseInt(hex.slice(3, 5), 16)
   const b = parseInt(hex.slice(5, 7), 16)
   return `rgba(${r}, ${g}, ${b}, ${alpha})`
 }
 
-function adjustColorBrightness(hex, percent) {
+function adjustColorBrightness(hex: string, percent: number) {
   const num = parseInt(hex.slice(1), 16)
   const amt = Math.round(2.55 * percent)
   const R = (num >> 16) + amt
@@ -235,108 +223,83 @@ function adjustColorBrightness(hex, percent) {
 // Load site settings, services content, and services from CMS
 const cmsStore = useCMSStore()
 const { t, locale } = useI18n()
-const { createLocalizedContent, parseJsonField, getLocalizedFeatures } = useMultiLanguage()
+const { createLocalizedContent } = useMultiLanguage()
 const route = useRoute()
+
+// Import service categories
+import { getCategoryLabels } from '~/composables/constants/serviceCategories'
 
 await cmsStore.fetchSiteSettings()
 await cmsStore.fetchServicesContent()
-await cmsStore.fetchServices()
+if (!!route.query.category) {
+  cmsStore.fetchServices({
+    query: {
+      filter: {
+        features: route.query.category as string || undefined
+      }
+    }
+  })
+} else {
+  await cmsStore.fetchServices()
+}
 
 const siteSettingsRaw = cmsStore.siteSettings
 const servicesContentRaw = cmsStore.servicesContent
 const servicesRaw = cmsStore.getActiveServices
 
-// Get category from query parameter
-const selectedCategory = computed(() => route.query.category || '')
-
-// Get localized name for selected category
-const selectedCategoryLabel = computed(() => {
-  if (!selectedCategory.value) return ''
-
-  const category = serviceCategories.value.find(cat => cat.value === selectedCategory.value)
-  return category ? category.label : selectedCategory.value
-})
-
-// Get distinct categories for filter buttons
-const serviceCategories = computed(() => {
-  const categoriesMap = new Map()
-
-  servicesRaw.forEach(service => {
-    if (service.category) {
-      try {
-        const categoryObj = typeof service.category === 'string'
-          ? JSON.parse(service.category)
-          : service.category
-
-        const categoryId = (categoryObj.en || categoryObj.th || '').toLowerCase()
-        if (categoryId && !categoriesMap.has(categoryId)) {
-          categoriesMap.set(categoryId, categoryObj)
-        }
-      } catch (e) {
-        const categoryId = service.category.toLowerCase()
-        if (!categoriesMap.has(categoryId)) {
-          categoriesMap.set(categoryId, { en: service.category, th: service.category })
-        }
-      }
-    }
-  })
-
-  return Array.from(categoriesMap.values()).map(cat => {
-    return {
-      label: cat[locale.value] || cat.en || cat.th || '', // แสดงตามภาษาปัจจุบัน
-      value: cat.en || cat.th || '' // ใช้ EN เสมอใน URL
-    }
-  }).filter(item => item.label && item.value)
-})
-
 // Create reactive localized content
 const siteSettings = computed(() => createLocalizedContent(siteSettingsRaw))
 const servicesContent = computed(() => createLocalizedContent(servicesContentRaw))
 const services = computed(() => {
-  let filteredServices = servicesRaw
-
-  // Filter by category if specified
-  if (selectedCategory.value) {
-    filteredServices = servicesRaw.filter(service => {
-      if (!service.category) return false
-
-      try {
-        const categoryObj = typeof service.category === 'string'
-          ? JSON.parse(service.category)
-          : service.category
-
-        // เปรียบเทียบทั้ง EN และ TH
-        const categoryEN = categoryObj.en || ''
-        const categoryTH = categoryObj.th || ''
-        const searchTerm = selectedCategory.value.toLowerCase()
-
-        return categoryEN.toLowerCase() === searchTerm ||
-               categoryTH.toLowerCase() === searchTerm
-      } catch (e) {
-        // If parsing fails, compare as plain string
-        return service.category.toLowerCase() === selectedCategory.value.toLowerCase()
-      }
-    })
+  const services = cmsStore.services || []
+  if (!Array.isArray(services)) {
+    return []
   }
 
-  return filteredServices.map(service => {
+  return services.map(service => {
     const localized = createLocalizedContent(service)
+
+    // Features are already parsed by store as string[] of codes
+    const featureCodes: string[] = Array.isArray(service.features) ? service.features : []
+
+    // Get feature labels based on current locale
+    const featureLabels = getCategoryLabels(featureCodes, locale.value as 'en' | 'th')
+
     return {
       ...service, // Keep all original service data including externalURL
       ...localized, // Override with localized content
-      features: getLocalizedFeatures(service.features)
+      features: featureLabels, // Use localized feature labels
+      categoryLabels: [] // Categories have been removed
     }
   })
+})
+
+// Get service categories for "What We Do" section
+const serviceCategories = computed(() => {
+  return SERVICE_CATEGORIES.map(cat => ({
+    label: cat[locale.value] || cat.en, // แสดงตามภาษาปัจจุบัน
+    value: cat.code // ใช้ code สำหรับ URL
+  }))
 })
 
 // Handle service click - navigate to detail page
 const { $localePath } = useNuxtApp()
 
-const handleServiceClick = (service) => {
+const handleServiceClick = (service: any) => {
   // Navigate to service detail page
   navigateTo($localePath(`/services/${service.id}`))
 }
 
+watch(() => route.query.category, async (newCategory) => {
+  await cmsStore.fetchServices({
+    query: {
+      filter: {
+        features: newCategory as string || undefined
+      }
+    }
+  })
+}
+)
 // Dynamic color calculations
 const dynamicColors = computed(() => {
   const primary = siteSettings.value.primaryColor || '#6495ed'
@@ -437,7 +400,7 @@ useSeoMeta({
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
   transition: left 0.5s;
 }
 
@@ -656,28 +619,34 @@ useSeoMeta({
   display: none;
 }
 
-/* Category Filter Buttons */
-.category-filter {
-  @apply px-4 py-2 bg-white border-2 border-gray-200 rounded-full font-semibold text-sm text-gray-700 cursor-pointer;
+.service-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 50px;
+}
+
+.service-tag {
+  padding: 4px 12px;
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 20px;
+  color: #2d3748;
+  cursor: pointer;
   transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
 }
 
-.category-filter:hover {
-  @apply border-blue-500 text-blue-600 transform -translate-y-0.5;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
-}
-
-.category-filter-active {
-  @apply px-4 py-2 rounded-full font-semibold text-sm cursor-pointer;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-  border: 2px solid var(--primary-color);
-  color: white;
-  box-shadow: 0 4px 12px var(--primary-rgba-30);
-}
-
-.category-filter-active:hover {
-  @apply transform -translate-y-0.5;
-  box-shadow: 0 6px 16px var(--primary-rgba-30);
+.service-tag.active,
+.service-tag:hover {
+  border-color: var(--primary-color, #4949e9);
+  color: var(--primary-color, #4949e9);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(73, 73, 233, 0.1);
 }
 
 /* Responsive adjustments */
@@ -692,14 +661,20 @@ useSeoMeta({
     min-width: unset;
   }
 
-  .btn-primary + .btn-secondary,
-  .btn-secondary + .btn-primary {
+  .btn-primary+.btn-secondary,
+  .btn-secondary+.btn-primary {
     @apply ml-0 mt-3;
   }
+}
 
-  .category-filter,
-  .category-filter-active {
-    @apply text-xs px-3 py-1.5;
+@media (max-width: 480px) {
+  .service-tags {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .service-tag {
+    text-align: center;
   }
 }
 </style>

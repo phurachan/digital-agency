@@ -1,42 +1,79 @@
+import { useI18n } from 'vue-i18n'
+
 export const useMultiLanguage = () => {
   const { locale } = useI18n()
+
+  /**
+   * Strip HTML tags from a string
+   * @param html - HTML string
+   * @returns Plain text without HTML tags
+   */
+  const stripHtmlTags = (html: string): string => {
+    if (!html || typeof html !== 'string') return ''
+
+    // Remove HTML tags
+    let text = html.replace(/<[^>]*>/g, '')
+
+    // Decode common HTML entities
+    text = text
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#039;/g, "'")
+
+    // Remove extra whitespace
+    text = text.replace(/\s+/g, ' ').trim()
+
+    return text
+  }
 
   /**
    * Get localized content from multi-language field
    * @param field - The field that could be a JSON string, object, or plain string
    * @param fallback - Fallback text if no content is found
+   * @param stripHtml - Whether to strip HTML tags (default: false)
    * @returns Localized content
    */
-  const getLocalizedContent = (field: any, fallback: string = ''): string => {
+  const getLocalizedContent = (field: any, fallback: string = '', stripHtml: boolean = false): string => {
     try {
       // Check if field is null or undefined
       if (!field) return fallback
 
+      let result = ''
+
       // If it's already an object, extract the language value first
       if (typeof field === 'object' && field !== null) {
-        return field[locale.value] || field.en || field.th || fallback
+        result = field[locale.value] || field.en || field.th || fallback
       }
-
       // If it's already a string that doesn't look like JSON, return it
-      if (typeof field === 'string' && (!field.startsWith('{') && !field.startsWith('['))) {
-        return field
+      else if (typeof field === 'string' && (!field.startsWith('{') && !field.startsWith('['))) {
+        result = field
       }
-
       // If it's a string that looks like JSON, try to parse it
-      if (typeof field === 'string') {
+      else if (typeof field === 'string') {
         try {
           const parsed = JSON.parse(field)
           if (typeof parsed === 'object' && parsed !== null) {
-            return parsed[locale.value] || parsed.en || parsed.th || fallback
+            result = parsed[locale.value] || parsed.en || parsed.th || fallback
+          } else {
+            result = parsed
           }
-          return parsed
         } catch {
           // If JSON parsing fails, return the original string
-          return field
+          result = field
         }
+      } else {
+        result = field || fallback
       }
 
-      return field || fallback
+      // Strip HTML tags if requested
+      if (stripHtml && result) {
+        result = stripHtmlTags(result)
+      }
+
+      return result
     } catch (error) {
       console.warn('Error in getLocalizedContent:', error, 'Field:', field)
       return field || fallback
@@ -110,15 +147,18 @@ export const useMultiLanguage = () => {
 
     const content: any = {}
 
-    // Standard text fields
+    // Standard text fields (without HTML)
     const textFields = [
       'heroTitle', 'heroSubtitle', 'ctaText', 'ctaButtonText',
       'featureTitle', 'featureDescription', 'aboutTitle', 'aboutDescription',
       'peopleTitle', 'peopleDescription', 'missionTitle', 'missionText',
       'visionTitle', 'visionText', 'valuesTitle', 'valuesText',
-      'historyTitle', 'historyText', 'title', 'subtitle', 'description',
+      'historyTitle', 'historyText', 'title', 'subtitle',
       'name', 'position', 'bio', 'question', 'answer', 'siteName', 'siteTagline'
     ]
+
+    // Fields that may contain HTML and should be stripped for list views
+    const htmlFields = ['description']
 
     // Process text fields with fallbacks
     const fallbacks: { [key: string]: string } = {
@@ -138,13 +178,23 @@ export const useMultiLanguage = () => {
       name: 'Team Member',
       position: 'Staff',
       question: 'Question',
-      answer: 'Answer'
+      answer: 'Answer',
+      description: ''
     }
 
-    // Process text fields
+    // Process text fields (no HTML stripping)
     textFields.forEach(field => {
       if (rawContent[field] !== undefined) {
         content[field] = getLocalizedContent(rawContent[field], fallbacks[field] || '')
+      } else if (fallbacks[field]) {
+        content[field] = fallbacks[field]
+      }
+    })
+
+    // Process HTML fields (strip HTML tags)
+    htmlFields.forEach(field => {
+      if (rawContent[field] !== undefined) {
+        content[field] = getLocalizedContent(rawContent[field], fallbacks[field] || '', true)
       } else if (fallbacks[field]) {
         content[field] = fallbacks[field]
       }
@@ -186,6 +236,7 @@ export const useMultiLanguage = () => {
   }
 
   return {
+    stripHtmlTags,
     getLocalizedContent,
     parseJsonField,
     getLocalizedFeatures,

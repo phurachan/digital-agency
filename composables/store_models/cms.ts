@@ -24,9 +24,11 @@ export interface Service {
   id?: string
   title: string
   description: string
-  features: string[] | string
+  features: string[]
+  album?: string[]
   price?: number
   isActive: boolean
+  isDisplayInHome?: boolean
   icon?: string
   image?: string | null
   video?: string | null
@@ -150,9 +152,11 @@ export interface ServiceRequest {
   id?: string
   title?: string
   description?: string
-  features?: string[]
+  features?:  string[]
+  album?: string[]
   price?: number
   isActive?: boolean
+  isDisplayInHome?: boolean
   icon?: string
   image?: string | null
   video?: string | null

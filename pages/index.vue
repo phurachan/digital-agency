@@ -133,9 +133,18 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </div>
-              <div class="project-overlay">
-                <h3 class="project-title">{{ service.title }}</h3>
-                <p class="project-category">{{ service.description }}</p>
+            </div>
+            <div class="project-content">
+              <h3 class="project-title">{{ service.title }}</h3>
+              <p class="project-description">{{ service.description }}</p>
+
+              <!-- Features badges -->
+              <div v-if="service.features && service.features.length" class="project-features">
+                <span v-for="feature in service.features" :key="feature"
+                  class="feature-badge"
+                  :style="{ backgroundColor: service.color, opacity: 0.9 }">
+                  {{ feature }}
+                </span>
               </div>
             </div>
           </NuxtLink>
@@ -315,7 +324,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 definePageMeta({
   layout: false
 })
@@ -324,6 +333,9 @@ const { t, locale, setLocale } = useI18n()
 const router = useRouter()
 const route = useRoute()
 const { $localePath } = useNuxtApp()
+
+// Import SERVICE_CATEGORIES
+import { SERVICE_CATEGORIES, getCategoryLabels } from '~/composables/constants/serviceCategories'
 
 const mobileMenuOpen = ref(false)
 const navbarHidden = ref(false)
@@ -360,8 +372,17 @@ const services = computed(() => {
     .slice(0, 6)
     .map(service => {
       const localized = createLocalizedContent(service)
+
+      // Features are already parsed by store as string[] of codes
+      const featureCodes: string[] = Array.isArray(service.features) ? service.features : []
+
+      // Get feature labels based on current locale
+      const featureLabels = getCategoryLabels(featureCodes, locale.value as 'en' | 'th')
+
       return {
         ...localized,
+        features: featureLabels,
+        color: service.color || '#6495ed',
         externalURL: service.externalURL,
         video: service.video
       }
@@ -382,38 +403,12 @@ const whatWeDoItems = computed(() => {
     })
 })
 
-// Get distinct categories for services section
+// Get service categories for "What We Do" section
 const serviceCategories = computed(() => {
-  const allServices = cmsStore.services || []
-  const categoriesMap = new Map() // Use Map to store unique categories with their localized values
-
-  allServices
-    .filter(service => service.isActive && service.category)
-    .forEach(service => {
-      try {
-        const categoryObj = typeof service.category === 'string'
-          ? JSON.parse(service.category)
-          : service.category
-
-        const categoryId = (categoryObj.en || categoryObj.th || '').toLowerCase()
-        if (categoryId && !categoriesMap.has(categoryId)) {
-          categoriesMap.set(categoryId, categoryObj)
-        }
-      } catch (e) {
-        // If parsing fails, treat as plain string
-        const categoryId = service.category.toLowerCase()
-        if (!categoriesMap.has(categoryId)) {
-          categoriesMap.set(categoryId, { en: service.category, th: service.category })
-        }
-      }
-    })
-
-  return Array.from(categoriesMap.values()).map(cat => {
-    return {
-      label: cat[locale.value] || cat.en || cat.th || '', // แสดงตามภาษาปัจจุบัน
-      value: cat.en || cat.th || '' // ใช้ EN เสมอใน URL
-    }
-  }).filter(item => item.label && item.value)
+  return SERVICE_CATEGORIES.map(cat => ({
+    label: cat[locale.value] || cat.en, // แสดงตามภาษาปัจจุบัน
+    value: cat.code // ใช้ code สำหรับ URL
+  }))
 })
 
 // Site colors
@@ -998,9 +993,11 @@ section {
 }
 
 .project-card {
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
+  background: white;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .project-card.clickable {
@@ -1044,31 +1041,41 @@ section {
   height: 60px;
 }
 
-.project-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-  color: white;
-  padding: 30px 20px 20px;
-  transform: translateY(100%);
-  transition: transform 0.3s ease;
-}
-
-.project-card:hover .project-overlay {
-  transform: translateY(0);
+.project-content {
+  padding: 24px;
 }
 
 .project-title {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 700;
-  margin-bottom: 5px;
+  margin-bottom: 12px;
+  color: #1a1a1a;
 }
 
-.project-category {
-  font-size: 22px;
-  opacity: 0.9;
+.project-description {
+  font-size: 18px;
+  color: #718096;
+  line-height: 1.6;
+  margin-bottom: 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.project-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.feature-badge {
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 20px;
+  color: white;
+  font-weight: 500;
 }
 
 /* Why Us Section */

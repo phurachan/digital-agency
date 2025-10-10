@@ -1,38 +1,32 @@
 import { defineStore } from 'pinia'
 import { API_ENDPOINTS } from '~/composables/constants/api'
 import type { BaseRequestData } from '~/composables/store_models/base'
-import { initState, loadingState, successState, errorState } from '~/composables/store_models/base'
+import { errorState, initState, loadingState, successState } from '~/composables/store_models/base'
 import type {
-  CMSState,
-  HomeContent,
-  HomeContentRequest,
-  Service,
-  ServiceRequest,
-  AboutContent,
   AboutContentRequest,
-  TeamMember,
-  TeamMemberRequest,
-  ContactContent,
+  CMSState,
   ContactContentRequest,
   FAQ,
   FAQRequest,
-  SiteSettings,
-  SiteSettingsRequest,
-  ServicesContent,
+  HomeContentRequest,
+  Service,
+  ServiceRequest,
   ServicesContentRequest,
-  TeamContent,
-  TeamContentRequest
+  SiteSettingsRequest,
+  TeamContentRequest,
+  TeamMember,
+  TeamMemberRequest
 } from '~/composables/store_models/cms'
+import {
+  getDefaultAboutContent,
+  getDefaultContactContent,
+  getDefaultHomeContent,
+  getDefaultServicesContent,
+  getDefaultSiteSettings,
+  getDefaultTeamContent
+} from '~/composables/utilities/defaultContent'
 import { useHttpClient } from '~/composables/utilities/useHttpClient'
 import { BaseResponseError } from '~/composables/utility_models/http'
-import {
-  getDefaultHomeContent,
-  getDefaultSiteSettings,
-  getDefaultServicesContent,
-  getDefaultTeamContent,
-  getDefaultAboutContent,
-  getDefaultContactContent
-} from '~/composables/utilities/defaultContent'
 
 export const useCMSStore = defineStore('cms', {
   state: (): CMSState => ({
@@ -107,18 +101,10 @@ export const useCMSStore = defineStore('cms', {
         this.$patch(loadingState(requestData))
 
         const httpClient = useHttpClient()
-        const response = await httpClient.get(API_ENDPOINTS.CMS.SERVICES.GET)
+        const response = await httpClient.get(API_ENDPOINTS.CMS.SERVICES.GET, requestData.query)
 
         this.$patch(successState(response))
-        const servicesWithParsedFeatures = response?.data?.map((service: Service) => ({
-          ...service,
-          features: typeof service.features === 'string'
-            ? JSON.parse(service.features)
-            : Array.isArray(service.features)
-              ? service.features
-              : []
-        })) || []
-        this.services = servicesWithParsedFeatures
+        this.services = response?.data
 
         return response
       } catch (error: any) {

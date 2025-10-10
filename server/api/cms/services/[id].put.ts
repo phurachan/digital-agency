@@ -37,12 +37,11 @@ export default defineEventHandler(async (event) => {
     // Prepare update data (remove fields that shouldn't be updated)
     const { id: bodyId, createdAt, updatedAt, ...rawUpdateData } = body
 
-    // Convert features array to JSON string if needed
+    // Convert features and album arrays if needed
     const updateData = {
       ...rawUpdateData,
-      features: Array.isArray(rawUpdateData.features)
-        ? JSON.stringify(rawUpdateData.features)
-        : rawUpdateData.features
+      features: rawUpdateData.features,
+      album: rawUpdateData.album
     }
 
     // Update service by ID
@@ -61,8 +60,8 @@ export default defineEventHandler(async (event) => {
       id: result._id.toString(),
       title: result.title,
       description: result.description,
-      category: result.category,
       features: result.features,
+      album: result.album,
       price: result.price,
       isActive: result.isActive,
       isDisplayInHome: result.isDisplayInHome ?? true,

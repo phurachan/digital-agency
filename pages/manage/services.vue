@@ -110,7 +110,7 @@
 
     <!-- Service Modal -->
     <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div class="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         <div class="p-6">
           <div class="flex justify-between items-center mb-6">
             <h2 class="text-xl font-bold text-gray-900">
@@ -143,35 +143,8 @@
           </div>
 
           <form @submit.prevent="saveService" class="space-y-6">
-            <BaseInput v-model="serviceFormData.title[currentLanguage]"
+            <BaseInput v-model="serviceFormData.title[currentLanguage as 'en' | 'th']"
               :label="`${t('manage.services.serviceTitle')} (${currentLanguage.toUpperCase()})`" required />
-
-            <BaseTextarea v-model="serviceFormData.description[currentLanguage]"
-              :label="`${t('manage.services.description')} (${currentLanguage.toUpperCase()})`" :rows=3 required />
-
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                {{ t('manage.services.category') }} ({{ currentLanguage.toUpperCase() }})
-              </label>
-              <div class="space-y-2">
-                <select
-                  v-model="serviceFormData.category[currentLanguage]"
-                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-                >
-                  <option value="">{{ t('manage.services.selectExisting') }}</option>
-                  <option v-for="cat in existingCategories" :key="cat" :value="cat">{{ cat }}</option>
-                </select>
-                <input
-                  v-model="serviceFormData.category[currentLanguage]"
-                  type="text"
-                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  :placeholder="`${t('manage.services.typeNewCategory')} (${currentLanguage.toUpperCase()})`"
-                />
-              </div>
-              <p class="text-xs text-gray-500 mt-1">{{ t('manage.services.selectFromDropdown') }}</p>
-            </div>
-
-            <BaseInput v-model="serviceFormData.icon" type="text" :label="t('manage.services.iconName')" />
 
             <div>
               <label class="form-label">{{ t('manage.services.serviceImage') }}</label>
@@ -184,6 +157,39 @@
               <CmsVideoUpload v-model="serviceFormData.video" :label="t('manage.services.serviceVideo')"
                 :help-text="t('manage.services.serviceVideoHelp')" />
             </div>
+
+            <!-- Album Upload -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">อัลบั้มรูปภาพ</label>
+              <BaseImagePicker
+                v-model="serviceFormData.album"
+                category="service"
+                :album-images="serviceFormData.album"
+                :multiple="true"
+                :max-images="20"
+              />
+              <p class="text-xs text-gray-500 mt-2">อัปโหลดรูปภาพสำหรับแสดงในอัลบั้มของบริการนี้ (สูงสุด 20 รูป)</p>
+            </div>
+
+            <BaseRichTextEditor
+              v-model="serviceFormData.description[currentLanguage as 'en' | 'th']"
+              :label="`${t('manage.services.description')} (${currentLanguage.toUpperCase()})`"
+              :image-category="'service'"
+              :album-images="serviceFormData.album"
+              required
+            />
+
+            <!-- Multi-select Features -->
+            <BaseMultiSelect
+              v-model="serviceFormData.features"
+              :options="SERVICE_CATEGORIES"
+              :label="t('manage.services.features')"
+              :placeholder="t('manage.services.selectFeatures')"
+              :help="t('manage.services.featuresHelp')"
+              :locale="currentLanguage as 'en' | 'th'"
+            />
+
+            <BaseInput v-model="serviceFormData.icon" type="text" :label="t('manage.services.iconName')" />
 
             <BaseInput v-model="serviceFormData.externalURL" type="url" :label="t('manage.services.externalURL')"
               :placeholder="t('manage.services.externalURLPlaceholder')"
@@ -202,29 +208,6 @@
                     pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$" />
                   <p class="text-xs text-gray-500 mt-1">{{ t('manage.services.cardColorHelp') }}</p>
                 </div>
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('manage.services.features') }} ({{ currentLanguage.toUpperCase()
-                }})</label>
-              <div class="space-y-2">
-                <div v-for="(feature, index) in serviceFormData.features" :key="index" class="flex space-x-2">
-                  <BaseInput v-model="serviceFormData.features[index][currentLanguage]" type="text"
-                    :placeholder="`${t('manage.services.feature')} ${index + 1} (${currentLanguage.toUpperCase()})`" class="flex-1" />
-                  <button @click="removeFeature(index)" type="button"
-                    class="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                      </path>
-                    </svg>
-                  </button>
-                </div>
-                <button @click="addFeature" type="button"
-                  class="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-gray-400 hover:text-gray-600">
-                  {{ t('manage.services.addFeature') }}
-                </button>
               </div>
             </div>
 
@@ -273,7 +256,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 
 definePageMeta({
   layout: 'default',
@@ -285,14 +268,17 @@ await cmsStore.fetchSiteSettings()
 const siteSettings = cmsStore.siteSettings
 
 // Import multi-language composable
-const { createLocalizedContent, getLocalizedFeatures } = useMultiLanguage()
+const { createLocalizedContent } = useMultiLanguage()
 const { locale, t } = useI18n()
+
+// Import service categories
+import { SERVICE_CATEGORIES, getCategoryLabels } from '~/composables/constants/serviceCategories'
 
 // Use computed properties from store like in UsersTab.vue
 const loading = computed(() => cmsStore.isLoading)
 const saving = ref(false)
 const showModal = ref(false)
-const editingService = ref(null)
+const editingService = ref<any>(null)
 const successMessage = ref('')
 const errorMessage = ref('')
 
@@ -304,9 +290,10 @@ const serviceFormData = reactive({
   // Text fields as JSON {en: "English", th: "Thai"}
   title: { en: '', th: '' },
   description: { en: '', th: '' },
-  category: { en: '', th: '' },
-  // Features array with multi-language support
-  features: [{ en: '', th: '' }],
+  // Features as string[] of codes (language-neutral)
+  features: [] as string[],
+  // Album as string[] of image URLs
+  album: [] as string[],
   // Language-neutral fields
   icon: '',
   image: '',
@@ -327,52 +314,21 @@ const localizedServices = computed(() => {
   return services.map(service => {
     const localized = createLocalizedContent(service)
 
-    // Parse category separately if needed
-    let categoryDisplay = localized.category || service.category
-    if (typeof categoryDisplay === 'string' && categoryDisplay.trim()) {
-      try {
-        const parsed = JSON.parse(categoryDisplay)
-        categoryDisplay = parsed[locale.value] || parsed.en || parsed.th || categoryDisplay
-      } catch (e) {
-        // Keep as is if parsing fails
-      }
-    }
+    // Features are already parsed by store as string[] of codes
+    const featureCodes: string[] = Array.isArray(service.features) ? service.features : []
+    
+    // Get feature labels based on current locale
+    const featureLabels = getCategoryLabels(featureCodes, locale.value as 'en' | 'th')
 
     return {
       ...service,
       title: localized.title || service.title,
       description: localized.description || service.description,
-      category: categoryDisplay,
-      features: getLocalizedFeatures(service.features) || []
+      features: featureLabels,
+      featureCodes: featureCodes, // Keep codes for editing
+      isDisplayInHome: service.isDisplayInHome ?? false
     }
   })
-})
-
-// Get distinct categories for autocomplete - filtered by current language
-const existingCategories = computed(() => {
-  const services = cmsStore.services || []
-  const categoriesSet = new Set()
-
-  services.forEach(service => {
-    if (service.category) {
-      try {
-        const categoryObj = typeof service.category === 'string'
-          ? JSON.parse(service.category)
-          : service.category
-
-        // แสดงเฉพาะภาษาที่กำลังเลือกอยู่
-        const categoryValue = categoryObj[currentLanguage.value]
-        if (categoryValue) {
-          categoriesSet.add(categoryValue)
-        }
-      } catch (e) {
-        // If parsing fails, treat as plain string
-        categoriesSet.add(service.category)
-      }
-    }
-  })
-
-  return Array.from(categoriesSet).sort()
 })
 
 // Methods
@@ -383,9 +339,9 @@ onMounted(async () => {
 const loadServices = async () => {
   try {
     await cmsStore.fetchServices()
-  } catch (error) {
+  } catch (error: any) {
     console.error('Failed to load services:', error)
-    errorMessage.value = t('manage.services.failedToLoad') + ': ' + (error.message || 'Unknown error')
+    errorMessage.value = t('manage.services.failedToLoad') + ': ' + (error?.message || 'Unknown error')
   }
 }
 
@@ -395,12 +351,14 @@ const openAddModal = () => {
   showModal.value = true
 }
 
-const editService = (service) => {
-  console.log('Editing service:', service)
+const editService = (service: any) => {
   editingService.value = service
 
+  // Get original service from store (not localized)
+  const originalService = cmsStore.services?.find((s: any) => s.id === service.id)
+
   // Helper function to parse JSON fields
-  const parseField = (field) => {
+  const parseField = (field: any): { en: string; th: string } => {
     if (typeof field === 'object' && field !== null) {
       return field
     }
@@ -418,37 +376,25 @@ const editService = (service) => {
     return { en: '', th: '' }
   }
 
-  // Handle multi-language fields
-  serviceFormData.title = parseField(service.title)
-  serviceFormData.description = parseField(service.description)
-  serviceFormData.category = parseField(service.category)
+  // Handle multi-language fields - use original service from store
+  serviceFormData.title = parseField(originalService?.title || service.title)
+  serviceFormData.description = parseField(originalService?.description || service.description)
 
-  // Handle features array
-  if (service.features && Array.isArray(service.features)) {
-    // Check if features are objects with th/en or simple strings
-    serviceFormData.features = service.features.length > 0
-      ? service.features.map(feature => {
-        if (typeof feature === 'object' && feature.th && feature.en) {
-          return feature
-        } else {
-          // If feature is a string, use it for current locale
-          return { en: feature || '', th: feature || '' }
-        }
-      })
-      : [{ en: '', th: '' }]
-  } else {
-    serviceFormData.features = [{ en: '', th: '' }]
-  }
+  // Handle features - now it's string[] of codes
+  serviceFormData.features = service.featureCodes || []
+
+  // Handle album - it's string[] of image URLs
+  serviceFormData.album = originalService?.album || service.album || []
 
   // Language-neutral fields
-  serviceFormData.icon = service.icon || ''
-  serviceFormData.image = service.image || ''
-  serviceFormData.video = service.video || ''
-  serviceFormData.externalURL = service.externalURL || ''
-  serviceFormData.color = service.color || '#6495ed'
-  serviceFormData.order = service.order || 0
-  serviceFormData.isActive = service.isActive
-  serviceFormData.isDisplayInHome = service.isDisplayInHome ?? true
+  serviceFormData.icon = originalService?.icon || service.icon || ''
+  serviceFormData.image = originalService?.image || service.image || ''
+  serviceFormData.video = originalService?.video || service.video || ''
+  serviceFormData.externalURL = originalService?.externalURL || service.externalURL || ''
+  serviceFormData.color = originalService?.color || service.color || '#6495ed'
+  serviceFormData.order = originalService?.order ?? service.order ?? 0
+  serviceFormData.isActive = originalService?.isActive ?? service.isActive
+  serviceFormData.isDisplayInHome = originalService?.isDisplayInHome ?? service.isDisplayInHome ?? true
 
   currentLanguage.value = 'en'
   showModal.value = true
@@ -463,8 +409,8 @@ const closeModal = () => {
 const resetForm = () => {
   serviceFormData.title = { en: '', th: '' }
   serviceFormData.description = { en: '', th: '' }
-  serviceFormData.category = { en: '', th: '' }
-  serviceFormData.features = [{ en: '', th: '' }]
+  serviceFormData.features = []
+  serviceFormData.album = []
   serviceFormData.icon = ''
   serviceFormData.image = ''
   serviceFormData.video = ''
@@ -476,33 +422,20 @@ const resetForm = () => {
   currentLanguage.value = 'en'
 }
 
-const addFeature = () => {
-  serviceFormData.features.push({ en: '', th: '' })
-}
-
-const removeFeature = (index) => {
-  if (serviceFormData.features.length > 1) {
-    serviceFormData.features.splice(index, 1)
-  }
-}
-
 const saveService = async () => {
   saving.value = true
   successMessage.value = ''
   errorMessage.value = ''
 
   try {
-    // Filter out empty features and prepare multi-language data
-    const filteredFeatures = serviceFormData.features.filter(feature =>
-      feature.en.trim() || feature.th.trim()
-    )
-
     const serviceData = {
       // Multi-language fields as JSON strings
       title: JSON.stringify(serviceFormData.title),
       description: JSON.stringify(serviceFormData.description),
-      category: JSON.stringify(serviceFormData.category),
-      features: JSON.stringify(filteredFeatures),
+      // Features as JSON string of code array
+      features: serviceFormData.features,
+      // Album as JSON string of URLs array
+      album: serviceFormData.album,
       // Language-neutral fields
       icon: serviceFormData.icon,
       image: serviceFormData.image,
@@ -536,13 +469,38 @@ const saveService = async () => {
   }
 }
 
-const toggleHomeDisplay = async (service) => {
+const toggleHomeDisplay = async (service: any) => {
   try {
+    // Get original service from store
+    const originalService = cmsStore.services?.find((s: any) => s.id === service.id)
+
+    if (!originalService) {
+      errorMessage.value = t('manage.services.failedToUpdate')
+      return
+    }
+
+    // Helper function to ensure JSON string
+    const ensureJsonString = (field: any): string => {
+      if (typeof field === 'string') {
+        return field
+      }
+      return JSON.stringify(field)
+    }
+
     await cmsStore.updateService({
       body: {
-        ...service,
         id: service.id,
-        features: service.features,
+        title: ensureJsonString(originalService.title),
+        description: ensureJsonString(originalService.description),
+        features: originalService.features || [],
+        album: originalService.album || [],
+        icon: originalService.icon || '',
+        image: originalService.image || '',
+        video: originalService.video || '',
+        externalURL: originalService.externalURL || '',
+        color: originalService.color || '#6495ed',
+        order: originalService.order || 0,
+        isActive: originalService.isActive,
         isDisplayInHome: !service.isDisplayInHome
       }
     })
@@ -551,10 +509,11 @@ const toggleHomeDisplay = async (service) => {
     await loadServices()
   } catch (error) {
     errorMessage.value = t('manage.services.failedToUpdate')
+    console.error('Toggle home display error:', error)
   }
 }
 
-const deleteService = async (service) => {
+const deleteService = async (service: any) => {
   if (confirm(t('manage.services.confirmDelete', { title: service.title }))) {
     try {
       await cmsStore.deleteService({ body: { id: service.id } })
@@ -567,7 +526,7 @@ const deleteService = async (service) => {
   }
 }
 
-const formatDate = (dateString) => {
+const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString()
 }
 
@@ -584,15 +543,15 @@ watch([successMessage, errorMessage], () => {
 
 // SEO
 useSeoMeta({
-  title: `Manage Services | ${siteSettings.siteName} CMS`,
+  title: `Manage Services | ${siteSettings?.siteName || 'CMS'}`,
   robots: 'noindex, nofollow'
 })
 </script>
 
 <style scoped>
 :root {
-  --primary-color: v-bind('siteSettings.primaryColor || "#6495ed"');
-  --secondary-color: v-bind('siteSettings.secondaryColor || "#9333ea"');
+  --primary-color: v-bind('siteSettings?.primaryColor || "#6495ed"');
+  --secondary-color: v-bind('siteSettings?.secondaryColor || "#9333ea"');
 }
 
 .card {
@@ -681,5 +640,13 @@ useSeoMeta({
 
 [data-theme="dark"] button:hover .hover\:bg-red-50 {
   background: rgba(153, 27, 27, 0.2);
+}
+
+[data-theme="dark"] .bg-purple-100 {
+  background: rgba(168, 85, 247, 0.2);
+}
+
+[data-theme="dark"] .text-purple-700 {
+  color: rgb(196 181 253);
 }
 </style>

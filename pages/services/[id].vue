@@ -62,7 +62,7 @@
         </header>
 
         <!-- Featured Image/Video -->
-        <div v-if="serviceData.image || serviceData.video" class="featured-media">
+        <!-- <div v-if="serviceData.image || serviceData.video" class="featured-media">
           <img v-if="serviceData.image" :src="serviceData.image" :alt="serviceData.title" class="featured-image">
           <div v-else-if="serviceData.video" class="video-wrapper">
             <iframe
@@ -73,24 +73,45 @@
               allowfullscreen
             ></iframe>
           </div>
-        </div>
+        </div> -->
 
         <!-- Article Body -->
         <div class="article-body">
-          <!-- Description -->
+          <!-- Description (Rich Text) -->
           <div class="content-section">
-            <p class="lead-text">{{ serviceData.description }}</p>
+            <div class="prose-content" v-html="serviceData.description"></div>
+          </div>
+
+          <!-- Album Gallery -->
+          <div v-if="serviceData.album && serviceData.album.length > 0" class="content-section">
+            <h2 class="section-heading">{{ t('services.gallery') || 'แกลเลอรี่' }}</h2>
+            <div class="album-grid">
+              <div
+                v-for="(image, index) in serviceData.album"
+                :key="index"
+                class="album-item"
+                @click="openLightbox(index)"
+              >
+                <img :src="image" :alt="`${serviceData.title} - Image ${index + 1}`" class="album-image">
+                <div class="album-overlay">
+                  <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- Features Section -->
           <div v-if="serviceData.features && serviceData.features.length > 0" class="content-section">
             <h2 class="section-heading">{{ t('services.features') }}</h2>
-            <ul class="features-list">
-              <li v-for="(feature, index) in serviceData.features" :key="index" class="feature-item">
-                <span class="feature-number">{{ index + 1 }}</span>
-                <span class="feature-text">{{ feature }}</span>
-              </li>
-            </ul>
+            <div class="flex flex-wrap gap-3">
+              <span v-for="feature in serviceData.features" :key="feature"
+                class="px-4 py-2 text-base rounded-full text-white font-medium"
+                :style="{ backgroundColor: serviceData.color || '#6495ed', opacity: 0.9 }">
+                {{ feature }}
+              </span>
+            </div>
           </div>
 
           <!-- Contact CTA -->
@@ -137,10 +158,36 @@
 
     <!-- Footer -->
     <CmsFooter />
+
+    <!-- Lightbox Modal -->
+    <div v-if="showLightbox" class="lightbox-modal" @click="closeLightbox">
+      <button class="lightbox-close" @click.stop="closeLightbox">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+
+      <button v-if="currentImageIndex > 0" class="lightbox-prev" @click.stop="prevImage">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </button>
+
+      <div class="lightbox-content" @click.stop>
+        <img :src="serviceData.album[currentImageIndex]" :alt="`${serviceData.title} - Image ${currentImageIndex + 1}`">
+        <div class="lightbox-counter">{{ currentImageIndex + 1 }} / {{ serviceData.album.length }}</div>
+      </div>
+
+      <button v-if="currentImageIndex < serviceData.album.length - 1" class="lightbox-next" @click.stop="nextImage">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </button>
+    </div>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 definePageMeta({
   layout: false
 })
@@ -150,6 +197,9 @@ const { t, locale } = useI18n()
 const cmsStore = useCMSStore()
 const { createLocalizedContent } = useMultiLanguage()
 
+// Import service categories
+import { getCategoryLabels } from '~/composables/constants/serviceCategories'
+
 // Fetch services data
 await cmsStore.fetchServices()
 await cmsStore.fetchSiteSettings()
@@ -157,7 +207,7 @@ await cmsStore.fetchSiteSettings()
 const siteSettings = computed(() => createLocalizedContent(cmsStore.siteSettings || {}))
 
 // Get service by ID from route params
-const serviceId = route.params.id
+const serviceId = typeof route.params.id === 'string' ? route.params.id : route.params.id[0]
 const service = computed(() => cmsStore.getServiceById(serviceId))
 
 // If service not found, redirect to services page
@@ -166,19 +216,118 @@ if (!service.value) {
 }
 
 // Create localized service data
-const serviceData = computed(() => createLocalizedContent(service.value || {}))
+const serviceData = computed(() => {
+  const currentService = service.value || {}
+
+  // Parse multi-language fields manually to preserve HTML
+  const parseField = (field: any): string => {
+    if (typeof field === 'object' && field !== null) {
+      return field[locale.value] || field.en || ''
+    }
+    if (typeof field === 'string' && field.trim()) {
+      try {
+        const parsed = JSON.parse(field)
+        if (typeof parsed === 'object' && parsed !== null) {
+          return parsed[locale.value] || parsed.en || ''
+        }
+        return field
+      } catch (e) {
+        return field
+      }
+    }
+    return ''
+  }
+
+  // Features are already parsed by store as string[] of codes
+  const featureCodes: string[] = Array.isArray(currentService.features) ? currentService.features : []
+
+  // Get feature labels based on current locale
+  const featureLabels = getCategoryLabels(featureCodes, locale.value as 'en' | 'th')
+
+  // Album images
+  const albumImages = currentService.album || []
+
+  return {
+    id: currentService.id,
+    title: parseField(currentService.title),
+    description: parseField(currentService.description), // Preserve HTML
+    features: featureLabels, // Use localized feature labels
+    color: currentService.color || '#6495ed', // Keep service color
+    album: albumImages, // Album images array
+    image: currentService.image,
+    video: currentService.video,
+    externalURL: currentService.externalURL,
+    price: currentService.price,
+    createdAt: currentService.createdAt,
+    updatedAt: currentService.updatedAt,
+    isActive: currentService.isActive,
+    isDisplayInHome: currentService.isDisplayInHome
+  }
+})
+
+// Lightbox state
+const showLightbox = ref(false)
+const currentImageIndex = ref(0)
+
+// Lightbox functions
+const openLightbox = (index: number) => {
+  currentImageIndex.value = index
+  showLightbox.value = true
+  // Prevent body scroll when lightbox is open
+  document.body.style.overflow = 'hidden'
+}
+
+const closeLightbox = () => {
+  showLightbox.value = false
+  // Restore body scroll
+  document.body.style.overflow = ''
+}
+
+const nextImage = () => {
+  if (currentImageIndex.value < (serviceData.value.album?.length || 0) - 1) {
+    currentImageIndex.value++
+  }
+}
+
+const prevImage = () => {
+  if (currentImageIndex.value > 0) {
+    currentImageIndex.value--
+  }
+}
+
+// Keyboard navigation for lightbox
+onMounted(() => {
+  const handleKeydown = (e: KeyboardEvent) => {
+    if (!showLightbox.value) return
+
+    if (e.key === 'Escape') {
+      closeLightbox()
+    } else if (e.key === 'ArrowRight') {
+      nextImage()
+    } else if (e.key === 'ArrowLeft') {
+      prevImage()
+    }
+  }
+
+  window.addEventListener('keydown', handleKeydown)
+
+  onBeforeUnmount(() => {
+    window.removeEventListener('keydown', handleKeydown)
+    document.body.style.overflow = ''
+  })
+})
 
 // Get related services (other active services, limit to 3)
 const relatedServices = computed(() => {
   const allServices = cmsStore.getActiveServices || []
   return allServices
-    .filter(s => s.id !== serviceId)
+    .filter((s: any) => s.id !== serviceId)
     .slice(0, 3)
-    .map(s => createLocalizedContent(s))
+    .map((s: any) => createLocalizedContent(s))
 })
 
 // Helper functions
-const formatDate = (dateString) => {
+const formatDate = (dateString: string) => {
   if (!dateString) return ''
   const date = new Date(dateString)
   return date.toLocaleDateString(locale.value === 'th' ? 'th-TH' : 'en-US', {
@@ -188,20 +337,20 @@ const formatDate = (dateString) => {
   })
 }
 
-const truncateText = (text, maxLength) => {
+const truncateText = (text: string, maxLength: number) => {
   if (!text) return ''
   return text.length > maxLength ? text.substring(0, maxLength) + '...' : text
 }
 
 // Dynamic color calculation functions
-function hexToRgba(hex, alpha = 1) {
+function hexToRgba(hex: string, alpha = 1) {
   const r = parseInt(hex.slice(1, 3), 16)
   const g = parseInt(hex.slice(3, 5), 16)
   const b = parseInt(hex.slice(5, 7), 16)
   return `rgba(${r}, ${g}, ${b}, ${alpha})`
 }
 
-function adjustColorBrightness(hex, percent) {
+function adjustColorBrightness(hex: string, percent: number) {
   const num = parseInt(hex.slice(1), 16)
   const amt = Math.round(2.55 * percent)
   const R = (num >> 16) + amt
@@ -453,52 +602,6 @@ useSeoMeta({
   display: inline-block;
 }
 
-/* Features List */
-.features-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: 16px;
-}
-
-.feature-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  padding: 20px;
-  background: #f7fafc;
-  border-radius: 12px;
-  border-left: 4px solid var(--primary-color);
-  transition: all 0.3s;
-}
-
-.feature-item:hover {
-  background: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transform: translateX(4px);
-}
-
-.feature-number {
-  flex-shrink: 0;
-  width: 32px;
-  height: 32px;
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 14px;
-}
-
-.feature-text {
-  font-size: 18px;
-  color: #2d3748;
-  line-height: 1.6;
-}
-
 /* CTA Card */
 .cta-card {
   background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
@@ -712,5 +815,221 @@ useSeoMeta({
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* Prose Content (Rich Text) */
+.prose-content {
+  font-size: 18px;
+  line-height: 1.8;
+  color: #4a5568;
+}
+
+.prose-content :deep(h1) {
+  font-size: 2em;
+  font-weight: bold;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  color: #1a202c;
+}
+
+.prose-content :deep(h2) {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  color: #1a202c;
+}
+
+.prose-content :deep(h3) {
+  font-size: 1.25em;
+  font-weight: bold;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  color: #1a202c;
+}
+
+.prose-content :deep(p) {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.prose-content :deep(ul),
+.prose-content :deep(ol) {
+  padding-left: 1.5em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.prose-content :deep(li) {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+
+.prose-content :deep(img) {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  margin: 1em 0;
+}
+
+.prose-content :deep(a) {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+.prose-content :deep(blockquote) {
+  border-left: 3px solid #e5e7eb;
+  padding-left: 1em;
+  font-style: italic;
+  color: #6b7280;
+  margin: 0.5em 0;
+}
+
+/* Album Gallery */
+.album-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .album-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+  }
+}
+
+.album-item {
+  position: relative;
+  aspect-ratio: 4/3;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.album-item:hover {
+  transform: scale(1.05);
+}
+
+.album-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.album-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.album-item:hover .album-overlay {
+  opacity: 1;
+}
+
+/* Lightbox Modal */
+.lightbox-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  padding: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s;
+  z-index: 10001;
+}
+
+.lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.lightbox-prev,
+.lightbox-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  padding: 16px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s;
+  z-index: 10001;
+}
+
+.lightbox-prev {
+  left: 20px;
+}
+
+.lightbox-next {
+  right: 20px;
+}
+
+.lightbox-prev:hover,
+.lightbox-next:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.lightbox-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lightbox-content img {
+  max-width: 100%;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.lightbox-counter {
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 16px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 8px 16px;
+  border-radius: 20px;
+}
+
+@media (max-width: 768px) {
+  .lightbox-prev,
+  .lightbox-next {
+    padding: 12px;
+  }
+
+  .lightbox-prev {
+    left: 10px;
+  }
+
+  .lightbox-next {
+    right: 10px;
+  }
 }
 </style>
