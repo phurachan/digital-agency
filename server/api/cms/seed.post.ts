@@ -30,16 +30,17 @@ export default defineEventHandler(async (event) => {
     // Create Home Content
     await HomeContent.create({
       heroTitle: JSON.stringify({
-        "th": "เอเจนซี่ดิจิทัลสร้างสรรค์ของคุณ",
-        "en": "Your Creative Digital Agency"
+        "th": "AGENCY THAT GETS YOU",
+        "en": "AGENCY THAT GETS YOU"
       }),
       heroSubtitle: JSON.stringify({
-        "th": "เราสร้างสรรค์เนื้อหาดิจิทัล วิดีโอ โปสเตอร์ และแคมเปญที่น่าประทับใจเพื่อยกระดับแบรนด์ของคุณ",
-        "en": "We create stunning digital content, videos, posters, and campaigns to elevate your brand"
+        "th": "ชิลล์ไปกับบริการที่หลากหลาย จัดงานอีเวนท์ ถ่ายภาพ ถ่ายวิดีโอ และอีกมากมาย",
+        "en": "Chill with a variety of services: event planning, photography, videography, and much more"
       }),
+      heroDisplayMode: 'gradient',
       ctaText: JSON.stringify({
-        "th": "พร้อมเริ่มต้นโปรเจคใหม่กับเรา",
-        "en": "Ready to start your next project with us"
+        "th": "พร้อมที่จะร่วมงานกันหรือยัง?",
+        "en": "Ready to work together?"
       }),
       ctaButtonText: JSON.stringify({
         "th": "เริ่มต้นเลย",
@@ -47,234 +48,202 @@ export default defineEventHandler(async (event) => {
       }),
       featureTitle: JSON.stringify({
         "th": "บริการครบวงจร",
-        "en": "Complete Digital Solutions"
+        "en": "Complete Services"
       }),
       featureDescription: JSON.stringify({
-        "th": "ตั้งแต่การออกแบบโปสเตอร์ การผลิตวิดีโอ ไปจนถึงการตลาดดิจิทัล เรามีทีมผู้เชี่ยวชาญพร้อมดูแลทุกขั้นตอน",
-        "en": "From poster design and video production to digital marketing, we have expert teams ready to handle every step"
+        "th": "ตั้งแต่การจัดงานอีเวนท์ การถ่ายภาพ วิดีโอ ไปจนถึงการตลาดดิจิทัล เรามีทีมผู้เชี่ยวชาญพร้อมดูแลทุกขั้นตอน",
+        "en": "From event planning, photography, videography to digital marketing, we have expert teams ready to handle every step"
       }),
       aboutTitle: JSON.stringify({
-        "th": "เกี่ยวกับเรา",
-        "en": "About Us"
+        "th": "ทำความรู้จักเรา",
+        "en": "Get to Know Us"
       }),
       aboutDescription: JSON.stringify({
-        "th": "เรามีประสบการณ์กว่า 10 ปีในการสร้างสรรค์เนื้อหาดิจิทัลที่โดดเด่น ด้วยทีมงานมืออาชีพและเทคโนโลยีล้ำสมัย",
-        "en": "We have over 10 years of experience creating outstanding digital content with professional teams and cutting-edge technology"
+        "th": "เราคือทีมงานที่รวมตัวกันด้วยความหลงใหลในการสร้างสรรค์งานที่มีคุณภาพ พร้อมมอบประสบการณ์ที่แตกต่างให้กับทุกโปรเจกต์",
+        "en": "We are a team united by passion for creating quality work, ready to deliver unique experiences for every project"
       }),
       peopleTitle: JSON.stringify({
-        "th": "ทีมงานมืออาชีพ",
-        "en": "Professional Team"
+        "th": "ข้อมูลเชิงลึก",
+        "en": "Insights"
       }),
       peopleDescription: JSON.stringify({
-        "th": "ทีมงานที่มีความเชี่ยวชาญในทุกสาขา พร้อมสร้างสรรค์ผลงานที่ตอบโจทย์ทุกความต้องการ",
-        "en": "Expert team in every field, ready to create works that meet all your needs"
+        "th": "อ่านเรื่องราวและประสบการณ์จากทีมงานของเรา",
+        "en": "Read stories and experiences from our team"
       }),
       heroImage: null,
       aboutImage: null,
       featureImage: null
     })
 
-    // Create Services
+    // Create Services with new structure
     const servicesData = [
       {
         title: JSON.stringify({
-          "th": "การผลิตวิดีโอ",
-          "en": "Video Production"
+          "th": "ช่างภาพมืออาชีพ",
+          "en": "Professional Photographer"
         }),
         description: JSON.stringify({
-          "th": "ผลิตวิดีโอคุณภาพสูงสำหรับโฆษณา การตลาด และเนื้อหาโซเชียลมีเดีย",
-          "en": "High-quality video production for advertising, marketing, and social media content"
+          "th": "<h2>บริการถ่ายภาพมืออาชีพ</h2><p>ทีมช่างภาพมืออาชีพพร้อมบันทึกทุกช่วงเวลาสำคัญของคุณด้วยเทคนิคและอุปกรณ์ที่ทันสมัย ไม่ว่าจะเป็นงานอีเวนต์ งานแต่งงาน หรือถ่ายภาพผลิตภัณฑ์</p><p>เราให้ความสำคัญกับทุกรายละเอียด เพื่อสร้างภาพที่สวยงามและประทับใจที่สุด</p>",
+          "en": "<h2>Professional Photography Service</h2><p>Professional photography team ready to capture every important moment with modern techniques and equipment. Whether it's events, weddings, or product photography.</p><p>We pay attention to every detail to create the most beautiful and impressive images.</p>"
         }),
-        features: JSON.stringify({
-          "th": ["วิดีโอโฆษณา", "วิดีโอแนะนำผลิตภัณฑ์", "วิดีโอสำหรับโซเชียลมีเดีย", "การตัดต่อแบบมืออาชีพ"],
-          "en": ["Commercial Videos", "Product Showcase Videos", "Social Media Videos", "Professional Editing"]
-        }),
-        price: 15000,
-        icon: "🎬",
+        features: ["photographer", "event_organizer"],
+        album: [],
+        price: 8000,
+        icon: "camera",
         image: null,
+        video: null,
+        externalURL: null,
         color: "#e74c3c",
         order: 1,
-        isActive: true
+        isActive: true,
+        isDisplayInHome: true
       },
       {
         title: JSON.stringify({
-          "th": "การออกแบบโปสเตอร์",
-          "en": "Poster Design"
+          "th": "จัดงานอีเวนต์",
+          "en": "Event Organizer"
         }),
         description: JSON.stringify({
-          "th": "ออกแบบโปสเตอร์และกราฟิกที่สวยงามและดึงดูดสำหรับการโฆษณาและการตลาด",
-          "en": "Beautiful and attractive poster and graphic design for advertising and marketing"
+          "th": "<h2>บริการจัดงานอีเวนต์ครบวงจร</h2><p>จัดงานอีเวนต์ทุกประเภท ตั้งแต่การวางแผน ออกแบบคอนเซ็ปต์ จัดหาสถานที่ ประสานงานผู้ให้บริการ ไปจนถึงการดำเนินงานในวันจัดงาน</p><ul><li>งานเปิดตัวผลิตภัณฑ์</li><li>งานสัมมนา Workshop</li><li>งานเลี้ยงบริษัท</li><li>งานแต่งงาน</li></ul>",
+          "en": "<h2>Complete Event Organization Service</h2><p>Organize all types of events from planning, concept design, venue sourcing, vendor coordination, to event day execution.</p><ul><li>Product Launches</li><li>Seminars & Workshops</li><li>Corporate Events</li><li>Weddings</li></ul>"
         }),
-        features: JSON.stringify({
-          "th": ["โปสเตอร์โฆษณา", "กราฟิกโซเชียลมีเดีย", "แบนเนอร์ออนไลน์", "บรรจุภัณฑ์"],
-          "en": ["Advertising Posters", "Social Media Graphics", "Online Banners", "Packaging Design"]
-        }),
-        price: 5000,
-        icon: "🎨",
+        features: ["event_organizer", "marketing_staff"],
+        album: [],
+        price: 25000,
+        icon: "event",
         image: null,
+        video: null,
+        externalURL: null,
         color: "#9b59b6",
         order: 2,
-        isActive: true
+        isActive: true,
+        isDisplayInHome: true
       },
       {
         title: JSON.stringify({
-          "th": "เนื้อหาโซเชียลมีเดีย",
-          "en": "Social Media Content"
+          "th": "ผลิตคอนเทนต์โซเชียล",
+          "en": "Social Content Production"
         }),
         description: JSON.stringify({
-          "th": "สร้างเนื้อหาที่น่าสนใจสำหรับแพลตฟอร์มโซเชียลมีเดียทุกประเภท",
-          "en": "Create engaging content for all social media platforms"
+          "th": "<h2>สร้างคอนเทนต์โซเชียลมีเดีย</h2><p>ผลิตคอนเทนต์ที่น่าสนใจสำหรับโซเชียลมีเดียทุกแพลตฟอร์ม</p><p><strong>บริการของเรารวมถึง:</strong></p><ul><li>วางแผนและกำหนดกลยุทธ์คอนเทนต์</li><li>ถ่ายภาพและวิดีโอ</li><li>ตัดต่อและออกแบบกราฟิก</li><li>โพสต์และจัดการ Social Media</li></ul>",
+          "en": "<h2>Social Media Content Creation</h2><p>Create engaging content for all social media platforms.</p><p><strong>Our services include:</strong></p><ul><li>Content planning and strategy</li><li>Photography and videography</li><li>Editing and graphic design</li><li>Social media posting and management</li></ul>"
         }),
-        features: JSON.stringify({
-          "th": ["โพสต์ Facebook/Instagram", "เนื้อหา TikTok", "การวางแผนเนื้อหา", "การจัดการชุมชน"],
-          "en": ["Facebook/Instagram Posts", "TikTok Content", "Content Planning", "Community Management"]
-        }),
-        price: 8000,
-        icon: "📱",
+        features: ["content_creator", "graphic_designer", "video_editor"],
+        album: [],
+        price: 15000,
+        icon: "social",
         image: null,
+        video: null,
+        externalURL: null,
         color: "#3498db",
         order: 3,
-        isActive: true
+        isActive: true,
+        isDisplayInHome: true
       },
       {
         title: JSON.stringify({
-          "th": "แพ็คเกจแบรนดิ้ง",
-          "en": "Branding Package"
+          "th": "ผลิตวิดีโอโฆษณา",
+          "en": "Commercial Video Production"
         }),
         description: JSON.stringify({
-          "th": "บริการออกแบบและพัฒนาแบรนด์ครบวงจร ตั้งแต่โลโก้ไปจนถึงไกด์ไลน์แบรนด์",
-          "en": "Complete brand design and development from logo to brand guidelines"
+          "th": "<h2>ผลิตวิดีโอโฆษณาคุณภาพสูง</h2><p>สร้างวิดีโอโฆษณาที่น่าสนใจและมีประสิทธิภาพ ตั้งแต่การเขียนบท การถ่ายทำ จนถึงการตัดต่อขั้นสุดท้าย</p><h3>ประเภทวิดีโอ</h3><ul><li>วิดีโอโฆษณาทีวี และออนไลน์</li><li>วิดีโอแนะนำผลิตภัณฑ์</li><li>วิดีโอ Corporate</li><li>วิดีโอสั้นสำหรับ Social Media</li></ul>",
+          "en": "<h2>High-Quality Commercial Video Production</h2><p>Create engaging and effective commercial videos from scriptwriting, filming, to final editing.</p><h3>Video Types</h3><ul><li>TV & Online Commercials</li><li>Product Showcase Videos</li><li>Corporate Videos</li><li>Short-form Social Media Videos</li></ul>"
         }),
-        features: JSON.stringify({
-          "th": ["การออกแบบโลโก้", "ระบบสีแบรนด์", "ฟอนต์แบรนด์", "ไกด์ไลน์การใช้งาน"],
-          "en": ["Logo Design", "Brand Color System", "Brand Typography", "Usage Guidelines"]
-        }),
-        price: 25000,
-        icon: "🏷️",
+        features: ["video_editor", "photographer", "content_creator"],
+        album: [],
+        price: 35000,
+        icon: "video",
         image: null,
+        video: null,
+        externalURL: null,
         color: "#f39c12",
         order: 4,
-        isActive: true
+        isActive: true,
+        isDisplayInHome: true
       },
       {
         title: JSON.stringify({
-          "th": "การตลาดดิจิทัล",
-          "en": "Digital Marketing"
+          "th": "ออกแบบกราฟิก",
+          "en": "Graphic Design"
         }),
         description: JSON.stringify({
-          "th": "วางกลยุทธ์และบริหารจัดการการตลาดออนไลน์ให้ได้ผลลัพธ์สูงสุด",
-          "en": "Strategic planning and management of online marketing for maximum results"
+          "th": "<h2>บริการออกแบบกราฟิก</h2><p>ออกแบบกราฟิกที่สวยงามและตรงใจสำหรับทุกความต้องการ</p><p>🎨 <strong>บริการของเรา</strong></p><ul><li>ออกแบบโลโก้และ Corporate Identity</li><li>ออกแบบโปสเตอร์และแบนเนอร์</li><li>ออกแบบบรรจุภัณฑ์</li><li>ออกแบบสื่อสิ่งพิมพ์</li><li>กราฟิกสำหรับ Social Media</li></ul>",
+          "en": "<h2>Graphic Design Service</h2><p>Beautiful and compelling graphic design for all your needs.</p><p>🎨 <strong>Our Services</strong></p><ul><li>Logo & Corporate Identity Design</li><li>Poster & Banner Design</li><li>Packaging Design</li><li>Print Media Design</li><li>Social Media Graphics</li></ul>"
         }),
-        features: JSON.stringify({
-          "th": ["Google Ads", "Facebook Ads", "SEO", "Email Marketing"],
-          "en": ["Google Ads", "Facebook Ads", "SEO", "Email Marketing"]
-        }),
-        price: 12000,
-        icon: "📈",
+        features: ["graphic_designer", "brand_designer"],
+        album: [],
+        price: 8000,
+        icon: "design",
         image: null,
+        video: null,
+        externalURL: null,
         color: "#27ae60",
         order: 5,
-        isActive: true
+        isActive: true,
+        isDisplayInHome: true
       },
       {
         title: JSON.stringify({
-          "th": "การพัฒนาเว็บไซต์",
-          "en": "Website Development"
+          "th": "ทีมการตลาด",
+          "en": "Marketing Team"
         }),
         description: JSON.stringify({
-          "th": "พัฒนาเว็บไซต์ที่ทันสมัยและใช้งานง่าย รองรับทุกอุปกรณ์",
-          "en": "Develop modern and user-friendly websites that work on all devices"
+          "th": "<h2>ทีมการตลาดมืออาชีพ</h2><p>วางแผนและดำเนินการแคมเปญการตลาดที่มีประสิทธิภาพเพื่อเพิ่มยอดขายและการรับรู้แบรนด์</p><blockquote>\"การตลาดที่ดีคือการเข้าใจลูกค้าและสร้างคุณค่าที่แท้จริงให้กับพวกเขา\"</blockquote><h3>บริการการตลาด</h3><ul><li>วางกลยุทธ์การตลาด</li><li>Digital Marketing</li><li>Social Media Marketing</li><li>Content Marketing</li><li>Influencer Marketing</li></ul>",
+          "en": "<h2>Professional Marketing Team</h2><p>Plan and execute effective marketing campaigns to increase sales and brand awareness.</p><blockquote>\"Good marketing is about understanding customers and creating real value for them\"</blockquote><h3>Marketing Services</h3><ul><li>Marketing Strategy</li><li>Digital Marketing</li><li>Social Media Marketing</li><li>Content Marketing</li><li>Influencer Marketing</li></ul>"
         }),
-        features: JSON.stringify({
-          "th": ["Responsive Design", "E-commerce", "CMS", "SEO-Friendly"],
-          "en": ["Responsive Design", "E-commerce", "CMS", "SEO-Friendly"]
-        }),
-        price: 35000,
-        icon: "💻",
+        features: ["marketing_staff", "content_creator"],
+        album: [],
+        price: 20000,
+        icon: "marketing",
         image: null,
+        video: null,
+        externalURL: null,
         color: "#2c3e50",
         order: 6,
-        isActive: true
+        isActive: true,
+        isDisplayInHome: true
       },
       {
         title: JSON.stringify({
-          "th": "การถ่ายภาพผลิตภัณฑ์",
-          "en": "Product Photography"
+          "th": "จัดทีมงานสตาฟ",
+          "en": "Staff Outsourcing"
         }),
         description: JSON.stringify({
-          "th": "บริการถ่ายภาพผลิตภัณฑ์คุณภาพสูงสำหรับการตลาดและอีคอมเมิร์ซ",
-          "en": "High-quality product photography services for marketing and e-commerce"
+          "th": "<h2>บริการจัดหาทีมงาน</h2><p>จัดหาทีมงานมืออาชีพสำหรับโปรเจกต์ของคุณ ไม่ว่าจะเป็นงานระยะสั้นหรือระยะยาว</p><p><strong>ประเภททีมงาน:</strong></p><ul><li>ทีมงานอีเวนต์</li><li>ทีมงานการตลาด</li><li>ช่างภาพ / ช่างวิดีโอ</li><li>นักออกแบบ / Content Creator</li><li>พนักงานขาย / Promoter</li></ul><p>ทีมงานของเราผ่านการคัดสรรและฝึกอบรมอย่างดี</p>",
+          "en": "<h2>Staff Outsourcing Service</h2><p>Professional team outsourcing for your projects, whether short-term or long-term.</p><p><strong>Team Types:</strong></p><ul><li>Event Staff</li><li>Marketing Team</li><li>Photographers / Videographers</li><li>Designers / Content Creators</li><li>Sales Staff / Promoters</li></ul><p>Our staff are carefully selected and well-trained.</p>"
         }),
-        features: JSON.stringify({
-          "th": ["Studio Photography", "Lifestyle Shots", "360° Photography", "Image Editing"],
-          "en": ["Studio Photography", "Lifestyle Shots", "360° Photography", "Image Editing"]
-        }),
-        price: 7500,
-        icon: "📸",
+        features: ["event_organizer", "marketing_staff"],
+        album: [],
+        price: 12000,
+        icon: "people",
         image: null,
+        video: null,
+        externalURL: null,
         color: "#34495e",
         order: 7,
-        isActive: true
+        isActive: true,
+        isDisplayInHome: true
       },
       {
         title: JSON.stringify({
-          "th": "การจัดการแคมเปญโฆษณา",
-          "en": "Ad Campaign Management"
+          "th": "Brand Identity Design",
+          "en": "Brand Identity Design"
         }),
         description: JSON.stringify({
-          "th": "จัดการแคมเปญโฆษณาออนไลน์บนแพลตฟอร์มต่างๆ เพื่อผลลัพธ์สูงสุด",
-          "en": "Manage online advertising campaigns across platforms for maximum results"
+          "th": "<h2>ออกแบบ Brand Identity ครบวงจร</h2><p>สร้างเอกลักษณ์ของแบรนด์ที่โดดเด่นและจดจำได้ง่าย</p><h3>✨ บริการออกแบบแบรนด์</h3><ul><li>Logo Design & Branding</li><li>Brand Guideline</li><li>Color Palette & Typography</li><li>Visual Identity System</li><li>Brand Application Design</li></ul><p>เราจะช่วยสร้างเอกลักษณ์ที่สะท้อนตัวตนของแบรนด์คุณ</p>",
+          "en": "<h2>Complete Brand Identity Design</h2><p>Create distinctive and memorable brand identity.</p><h3>✨ Branding Services</h3><ul><li>Logo Design & Branding</li><li>Brand Guidelines</li><li>Color Palette & Typography</li><li>Visual Identity System</li><li>Brand Application Design</li></ul><p>We help create an identity that reflects your brand's essence.</p>"
         }),
-        features: JSON.stringify({
-          "th": ["Campaign Strategy", "A/B Testing", "Performance Tracking", "Budget Optimization"],
-          "en": ["Campaign Strategy", "A/B Testing", "Performance Tracking", "Budget Optimization"]
-        }),
-        price: 18000,
-        icon: "🎯",
+        features: ["brand_designer", "graphic_designer"],
+        album: [],
+        price: 30000,
+        icon: "brand",
         image: null,
+        video: null,
+        externalURL: null,
         color: "#e67e22",
         order: 8,
-        isActive: true
-      },
-      {
-        title: JSON.stringify({
-          "th": "การออกแบบ UX/UI",
-          "en": "UX/UI Design"
-        }),
-        description: JSON.stringify({
-          "th": "ออกแบบประสบการณ์ผู้ใช้และส่วนติดต่อผู้ใช้ที่สวยงามและใช้งานง่าย",
-          "en": "Design beautiful and user-friendly user experience and user interface"
-        }),
-        features: JSON.stringify({
-          "th": ["User Research", "Wireframing", "Prototyping", "Usability Testing"],
-          "en": ["User Research", "Wireframing", "Prototyping", "Usability Testing"]
-        }),
-        price: 22000,
-        icon: "🎨",
-        image: null,
-        color: "#8e44ad",
-        order: 9,
-        isActive: true
-      },
-      {
-        title: JSON.stringify({
-          "th": "การวิเคราะห์ข้อมูล",
-          "en": "Data Analytics"
-        }),
-        description: JSON.stringify({
-          "th": "วิเคราะห์ข้อมูลการตลาดและพฤติกรรมผู้ใช้เพื่อปรับปรุงกลยุทธ์",
-          "en": "Analyze marketing data and user behavior to improve strategies"
-        }),
-        features: JSON.stringify({
-          "th": ["Google Analytics", "Heat Maps", "User Journey", "Performance Reports"],
-          "en": ["Google Analytics", "Heat Maps", "User Journey", "Performance Reports"]
-        }),
-        price: 13500,
-        icon: "📊",
-        image: null,
-        color: "#16a085",
-        order: 10,
-        isActive: true
+        isActive: true,
+        isDisplayInHome: true
       }
     ]
 
@@ -292,38 +261,42 @@ export default defineEventHandler(async (event) => {
           "en": "Creative Director"
         }),
         bio: JSON.stringify({
-          "th": "มีประสบการณ์กว่า 15 ปีในด้านการสร้างสรรค์และการออกแบบ เชี่ยวชาญในการผลิตวิดีโอและการตลาดดิจิทัล",
-          "en": "Over 15 years of experience in creativity and design, specializing in video production and digital marketing"
+          "th": "มีประสบการณ์กว่า 15 ปีในด้านการสร้างสรรค์และการออกแบบ เชี่ยวชาญในการผลิตวิดีโอและการจัดงานอีเวนต์",
+          "en": "Over 15 years of experience in creativity and design, specializing in video production and event management"
         }),
         image: null,
+        link: null,
         socialLinks: JSON.stringify({
           "facebook": "https://facebook.com/somchai",
           "instagram": "https://instagram.com/somchai",
           "linkedin": "https://linkedin.com/in/somchai"
         }),
         order: 1,
-        isActive: true
+        isActive: true,
+        isDisplayInHome: true
       },
       {
         name: JSON.stringify({
           "th": "สุดา นักออกแบบ",
-          "en": "Suda Nakaukbaeb"
+          "en": "Suda Designer"
         }),
         position: JSON.stringify({
           "th": "หัวหน้านักออกแบบ",
           "en": "Lead Designer"
         }),
         bio: JSON.stringify({
-          "th": "ผู้เชี่ยวชาญด้านการออกแบบกราฟิกและโปสเตอร์ มีผลงานที่ได้รับรางวัลมากมาย",
-          "en": "Expert in graphic and poster design with many award-winning works"
+          "th": "ผู้เชี่ยวชาญด้านการออกแบบกราฟิกและแบรนด์ มีผลงานที่ได้รับรางวัลมากมาย",
+          "en": "Expert in graphic and brand design with many award-winning works"
         }),
         image: null,
+        link: null,
         socialLinks: JSON.stringify({
           "instagram": "https://instagram.com/suda.design",
           "behance": "https://behance.net/suda"
         }),
         order: 2,
-        isActive: true
+        isActive: true,
+        isDisplayInHome: true
       },
       {
         name: JSON.stringify({
@@ -339,12 +312,14 @@ export default defineEventHandler(async (event) => {
           "en": "Expert in video production and filming with experience working with leading brands"
         }),
         image: null,
+        link: null,
         socialLinks: JSON.stringify({
           "youtube": "https://youtube.com/terapong",
           "instagram": "https://instagram.com/terapong.video"
         }),
         order: 3,
-        isActive: true
+        isActive: true,
+        isDisplayInHome: true
       },
       {
         name: JSON.stringify({
@@ -360,54 +335,14 @@ export default defineEventHandler(async (event) => {
           "en": "Expert in online marketing and social media, helping brands grow sustainably"
         }),
         image: null,
+        link: null,
         socialLinks: JSON.stringify({
           "facebook": "https://facebook.com/nipa.marketing",
           "linkedin": "https://linkedin.com/in/nipa"
         }),
         order: 4,
-        isActive: true
-      },
-      {
-        name: JSON.stringify({
-          "th": "อานนท์ เทคโนโลยี",
-          "en": "Anon Technology"
-        }),
-        position: JSON.stringify({
-          "th": "หัวหน้านักพัฒนา",
-          "en": "Lead Developer"
-        }),
-        bio: JSON.stringify({
-          "th": "ผู้เชี่ยวชาญด้านเทคโนโลยีและการพัฒนาเว็บไซต์ ผลักดันนวัตกรรมใหม่ๆ ให้กับทีม",
-          "en": "Expert in technology and website development, driving new innovations for the team"
-        }),
-        image: null,
-        socialLinks: JSON.stringify({
-          "github": "https://github.com/anon",
-          "linkedin": "https://linkedin.com/in/anon"
-        }),
-        order: 5,
-        isActive: true
-      },
-      {
-        name: JSON.stringify({
-          "th": "พิมพ์ใจ คอนเทนต์",
-          "en": "Pimjai Content"
-        }),
-        position: JSON.stringify({
-          "th": "ผู้เชี่ยวชาญเนื้อหา",
-          "en": "Content Specialist"
-        }),
-        bio: JSON.stringify({
-          "th": "นักเขียนและผู้สร้างเนื้อหาที่มีประสบการณ์ ช่วยสร้างสรรค์เนื้อหาที่น่าสนใจและมีประสิทธิภาพ",
-          "en": "Experienced writer and content creator, helping create engaging and effective content"
-        }),
-        image: null,
-        socialLinks: JSON.stringify({
-          "twitter": "https://twitter.com/pimjai",
-          "medium": "https://medium.com/@pimjai"
-        }),
-        order: 6,
-        isActive: true
+        isActive: true,
+        isDisplayInHome: true
       }
     ]
 
@@ -420,32 +355,32 @@ export default defineEventHandler(async (event) => {
         "en": "Our Mission"
       }),
       missionText: JSON.stringify({
-        "th": "เรามุ่งมั่นที่จะสร้างสรรค์เนื้อหาดิจิทัลที่มีคุณภาพและสร้างสรรค์ เพื่อช่วยให้ธุรกิจของลูกค้าเติบโตและประสบความสำเร็จในยุคดิจิทัล",
-        "en": "We are committed to creating high-quality and innovative digital content to help our clients' businesses grow and succeed in the digital age"
+        "th": "เรามุ่งมั่นที่จะสร้างสรรค์บริการที่มีคุณภาพและประทับใจ เพื่อช่วยให้แบรนด์และธุรกิจของลูกค้าเติบโตอย่างยั่งยืน ด้วยทีมงานมืออาชีพและประสบการณ์ที่หลากหลาย",
+        "en": "We are committed to creating quality and impressive services to help our clients' brands and businesses grow sustainably with professional teams and diverse experience"
       }),
       visionTitle: JSON.stringify({
         "th": "วิสัยทัศน์",
         "en": "Our Vision"
       }),
       visionText: JSON.stringify({
-        "th": "เป็นเอเจนซี่ดิจิทัลชั้นนำที่เป็นที่ยอมรับในระดับสากล ด้วยการนำเสนอผลงานที่สร้างสรรค์และมีคุณภาพสูง",
-        "en": "To be a leading globally recognized digital agency through creative and high-quality work presentations"
+        "th": "เป็นเอเจนซี่บริการครบวงจรที่เป็นที่ยอมรับและได้รับความไว้วางใจจากลูกค้า ด้วยการนำเสนอผลงานที่สร้างสรรค์และมีคุณภาพสูง",
+        "en": "To be a trusted full-service agency recognized and trusted by clients through creative and high-quality work delivery"
       }),
       valuesTitle: JSON.stringify({
         "th": "ค่านิยมของเรา",
         "en": "Our Values"
       }),
       valuesText: JSON.stringify({
-        "th": "ความสร้างสรรค์ คุณภาพ ความซื่อสัตย์ และการทำงานเป็นทีม เป็นหัวใจหลักในการทำงานของเรา",
-        "en": "Creativity, Quality, Integrity, and Teamwork are the core values of our work"
+        "th": "ความสร้างสรรค์ คุณภาพ ความซื่อสัตย์ และการทำงานเป็นทีม คือหัวใจหลักในการทำงานของเรา เพื่อมอบประสบการณ์ที่ดีที่สุดให้กับลูกค้า",
+        "en": "Creativity, Quality, Integrity, and Teamwork are the core values of our work to provide the best experience for clients"
       }),
       historyTitle: JSON.stringify({
         "th": "ประวัติของเรา",
         "en": "Our History"
       }),
       historyText: JSON.stringify({
-        "th": "ก่อตั้งขึ้นในปี 2014 ด้วยความมุ่งมั่นที่จะสร้างสรรค์เนื้อหาดิจิทัลที่มีคุณภาพ เราได้เติบโตจากทีมเล็กๆ มาเป็นเอเจนซี่ที่มีชื่อเสียง",
-        "en": "Founded in 2014 with a commitment to creating quality digital content, we have grown from a small team to a renowned agency"
+        "th": "ก่อตั้งขึ้นด้วยความมุ่งมั่นที่จะสร้างสรรค์บริการที่มีคุณภาพ เราได้เติบโตจากทีมเล็กๆ มาเป็นเอเจนซี่ที่มีชื่อเสียงและได้รับความไว้วางใจจากลูกค้าหลายราย",
+        "en": "Founded with a commitment to creating quality services, we have grown from a small team to a renowned agency trusted by many clients"
       }),
       missionImage: null,
       heroImage: null
@@ -462,7 +397,7 @@ export default defineEventHandler(async (event) => {
         "en": "Ready to listen and help you with every project"
       }),
       phone: "02-123-4567",
-      email: "contact@digitalagency.co.th",
+      email: "contact@agency.co.th",
       address: JSON.stringify({
         "th": "123 ถนนสุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพฯ 10110",
         "en": "123 Sukhumvit Road, Khlong Toei, Bangkok 10110"
@@ -471,18 +406,19 @@ export default defineEventHandler(async (event) => {
         "th": "จันทร์-ศุกร์: 9:00-18:00 น.\nเสาร์: 9:00-16:00 น.\nอาทิตย์: ปิด",
         "en": "Monday-Friday: 9:00-18:00\nSaturday: 9:00-16:00\nSunday: Closed"
       }),
+      bannerImage: null,
       heroImage: null
     })
 
     // Create Services Content
     await ServicesContent.create({
       heroTitle: JSON.stringify({
-        "th": "ผลงาน",
+        "th": "สิ่งที่เราทำ",
         "en": "What We Do"
       }),
       heroSubtitle: JSON.stringify({
-        "th": "บริการครบวงจรด้านการสร้างสรรค์เนื้อหาดิจิทัล",
-        "en": "Complete digital content creation services"
+        "th": "บริการครบวงจรสำหรับทุกความต้องการของคุณ",
+        "en": "Complete services for all your needs"
       }),
       heroImage: null
     })
@@ -490,12 +426,12 @@ export default defineEventHandler(async (event) => {
     // Create Team Content
     await TeamContent.create({
       heroTitle: JSON.stringify({
-        "th": "ทีมงานของเรา",
-        "en": "Our Team"
+        "th": "ข้อมูลเชิงลึก",
+        "en": "Insights"
       }),
       heroSubtitle: JSON.stringify({
-        "th": "ทีมผู้เชี่ยวชาญที่พร้อมสร้างสรรค์ผลงานให้คุณ",
-        "en": "Expert team ready to create amazing work for you"
+        "th": "อ่านเรื่องราวและประสบการณ์จากทีมงานของเรา",
+        "en": "Read stories and experiences from our team"
       }),
       heroImage: null
     })
@@ -504,14 +440,26 @@ export default defineEventHandler(async (event) => {
     const faqData = [
       {
         question: JSON.stringify({
-          "th": "ใช้เวลาในการผลิตวิดีโอนานแค่ไหน?",
-          "en": "How long does video production take?"
+          "th": "บริการของคุณครอบคลุมอะไรบ้าง?",
+          "en": "What services do you offer?"
         }),
         answer: JSON.stringify({
-          "th": "ขึ้นอยู่กับความซับซ้อนของโปรเจค โดยทั่วไปใช้เวลา 1-4 สัปดาห์ ตั้งแต่การวางแผนจนถึงการส่งมอบผลงาน",
-          "en": "Depends on project complexity, typically takes 1-4 weeks from planning to delivery"
+          "th": "เรามีบริการครบวงจร ตั้งแต่การจัดงานอีเวนต์ การถ่ายภาพและวิดีโอ การออกแบบกราฟิก ไปจนถึงการตลาดดิจิทัล และการจัดหาทีมงาน",
+          "en": "We offer complete services from event organization, photography and videography, graphic design, to digital marketing and staff outsourcing"
         }),
         order: 1,
+        isActive: true
+      },
+      {
+        question: JSON.stringify({
+          "th": "ใช้เวลาในการทำงานนานแค่ไหน?",
+          "en": "How long does it take to complete a project?"
+        }),
+        answer: JSON.stringify({
+          "th": "ขึ้นอยู่กับประเภทและขอบเขตของโปรเจค โดยทั่วไปใช้เวลา 1-4 สัปดาห์ เราจะแจ้งไทม์ไลน์ที่ชัดเจนก่อนเริ่มงาน",
+          "en": "Depends on project type and scope, typically 1-4 weeks. We provide clear timeline before starting work"
+        }),
+        order: 2,
         isActive: true
       },
       {
@@ -523,7 +471,7 @@ export default defineEventHandler(async (event) => {
           "th": "ใช่ เรามีบริการแก้ไขผลงานฟรี 2-3 ครั้ง และสามารถแก้ไขเพิ่มเติมได้ตามความต้องการ",
           "en": "Yes, we provide 2-3 free revisions and additional revisions as needed"
         }),
-        order: 2,
+        order: 3,
         isActive: true
       },
       {
@@ -532,10 +480,10 @@ export default defineEventHandler(async (event) => {
           "en": "How do you calculate service prices?"
         }),
         answer: JSON.stringify({
-          "th": "ราคาขึ้นอยู่กับขอบเขตงาน ความซับซ้อน และระยะเวลาในการทำงาน เราจะให้ใบเสนอราคาที่ชัดเจนก่อนเริ่มงาน",
-          "en": "Prices depend on scope, complexity, and timeline. We provide clear quotations before starting work"
+          "th": "ราคาขึ้นอยู่กับขอบเขตงาน ความซับซ้อน และระยะเวลาในการทำงาน เราจะให้ใบเสนอราคาที่ชัดเจนหลังจากรับฟังความต้องการของคุณ",
+          "en": "Prices depend on scope, complexity, and timeline. We provide clear quotations after understanding your requirements"
         }),
-        order: 3,
+        order: 4,
         isActive: true
       },
       {
@@ -544,20 +492,8 @@ export default defineEventHandler(async (event) => {
           "en": "Can I see examples of your work?"
         }),
         answer: JSON.stringify({
-          "th": "แน่นอน เรามีพอร์ตโฟลิโอที่หลากหลายให้ชม และสามารถขอดูผลงานที่เกี่ยวข้องกับโปรเจคของคุณได้",
-          "en": "Absolutely! We have a diverse portfolio to show and can provide relevant examples for your project"
-        }),
-        order: 4,
-        isActive: true
-      },
-      {
-        question: JSON.stringify({
-          "th": "มีบริการหลังการขายหรือไม่?",
-          "en": "Do you provide after-sales service?"
-        }),
-        answer: JSON.stringify({
-          "th": "ใช่ เรามีบริการดูแลและซัพพอร์ตหลังส่งมอบงาน รวมถึงการแก้ไขปัญหาเฉพาะหน้า",
-          "en": "Yes, we provide post-delivery support and maintenance, including urgent issue fixes"
+          "th": "แน่นอน เรามีพอร์ตโฟลิโอให้ชม และสามารถขอดูผลงานที่เกี่ยวข้องกับโปรเจคของคุณได้",
+          "en": "Absolutely! We have portfolio to show and can provide relevant examples for your project"
         }),
         order: 5,
         isActive: true
@@ -569,22 +505,41 @@ export default defineEventHandler(async (event) => {
     // Create Site Settings
     await SiteSettings.create({
       siteName: JSON.stringify({
-        "th": "Creative Digital Agency",
-        "en": "Creative Digital Agency"
+        "th": "CHILLING HAUS",
+        "en": "CHILLING HAUS"
       }),
       siteTagline: JSON.stringify({
-        "th": "เอเจนซี่ดิจิทัลสร้างสรรค์",
-        "en": "Your Creative Digital Partner"
+        "th": "Agency That Gets You",
+        "en": "Agency That Gets You"
       }),
-      primaryColor: "#6495ed",
+      primaryColor: "#4949e9",
       secondaryColor: "#9333ea",
       socialLinks: JSON.stringify({
-        "facebook": "https://facebook.com/creativedigitalagency",
-        "instagram": "https://instagram.com/creativedigitalagency",
-        "twitter": "https://twitter.com/creativedigital",
-        "linkedin": "https://linkedin.com/company/creative-digital-agency",
-        "youtube": "https://youtube.com/creativedigitalagency"
+        "facebook": "https://facebook.com/chillinghaus",
+        "instagram": "https://instagram.com/chillinghaus",
+        "twitter": "https://twitter.com/chillinghaus",
+        "linkedin": "https://linkedin.com/company/chillinghaus",
+        "youtube": "https://youtube.com/chillinghaus"
       }),
+      metaDescription: JSON.stringify({
+        "th": "เอเจนซี่บริการครบวงจร ตั้งแต่จัดงานอีเวนต์ ถ่ายภาพ วิดีโอ ออกแบบกราฟิก ไปจนถึงการตลาดดิจิทัล",
+        "en": "Full-service agency from event organization, photography, videography, graphic design to digital marketing"
+      }),
+      keywords: JSON.stringify({
+        "th": "จัดงานอีเวนต์, ช่างภาพ, วิดีโอ, กราฟิกดีไซน์, การตลาด, digital agency, event organizer",
+        "en": "event organization, photographer, video, graphic design, marketing, digital agency, event organizer"
+      }),
+      contactEmail: JSON.stringify({
+        "th": "contact@agency.co.th",
+        "en": "contact@agency.co.th"
+      }),
+      contactPhone: JSON.stringify({
+        "th": "02-123-4567",
+        "en": "02-123-4567"
+      }),
+      navbarDisplayMode: "both",
+      navbarTextColor: "#1a1a1a",
+      navbarBgColor: "rgba(255, 255, 255, 0.98)",
       logo: null,
       favicon: null
     })

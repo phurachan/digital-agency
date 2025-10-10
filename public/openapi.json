@@ -458,29 +458,28 @@
             "example": "64f123456789abcd12345678"
           },
           "title": {
-            "$ref": "#/components/schemas/MultiLanguageText"
+            "$ref": "#/components/schemas/MultiLanguageText",
+            "description": "Service title in multiple languages (stored as JSON string)"
           },
           "description": {
-            "$ref": "#/components/schemas/MultiLanguageText"
+            "$ref": "#/components/schemas/MultiLanguageText",
+            "description": "Service description with HTML content support in multiple languages (stored as JSON string)"
           },
           "features": {
-            "type": "object",
-            "properties": {
-              "th": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "example": ["คุณสมบัติ 1", "คุณสมบัติ 2"]
-              },
-              "en": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "example": ["Feature 1", "Feature 2"]
-              }
-            }
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["photographer", "event_organizer", "video_producer"],
+            "description": "Array of feature codes from service categories"
+          },
+          "album": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["/images/gallery/photo1.jpg", "/images/gallery/photo2.jpg"],
+            "description": "Array of image URLs for service gallery"
           },
           "price": {
             "type": "number",
@@ -497,7 +496,7 @@
           },
           "icon": {
             "type": "string",
-            "example": "🎬"
+            "example": "camera"
           },
           "image": {
             "type": "string",
@@ -539,17 +538,25 @@
             "example": "64f123456789abcd12345678"
           },
           "name": {
-            "$ref": "#/components/schemas/MultiLanguageText"
+            "$ref": "#/components/schemas/MultiLanguageText",
+            "description": "Team member name in multiple languages (stored as JSON string)"
           },
           "position": {
-            "$ref": "#/components/schemas/MultiLanguageText"
+            "$ref": "#/components/schemas/MultiLanguageText",
+            "description": "Team member position in multiple languages (stored as JSON string)"
           },
           "bio": {
-            "$ref": "#/components/schemas/MultiLanguageText"
+            "$ref": "#/components/schemas/MultiLanguageText",
+            "description": "Team member biography in multiple languages (stored as JSON string)"
           },
           "image": {
             "type": "string",
             "example": "/images/team/member.jpg"
+          },
+          "link": {
+            "type": "string",
+            "example": "https://portfolio.example.com",
+            "description": "External URL to redirect when clicking on team member"
           },
           "socialLinks": {
             "type": "object",
@@ -566,11 +573,17 @@
                 "type": "string",
                 "example": "https://linkedin.com/in/member"
               }
-            }
+            },
+            "description": "Social media links (stored as JSON string)"
           },
           "isActive": {
             "type": "boolean",
             "example": true
+          },
+          "isDisplayInHome": {
+            "type": "boolean",
+            "example": true,
+            "description": "Whether this team member should be displayed on the home page"
           },
           "order": {
             "type": "integer",
@@ -684,10 +697,28 @@
             "example": "64f123456789abcd12345678"
           },
           "siteName": {
-            "$ref": "#/components/schemas/MultiLanguageText"
+            "$ref": "#/components/schemas/MultiLanguageText",
+            "description": "Site name in multiple languages (stored as JSON string)"
           },
           "siteTagline": {
-            "$ref": "#/components/schemas/MultiLanguageText"
+            "$ref": "#/components/schemas/MultiLanguageText",
+            "description": "Site tagline in multiple languages (stored as JSON string)"
+          },
+          "metaDescription": {
+            "$ref": "#/components/schemas/MultiLanguageText",
+            "description": "SEO meta description in multiple languages (stored as JSON string)"
+          },
+          "keywords": {
+            "$ref": "#/components/schemas/MultiLanguageText",
+            "description": "SEO keywords in multiple languages (stored as JSON string)"
+          },
+          "contactEmail": {
+            "$ref": "#/components/schemas/MultiLanguageText",
+            "description": "Contact email in multiple languages (stored as JSON string)"
+          },
+          "contactPhone": {
+            "$ref": "#/components/schemas/MultiLanguageText",
+            "description": "Contact phone in multiple languages (stored as JSON string)"
           },
           "primaryColor": {
             "type": "string",
@@ -696,6 +727,22 @@
           "secondaryColor": {
             "type": "string",
             "example": "#9333ea"
+          },
+          "navbarDisplayMode": {
+            "type": "string",
+            "enum": ["transparent", "solid"],
+            "example": "transparent",
+            "description": "Navbar display mode (transparent or solid background)"
+          },
+          "navbarTextColor": {
+            "type": "string",
+            "example": "#ffffff",
+            "description": "Navbar text color in hex format"
+          },
+          "navbarBgColor": {
+            "type": "string",
+            "example": "#000000",
+            "description": "Navbar background color in hex format (used when navbarDisplayMode is solid)"
           },
           "socialLinks": {
             "type": "object",
@@ -711,8 +758,13 @@
               "twitter": {
                 "type": "string",
                 "example": "https://twitter.com/company"
+              },
+              "line": {
+                "type": "string",
+                "example": "https://line.me/company"
               }
-            }
+            },
+            "description": "Social media links (stored as JSON string)"
           },
           "logo": {
             "type": "string",
@@ -737,29 +789,28 @@
         "required": ["title", "description", "price"],
         "properties": {
           "title": {
-            "$ref": "#/components/schemas/MultiLanguageText"
+            "$ref": "#/components/schemas/MultiLanguageText",
+            "description": "Service title in multiple languages (will be stored as JSON string)"
           },
           "description": {
-            "$ref": "#/components/schemas/MultiLanguageText"
+            "$ref": "#/components/schemas/MultiLanguageText",
+            "description": "Service description with HTML content in multiple languages (will be stored as JSON string)"
           },
           "features": {
-            "type": "object",
-            "properties": {
-              "th": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "example": ["คุณสมบัติ 1", "คุณสมบัติ 2"]
-              },
-              "en": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "example": ["Feature 1", "Feature 2"]
-              }
-            }
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["photographer", "event_organizer", "video_producer"],
+            "description": "Array of feature codes from service categories"
+          },
+          "album": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["/images/gallery/photo1.jpg", "/images/gallery/photo2.jpg"],
+            "description": "Array of image URLs for service gallery"
           },
           "price": {
             "type": "number",
@@ -776,7 +827,7 @@
           },
           "icon": {
             "type": "string",
-            "example": "🎬"
+            "example": "camera"
           },
           "image": {
             "type": "string",
@@ -806,29 +857,28 @@
         "type": "object",
         "properties": {
           "title": {
-            "$ref": "#/components/schemas/MultiLanguageText"
+            "$ref": "#/components/schemas/MultiLanguageText",
+            "description": "Service title in multiple languages (will be stored as JSON string)"
           },
           "description": {
-            "$ref": "#/components/schemas/MultiLanguageText"
+            "$ref": "#/components/schemas/MultiLanguageText",
+            "description": "Service description with HTML content in multiple languages (will be stored as JSON string)"
           },
           "features": {
-            "type": "object",
-            "properties": {
-              "th": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "example": ["คุณสมบัติ 1", "คุณสมบัติ 2"]
-              },
-              "en": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "example": ["Feature 1", "Feature 2"]
-              }
-            }
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["photographer", "event_organizer", "video_producer"],
+            "description": "Array of feature codes from service categories"
+          },
+          "album": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["/images/gallery/photo1.jpg", "/images/gallery/photo2.jpg"],
+            "description": "Array of image URLs for service gallery"
           },
           "price": {
             "type": "number",
@@ -845,7 +895,7 @@
           },
           "icon": {
             "type": "string",
-            "example": "🎬"
+            "example": "camera"
           },
           "image": {
             "type": "string",
@@ -2422,6 +2472,11 @@
                     "type": "string",
                     "example": "/images/team/member.jpg"
                   },
+                  "link": {
+                    "type": "string",
+                    "example": "https://portfolio.example.com",
+                    "description": "External URL to redirect when clicking on team member"
+                  },
                   "socialLinks": {
                     "type": "object",
                     "properties": {
@@ -2442,6 +2497,11 @@
                   "isActive": {
                     "type": "boolean",
                     "example": true
+                  },
+                  "isDisplayInHome": {
+                    "type": "boolean",
+                    "example": true,
+                    "description": "Whether this team member should be displayed on the home page"
                   },
                   "order": {
                     "type": "integer",
@@ -2544,6 +2604,11 @@
                     "type": "string",
                     "example": "/images/team/member.jpg"
                   },
+                  "link": {
+                    "type": "string",
+                    "example": "https://portfolio.example.com",
+                    "description": "External URL to redirect when clicking on team member"
+                  },
                   "socialLinks": {
                     "type": "object",
                     "properties": {
@@ -2564,6 +2629,11 @@
                   "isActive": {
                     "type": "boolean",
                     "example": true
+                  },
+                  "isDisplayInHome": {
+                    "type": "boolean",
+                    "example": true,
+                    "description": "Whether this team member should be displayed on the home page"
                   },
                   "order": {
                     "type": "integer",
